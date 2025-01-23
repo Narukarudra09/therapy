@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 class CustomNavigation extends StatelessWidget {
   final String role;
+  final Function(int) onItemTapped;
 
-  const CustomNavigation({super.key, required this.role});
+  const CustomNavigation(
+      {super.key, required this.role, required this.onItemTapped});
 
   @override
   Widget build(BuildContext context) {
@@ -58,22 +60,17 @@ class CustomNavigation extends StatelessWidget {
         navigationItems = [];
     }
 
-    return Scaffold(
-      appBar: AppBar(title: Text('Home')),
-      body: Center(child: Text('Welcome, $role')),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedLabelStyle: TextStyle(
-          color: Colors.green,
-        ),
-        unselectedLabelStyle: TextStyle(
-          color: Colors.grey,
-        ),
-        selectedItemColor: Colors.green,
-        // Active color
-        unselectedItemColor: Colors.grey,
-        // Inactive color
-        items: navigationItems,
+    return BottomNavigationBar(
+      selectedLabelStyle: TextStyle(
+        color: Colors.green,
       ),
+      unselectedLabelStyle: TextStyle(
+        color: Colors.grey,
+      ),
+      selectedItemColor: Colors.green,
+      unselectedItemColor: Colors.grey,
+      items: navigationItems,
+      onTap: onItemTapped,
     );
   }
 }
