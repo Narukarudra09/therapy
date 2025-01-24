@@ -1,17 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:therapy/screens/main_screen.dart';
 import 'package:therapy/widgets/custom_button.dart';
-import 'package:therapy/widgets/verify_otp.dart';
+
+import '../../models/user_profile.dart';
+import '../../providers/auth_provider.dart';
 
 class VerifyScreen extends StatefulWidget {
-  const VerifyScreen({super.key});
+  final String phoneNumber;
+  final UserRole selectedRole;
+
+  const VerifyScreen(
+      {super.key, required this.phoneNumber, required this.selectedRole});
 
   @override
   State<VerifyScreen> createState() => _VerifyScreenState();
 }
 
 class _VerifyScreenState extends State<VerifyScreen> {
+  final _otpController = TextEditingController();
+
+  void _verifyOtp() async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+    try {
+      bool isVerified = await authProvider.verifyOtp(
+          phoneNumber: widget.phoneNumber,
+          otp: _otpController.text,
+          role: widget.selectedRole);
+
+      if (isVerified) {
+        Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (_) => MainScreen()));
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Invalid OTP')));
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Verification failed: ${e.toString()}')));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,9 +59,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
             Row(
               children: [
                 SvgPicture.asset("assets/logoG.svg"),
-                SizedBox(
-                  width: 6,
-                ),
+                const SizedBox(width: 6),
                 Text(
                   "Therapy",
                   style: GoogleFonts.poppins(
@@ -40,9 +70,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                 ),
               ],
             ),
-            SizedBox(
-              height: 16,
-            ),
+            const SizedBox(height: 16),
             Text(
               "OTP Verification",
               style: GoogleFonts.inter(
@@ -54,16 +82,14 @@ class _VerifyScreenState extends State<VerifyScreen> {
             Row(
               children: [
                 Text(
-                  "+91-7878404583",
+                  widget.phoneNumber,
                   style: GoogleFonts.inter(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                     color: Color.fromARGB(255, 27, 25, 75),
                   ),
                 ),
-                SizedBox(
-                  width: 6,
-                ),
+                const SizedBox(width: 6),
                 Text(
                   "Change",
                   style: GoogleFonts.inter(
@@ -74,9 +100,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                 ),
               ],
             ),
-            SizedBox(
-              height: 43,
-            ),
+            const SizedBox(height: 43),
             Row(
               children: [
                 Text(
@@ -97,16 +121,22 @@ class _VerifyScreenState extends State<VerifyScreen> {
                 ),
               ],
             ),
-            SizedBox(
-              height: 8,
+            const SizedBox(height: 8),
+            TextField(
+              controller: _otpController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                hintText: 'Enter 6-digit OTP',
+              ),
+              maxLength: 6,
             ),
-            VerifyOtp(),
-            SizedBox(
-              height: 52,
-            ),
+            const SizedBox(height: 52),
             CustomButton(
-              title: "Verity",
-              onTap: () {},
+              title: "Verify",
+              onTap: _verifyOtp,
             )
           ],
         ),
