@@ -27,10 +27,6 @@ class MainScreen extends StatelessWidget {
     final authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        surfaceTintColor: Colors.white,
-        backgroundColor: Colors.white,
-        shadowColor: Colors.white,
-        elevation: 5,
         title: Column(
           spacing: 4,
           crossAxisAlignment: CrossAxisAlignment.start,

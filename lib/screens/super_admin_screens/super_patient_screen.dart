@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:therapy/widgets/add_patients.dart';
 import 'package:therapy/widgets/custom_add_button.dart';
 import 'package:therapy/widgets/custom_listtile.dart';
 
@@ -32,7 +33,12 @@ class _SuperPatientScreenState extends State<SuperPatientScreen> {
                   ),
                   CustomAddButton(
                     title: "Add Patients",
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AddPatients()));
+                    },
                   ),
                 ],
               ),

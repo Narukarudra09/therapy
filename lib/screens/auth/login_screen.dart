@@ -128,6 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 8),
               DropdownButtonFormField<String>(
+                icon: Icon(Icons.keyboard_arrow_down),
                 value: _selectedRole,
                 borderRadius: BorderRadius.circular(8),
                 iconEnabledColor: const Color.fromARGB(255, 23, 28, 34),
