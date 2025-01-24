@@ -4,14 +4,20 @@ import 'package:google_fonts/google_fonts.dart';
 class CustomAddButton extends StatelessWidget {
   final String title;
   final void Function()? onTap;
+  final MainAxisAlignment mainAxisAlignment;
 
-  const CustomAddButton({super.key, required this.title, required this.onTap});
+  const CustomAddButton(
+      {super.key,
+      required this.title,
+      this.onTap,
+      this.mainAxisAlignment = MainAxisAlignment.start});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Row(
+        mainAxisAlignment: mainAxisAlignment,
         spacing: 4,
         children: [
           Container(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:therapy/widgets/patients/add_allergies.dart';
 
 class AddPatients extends StatefulWidget {
   const AddPatients({super.key});
@@ -317,7 +318,14 @@ class _AddPatientsState extends State<AddPatients> {
                           ),
                         ),
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AddAllergies(),
+                              ),
+                            );
+                          },
                           child: Icon(
                             Icons.add,
                             color: Color.fromARGB(255, 73, 13, 140),

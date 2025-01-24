@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:therapy/widgets/add_patients.dart';
 import 'package:therapy/widgets/custom_add_button.dart';
 import 'package:therapy/widgets/custom_listtile.dart';
+import 'package:therapy/widgets/patients/add_patients.dart';
 
 class SuperPatientScreen extends StatefulWidget {
   const SuperPatientScreen({super.key});
