@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:therapy/screens/main_screen.dart';
 import 'package:therapy/widgets/custom_button.dart';
+import 'package:therapy/widgets/verify_otp.dart';
 
 import '../../models/user_profile.dart';
 import '../../providers/auth_provider.dart';
@@ -122,17 +123,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
               ],
             ),
             const SizedBox(height: 8),
-            TextField(
-              controller: _otpController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                hintText: 'Enter 6-digit OTP',
-              ),
-              maxLength: 6,
-            ),
+            VerifyOtp(controller: _otpController),
             const SizedBox(height: 52),
             CustomButton(
               title: "Verify",

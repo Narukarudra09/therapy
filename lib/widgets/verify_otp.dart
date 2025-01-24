@@ -3,11 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class VerifyOtp extends StatelessWidget {
-  const VerifyOtp({super.key});
+  final TextEditingController controller;
+
+  const VerifyOtp({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
-    final controller = TextEditingController();
     final formKey = GlobalKey<FormState>();
     return Form(
       key: formKey,

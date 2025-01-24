@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Therapy App',
       home: SplashScreen(),
+      theme: ThemeData(scaffoldBackgroundColor: Colors.white),
     );
   }
 }
