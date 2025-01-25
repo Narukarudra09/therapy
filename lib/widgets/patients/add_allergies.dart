@@ -43,8 +43,10 @@ class _AddAllergiesState extends State<AddAllergies> {
         ),
         actions: [
           Container(
-            width: 74,
-            height: 26,
+            height: 30,
+            padding: EdgeInsets.symmetric(
+              horizontal: 18,
+            ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(50),
               color: Color.fromARGB(255, 65, 184, 119),

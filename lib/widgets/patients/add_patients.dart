@@ -10,8 +10,8 @@ class AddPatients extends StatefulWidget {
 }
 
 class _AddPatientsState extends State<AddPatients> {
-  String _city = 'Super Admin';
-  String _bloodGroup = 'A+';
+  String city = 'Super Admin';
+  String bloodGroup = 'A+';
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +25,10 @@ class _AddPatientsState extends State<AddPatients> {
         ),
         actions: [
           Container(
-            width: 74,
-            height: 26,
+            height: 30,
+            padding: EdgeInsets.symmetric(
+              horizontal: 18,
+            ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(50),
               color: Color.fromARGB(255, 65, 184, 119),
@@ -220,7 +222,7 @@ class _AddPatientsState extends State<AddPatients> {
                     .toList(),
                 onChanged: (String? newValue) {
                   setState(() {
-                    _city = newValue!;
+                    city = newValue!;
                   });
                 },
               ),
@@ -287,7 +289,7 @@ class _AddPatientsState extends State<AddPatients> {
                 onChanged: (String? newValue) {
                   setState(
                     () {
-                      _bloodGroup = newValue!;
+                      bloodGroup = newValue!;
                     },
                   );
                 },

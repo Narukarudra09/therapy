@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:therapy/screens/auth/verify_screen.dart';
 import 'package:therapy/widgets/custom_button.dart';
 
-import '../../models/user_profile.dart';
+import '../../models/user_role.dart';
 import '../../providers/auth_provider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -212,8 +212,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   keyboardType: TextInputType.phone,
                   style: GoogleFonts.inter(
                     fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: const Color.fromARGB(255, 102, 114, 128),
+                    fontWeight: FontWeight.w500,
+                    color: const Color.fromARGB(255, 46, 44, 52),
                   ),
                   decoration: InputDecoration(
                     border: OutlineInputBorder(

@@ -36,6 +36,7 @@ class MyApp extends StatelessWidget {
             backgroundColor: Colors.white,
             shadowColor: Colors.white,
             elevation: 5,
+            scrolledUnderElevation: 5,
           )),
     );
   }

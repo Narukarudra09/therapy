@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:therapy/widgets/custom_add_button.dart';
 import 'package:therapy/widgets/custom_listtile.dart';
 import 'package:therapy/widgets/patients/add_patients.dart';
+import 'package:therapy/widgets/patients/patient_detail.dart';
 
 class SuperPatientScreen extends StatefulWidget {
   const SuperPatientScreen({super.key});
@@ -10,6 +11,26 @@ class SuperPatientScreen extends StatefulWidget {
   @override
   State<SuperPatientScreen> createState() => _SuperPatientScreenState();
 }
+
+List<String> names = [
+  "Rudrapratap Singh Naruka",
+  "Rudrapratap",
+  "Rudrapratap Singh",
+  "Rudra",
+  "Naruka",
+  "Singh",
+  "Pratap",
+];
+
+List<String> email = [
+  "narukarudra2@gmail.com",
+  "narukarudra2@gmail.com",
+  "narukarudra2@gmail.com",
+  "narukarudra2@gmail.com",
+  "narukarudra2@gmail.com",
+  "narukarudra2@gmail.com",
+  "narukarudra2@gmail.com",
+];
 
 class _SuperPatientScreenState extends State<SuperPatientScreen> {
   @override
@@ -47,12 +68,23 @@ class _SuperPatientScreenState extends State<SuperPatientScreen> {
               ),
               ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: 10,
+                itemCount: 7,
                 shrinkWrap: true,
                 itemBuilder: (BuildContext context, int index) {
                   return CustomListTile(
-                      title: "Rudrapratap Singh Naruka",
-                      subtitle: "narukarudra2@gmail.com");
+                    title: names[index],
+                    subtitle: email[index],
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PatientDetail(
+                            patientName: names[index],
+                          ),
+                        ),
+                      );
+                    },
+                  );
                 },
               ),
             ],

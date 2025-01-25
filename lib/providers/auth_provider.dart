@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 
-import '../models/user_profile.dart';
+import '../models/user_role.dart';
 
 class AuthProvider extends ChangeNotifier {
-  UserProfile? _selectedUser;
+  UserRoles? _selectedUser;
   bool _isLoading = false;
-  String? _pendingPhoneNumber;
-  UserRole? _pendingRole;
+  String? pendingPhoneNumber;
+  UserRole? pendingRole;
 
-  UserProfile? get selectedUser => _selectedUser;
+  UserRoles? get selectedUser => _selectedUser;
 
   bool get isLoading => _isLoading;
 
   // Simulated login process to initiate OTP
   Future<bool> login(UserRole role, String phoneNumber) async {
     _isLoading = true;
-    _pendingRole = role;
-    _pendingPhoneNumber = phoneNumber;
+    pendingRole = role;
+    pendingPhoneNumber = phoneNumber;
     notifyListeners();
 
     try {
@@ -48,26 +48,26 @@ class AuthProvider extends ChangeNotifier {
       // Create user based on selected role
       switch (role) {
         case UserRole.superAdmin:
-          _selectedUser = UserProfile(
+          _selectedUser = UserRoles(
               id: '1', name: 'Super Admin', role: UserRole.superAdmin);
           break;
         case UserRole.centerOwner:
-          _selectedUser = UserProfile(
+          _selectedUser = UserRoles(
               id: '2', name: 'Center Owner', role: UserRole.centerOwner);
           break;
         case UserRole.therapist:
           _selectedUser =
-              UserProfile(id: '3', name: 'Therapist', role: UserRole.therapist);
+              UserRoles(id: '3', name: 'Therapist', role: UserRole.therapist);
           break;
         case UserRole.patient:
           _selectedUser =
-              UserProfile(id: '4', name: 'Patient', role: UserRole.patient);
+              UserRoles(id: '4', name: 'Patient', role: UserRole.patient);
           break;
       }
 
       _isLoading = false;
-      _pendingPhoneNumber = null;
-      _pendingRole = null;
+      pendingPhoneNumber = null;
+      pendingRole = null;
       notifyListeners();
       return true;
     } else {
@@ -79,8 +79,8 @@ class AuthProvider extends ChangeNotifier {
 
   void logout() {
     _selectedUser = null;
-    _pendingPhoneNumber = null;
-    _pendingRole = null;
+    pendingPhoneNumber = null;
+    pendingRole = null;
     notifyListeners();
   }
 }

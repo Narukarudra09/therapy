@@ -11,7 +11,7 @@ import 'package:therapy/screens/super_admin_screens/super_patient_screen.dart';
 import 'package:therapy/screens/super_admin_screens/super_payment_screen.dart';
 import 'package:therapy/screens/super_admin_screens/super_therapist_screen.dart';
 
-import '../models/user_profile.dart';
+import '../models/user_role.dart';
 import '../providers/auth_provider.dart';
 import '../providers/navigation_provider.dart';
 import 'center_owner_screens/center_daily_data_screen.dart';
@@ -62,7 +62,7 @@ class MainScreen extends StatelessWidget {
         actions: [
           GestureDetector(
               child: CircleAvatar(
-            backgroundColor: Colors.green,
+            backgroundImage: AssetImage("assets/profile.png"),
           )),
           SizedBox(
             width: 20,
@@ -173,31 +173,3 @@ class MainScreen extends StatelessWidget {
     );
   }
 }
-
-/*Widget _buildAppbarProfileForRole(
-    BuildContext context, UserRole role, int currentIndex) {
-  switch (role) {
-    case UserRole.superAdmin:
-      return [
-        SuperPatientScreen(),
-        SuperTherapistsScreen(),
-        SuperPaymentsScreen(),
-        SuperCentersScreen()
-      ][currentIndex];
-    case UserRole.centerOwner:
-    case UserRole.therapist:
-      return [
-        CenterDailyDataScreen(),
-        CenterPatientScreen(),
-        CenterPaymentScreen(),
-        CenterSettingsScreen()
-      ][currentIndex];
-    case UserRole.patient:
-      return [
-        PatientHomeScreen(),
-        PatientTherapiesScreen(),
-        PatientPaymentScreen(),
-        PatientSettingsScreen()
-      ][currentIndex];
-  }
-}*/
