@@ -130,21 +130,41 @@ class _RecordPaymentState extends State<RecordPayment> {
               ),
             ),
             SizedBox(height: 8),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade200),
-                borderRadius: BorderRadius.circular(12),
+            TextFormField(
+              controller: amountController,
+              keyboardType: TextInputType.phone,
+              style: GoogleFonts.inter(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: const Color.fromARGB(255, 46, 44, 52),
               ),
-              child: TextField(
-                controller: amountController,
-                decoration: InputDecoration(
-                  prefixText: '₹',
-                  border: InputBorder.none,
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: InputDecoration(
+                prefixIcon: Icon(Icons.currency_rupee),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(
+                    color: Color.fromARGB(255, 232, 233, 241),
+                  ),
                 ),
-                keyboardType: TextInputType.number,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(
+                    color: Color.fromARGB(255, 232, 233, 241),
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(
+                    color: Color.fromARGB(255, 232, 233, 241),
+                  ),
+                ),
               ),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return "Please enter your number";
+                }
+                return null;
+              },
             ),
             SizedBox(height: 24),
             Text(
