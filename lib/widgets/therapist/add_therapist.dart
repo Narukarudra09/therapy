@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:therapy/widgets/custom_add_button.dart';
 
 class AddTherapist extends StatefulWidget {
   const AddTherapist({super.key});
@@ -17,12 +18,11 @@ class _AddTherapistState extends State<AddTherapist> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text(
+        title: Text(
           'Add Center Member',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18,
+          style: GoogleFonts.inter(
+            color: Color.fromARGB(255, 23, 28, 34),
+            fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -54,7 +54,7 @@ class _AddTherapistState extends State<AddTherapist> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
           child: Form(
             key: _formKey,
             child: Column(
@@ -66,8 +66,7 @@ class _AddTherapistState extends State<AddTherapist> {
                     children: [
                       CircleAvatar(
                         radius: 50,
-                        backgroundImage: NetworkImage(
-                            'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Add%20Therapist-0Urh6ZvhocAtiyw83JP6MNAPpHw6Lx.png'),
+                        backgroundImage: AssetImage("assets/profile.png"),
                       ),
                       Positioned(
                         bottom: 0,
@@ -87,12 +86,12 @@ class _AddTherapistState extends State<AddTherapist> {
                 ),
                 const SizedBox(height: 24),
 
-                // Basic Profile Section
-                const Text(
+                Text(
                   'Basic Profile',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                  style: GoogleFonts.inter(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: const Color.fromARGB(255, 23, 28, 34),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -110,49 +109,269 @@ class _AddTherapistState extends State<AddTherapist> {
                   hint: 'Enter phone number',
                   required: true,
                 ),
-                _buildDropdown(
-                  label: 'User Role',
-                  value: 'Therapist',
-                  required: true,
+                Row(
+                  children: [
+                    Text(
+                      "User Role",
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: const Color.fromARGB(255, 135, 141, 186),
+                      ),
+                    ),
+                    Text(
+                      "*",
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: const Color.fromARGB(255, 255, 43, 43),
+                      ),
+                    ),
+                  ],
                 ),
-                _buildDropdown(
-                  label: 'center name',
-                  value: 'jk vihar',
-                  required: true,
+                SizedBox(
+                  height: 8,
                 ),
-                _buildDropdown(
-                  label: 'Gender',
-                  value: 'Male',
+                DropdownButtonFormField<String>(
+                  icon: Icon(Icons.keyboard_arrow_down),
+                  borderRadius: BorderRadius.circular(8),
+                  iconEnabledColor: const Color.fromARGB(255, 23, 28, 34),
+                  iconDisabledColor: const Color.fromARGB(255, 23, 28, 34),
+                  dropdownColor: const Color.fromARGB(255, 255, 255, 255),
+                  decoration: InputDecoration(
+                    hintText: "Select Role",
+                    hintStyle: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: const Color.fromARGB(255, 46, 44, 52),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(255, 232, 233, 241),
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(255, 232, 233, 241),
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(255, 232, 233, 241),
+                      ),
+                    ),
+                  ),
+                  items: [
+                    'Center Owner',
+                    'Therapist',
+                  ]
+                      .map((role) => DropdownMenuItem(
+                            value: role,
+                            child: Text(
+                              role,
+                              style: GoogleFonts.inter(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: const Color.fromARGB(255, 46, 44, 52),
+                              ),
+                            ),
+                          ))
+                      .toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {});
+                  },
                 ),
-
+                SizedBox(
+                  height: 16,
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "Center Name",
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: const Color.fromARGB(255, 135, 141, 186),
+                      ),
+                    ),
+                    Text(
+                      "*",
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: const Color.fromARGB(255, 255, 43, 43),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                DropdownButtonFormField<String>(
+                  icon: Icon(Icons.keyboard_arrow_down),
+                  borderRadius: BorderRadius.circular(8),
+                  iconEnabledColor: const Color.fromARGB(255, 23, 28, 34),
+                  iconDisabledColor: const Color.fromARGB(255, 23, 28, 34),
+                  dropdownColor: const Color.fromARGB(255, 255, 255, 255),
+                  decoration: InputDecoration(
+                    hintText: "Select Center",
+                    hintStyle: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: const Color.fromARGB(255, 46, 44, 52),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(255, 232, 233, 241),
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(255, 232, 233, 241),
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(255, 232, 233, 241),
+                      ),
+                    ),
+                  ),
+                  items: [
+                    'jk vihar',
+                    'tilak nagar',
+                  ]
+                      .map((role) => DropdownMenuItem(
+                            value: role,
+                            child: Text(
+                              role,
+                              style: GoogleFonts.inter(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: const Color.fromARGB(255, 46, 44, 52),
+                              ),
+                            ),
+                          ))
+                      .toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {});
+                  },
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                Text(
+                  "Gender",
+                  style: GoogleFonts.inter(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    color: const Color.fromARGB(255, 135, 141, 186),
+                  ),
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                DropdownButtonFormField<String>(
+                  icon: Icon(Icons.keyboard_arrow_down),
+                  borderRadius: BorderRadius.circular(8),
+                  iconEnabledColor: const Color.fromARGB(255, 23, 28, 34),
+                  iconDisabledColor: const Color.fromARGB(255, 23, 28, 34),
+                  dropdownColor: const Color.fromARGB(255, 255, 255, 255),
+                  decoration: InputDecoration(
+                    hintText: "Select Gender",
+                    hintStyle: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: const Color.fromARGB(255, 46, 44, 52),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(255, 232, 233, 241),
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(255, 232, 233, 241),
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(255, 232, 233, 241),
+                      ),
+                    ),
+                  ),
+                  items: [
+                    'Female',
+                    'Male',
+                    'Others',
+                  ]
+                      .map((role) => DropdownMenuItem(
+                            value: role,
+                            child: Text(
+                              role,
+                              style: GoogleFonts.inter(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: const Color.fromARGB(255, 46, 44, 52),
+                              ),
+                            ),
+                          ))
+                      .toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {});
+                  },
+                ),
+                SizedBox(
+                  height: 16,
+                ),
                 // Active Toggle
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Active',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black87,
-                        fontWeight: FontWeight.w500,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          'Active',
+                          style: GoogleFonts.sora(
+                            fontSize: 16,
+                            color: Color.fromARGB(255, 0, 0, 0),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Text(
+                          "*",
+                          style: GoogleFonts.sora(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: const Color.fromARGB(255, 255, 43, 43),
+                          ),
+                        ),
+                      ],
                     ),
                     Switch(
-                      value: isActive,
-                      onChanged: (value) => setState(() => isActive = value),
-                      activeColor: const Color(0xFF4CD080),
-                    ),
+                        value: isActive,
+                        onChanged: (value) => setState(() => isActive = value),
+                        activeColor: const Color.fromARGB(255, 65, 184, 119)),
                   ],
                 ),
 
                 const SizedBox(height: 24),
 
                 // KYC Documents Section
-                const Text(
+                Text(
                   'KYC Documents',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                  style: GoogleFonts.inter(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: const Color.fromARGB(255, 23, 28, 34),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -172,19 +391,22 @@ class _AddTherapistState extends State<AddTherapist> {
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
+                          children: [
                             Text(
                               'Fund.pdf',
-                              style: TextStyle(
-                                fontSize: 16,
+                              style: GoogleFonts.spaceGrotesk(
+                                fontSize: 14,
                                 fontWeight: FontWeight.w500,
+                                color: const Color.fromARGB(255, 0, 0, 0)
+                                    .withOpacity(0.87),
                               ),
                             ),
                             Text(
                               '53.9 kb',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey,
+                              style: GoogleFonts.spaceGrotesk(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: const Color.fromARGB(255, 82, 103, 137),
                               ),
                             ),
                           ],
@@ -192,10 +414,12 @@ class _AddTherapistState extends State<AddTherapist> {
                       ),
                       TextButton(
                         onPressed: () {},
-                        child: const Text(
+                        child: Text(
                           'View',
-                          style: TextStyle(
-                            color: Color(0xFF4CD080),
+                          style: GoogleFonts.inter(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: const Color.fromARGB(255, 65, 184, 119),
                           ),
                         ),
                       ),
@@ -203,33 +427,21 @@ class _AddTherapistState extends State<AddTherapist> {
                   ),
                 ),
 
-                // Upload Button
                 Container(
-                  margin: const EdgeInsets.only(top: 16),
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey[300]!,
-                      style: BorderStyle.solid,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(Icons.add, color: Color(0xFF4CD080)),
-                      SizedBox(width: 8),
-                      Text(
-                        'Upload',
-                        style: TextStyle(
-                          color: Color(0xFF4CD080),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
+                    margin: const EdgeInsets.only(top: 16),
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey[300]!,
+                        style: BorderStyle.solid,
                       ),
-                    ],
-                  ),
-                ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Center(
+                        child: CustomAddButton(
+                      title: "upload",
+                      mainAxisAlignment: MainAxisAlignment.center,
+                    ))),
               ],
             ),
           ),
@@ -253,33 +465,49 @@ class _AddTherapistState extends State<AddTherapist> {
             children: [
               Text(
                 label,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey[600],
+                style: GoogleFonts.inter(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: const Color.fromARGB(255, 135, 141, 186),
                 ),
               ),
               if (required)
-                const Text(
-                  ' *',
-                  style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 16,
+                Text(
+                  '*',
+                  style: GoogleFonts.inter(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    color: const Color.fromARGB(255, 255, 43, 43),
                   ),
                 ),
             ],
           ),
           const SizedBox(height: 8),
           TextFormField(
+            style: GoogleFonts.manrope(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: const Color.fromARGB(255, 46, 44, 52)),
             initialValue: initialValue,
             decoration: InputDecoration(
               hintText: hint,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: Colors.grey[300]!),
+                borderSide: BorderSide(
+                  color: Color.fromARGB(255, 232, 233, 241),
+                ),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: Colors.grey[300]!),
+                borderSide: BorderSide(
+                  color: Color.fromARGB(255, 232, 233, 241),
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(
+                  color: Color.fromARGB(255, 232, 233, 241),
+                ),
               ),
             ),
             validator: required
@@ -290,69 +518,6 @@ class _AddTherapistState extends State<AddTherapist> {
                     return null;
                   }
                 : null,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDropdown({
-    required String label,
-    required String value,
-    bool required = false,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey[600],
-                ),
-              ),
-              if (required)
-                const Text(
-                  ' *',
-                  style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 16,
-                  ),
-                ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey[300]!),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: DropdownButtonFormField<String>(
-              value: value,
-              decoration: const InputDecoration(
-                contentPadding: EdgeInsets.symmetric(horizontal: 12),
-                border: InputBorder.none,
-              ),
-              items: [value].map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {},
-              validator: required
-                  ? (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'This field is required';
-                      }
-                      return null;
-                    }
-                  : null,
-            ),
           ),
         ],
       ),

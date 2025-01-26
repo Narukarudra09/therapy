@@ -81,11 +81,9 @@ class CircularGradientPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..color = Colors.white.withOpacity(0.25);
 
-    // Define circle sizes and corresponding stroke widths
     final circleSizes = [895, 650, 440, 258];
     final strokeWidths = [100.0, 70.0, 60.0, 50.0];
 
-    // Draw circles with the specified sizes and stroke widths
     for (int i = 0; i < circleSizes.length; i++) {
       paint.strokeWidth = strokeWidths[i];
       canvas.drawCircle(center, circleSizes[i] / 2, paint);

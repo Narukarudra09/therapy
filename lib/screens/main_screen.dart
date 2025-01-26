@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:therapy/screens/patient_screen/patient_home_screen.dart';
@@ -26,49 +25,6 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Column(
-          spacing: 4,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              spacing: 4,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  "assets/logoG.svg",
-                  width: 17,
-                ),
-                Text(
-                  "Therapy",
-                  style: GoogleFonts.poppins(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: const Color.fromARGB(255, 6, 57, 24),
-                  ),
-                ),
-              ],
-            ),
-            Text(
-              "Welcome Ankit Dangi",
-              style: GoogleFonts.sora(
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-                color: const Color.fromARGB(255, 81, 92, 104),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          GestureDetector(
-              child: CircleAvatar(
-            backgroundImage: AssetImage("assets/profile.png"),
-          )),
-          SizedBox(
-            width: 20,
-          ),
-        ],
-      ),
       body: Consumer<NavigationProvider>(
         builder: (context, navProvider, child) {
           return _buildDashboardForRole(context,
