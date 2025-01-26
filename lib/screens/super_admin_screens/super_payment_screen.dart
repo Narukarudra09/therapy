@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../widgets/custom_add_button.dart';
-import '../../widgets/therapist/record_payment.dart';
+import '../../widgets/payment/record_payment.dart';
 
 class SuperPaymentsScreen extends StatefulWidget {
   const SuperPaymentsScreen({super.key});
