@@ -161,25 +161,33 @@ class _SuperPaymentsScreenState extends State<SuperPaymentsScreen> {
                   ),
                 ),
                 const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Text(
-                      'Next Payment • ',
-                      style: GoogleFonts.inter(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: const Color.fromARGB(255, 149, 160, 172),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Next Payment • ',
+                        style: GoogleFonts.inter(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                          color: const Color.fromARGB(255, 149, 160, 172),
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: true,
                       ),
-                    ),
-                    Text(
-                      '24/02/2023',
-                      style: GoogleFonts.inter(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: const Color.fromARGB(255, 255, 49, 49),
+                      Text(
+                        '24/02/2023',
+                        style: GoogleFonts.inter(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: const Color.fromARGB(255, 255, 49, 49),
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: true,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),

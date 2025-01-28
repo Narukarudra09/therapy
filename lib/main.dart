@@ -30,14 +30,25 @@ class MyApp extends StatelessWidget {
       title: 'Therapy App',
       home: SplashScreen(),
       theme: ThemeData(
-          scaffoldBackgroundColor: Colors.white,
-          appBarTheme: AppBarTheme(
-            surfaceTintColor: Colors.white,
-            backgroundColor: Colors.white,
-            shadowColor: Colors.white,
-            elevation: 5,
-            scrolledUnderElevation: 5,
-          )),
+        scaffoldBackgroundColor: Colors.white,
+        appBarTheme: AppBarTheme(
+          surfaceTintColor: Colors.white,
+          backgroundColor: Colors.white,
+          shadowColor: Colors.white,
+          elevation: 5,
+          scrolledUnderElevation: 5,
+        ),
+        timePickerTheme: TimePickerThemeData(
+          backgroundColor: Colors.white,
+          hourMinuteTextColor: Color(0xFF21005D),
+          hourMinuteColor: Color(0xFFEBF6ED),
+          dayPeriodTextColor: Color(0xFF31111D),
+          dayPeriodColor: Color(0xFFEBF6ED),
+          dialHandColor: Color(0xFF41B877),
+          dialBackgroundColor: Color(0xFFE9E9E9),
+          dialTextColor: Color(0xFF1D1B20),
+        ),
+      ),
     );
   }
 }

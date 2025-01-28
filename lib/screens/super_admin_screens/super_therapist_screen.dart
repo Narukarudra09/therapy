@@ -89,12 +89,15 @@ class _SuperTherapistsScreenState extends State<SuperTherapistsScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "Center Member",
-                    style: GoogleFonts.inter(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: const Color.fromARGB(255, 24, 8, 41),
+                  Flexible(
+                    child: Text(
+                      "Center Member",
+                      style: GoogleFonts.inter(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                        color: const Color.fromARGB(255, 24, 8, 41),
+                      ),
+                      softWrap: true,
                     ),
                   ),
                   CustomAddButton(

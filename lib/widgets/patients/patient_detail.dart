@@ -34,8 +34,7 @@ class PatientDetail extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        PatientProfile(patientName: patientName),
+                    builder: (context) => PatientProfile(),
                   ),
                 );
               },

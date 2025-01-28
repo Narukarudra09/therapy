@@ -1,33 +1,163 @@
 import 'package:flutter/material.dart';
 
+import '../models/medical_record.dart';
+import '../models/patient.dart';
+import '../models/payment.dart';
+import '../models/therapy_session.dart';
+
 class SuperPatientProvider extends ChangeNotifier {
-  String _city = 'bhilwara';
-  String _bloodGroup = 'A+';
-  final List<String> _allergies = [];
+  List<Patient> _patients = [];
+  Patient? _selectedPatient;
+  bool _isLoading = false;
+  String? _error;
 
-  String get city => _city;
+// Getters
+  List<Patient> get patients => _patients;
 
-  String get bloodGroup => _bloodGroup;
+  Patient? get selectedPatient => _selectedPatient;
 
-  List<String> get allergies => _allergies;
+  bool get isLoading => _isLoading;
 
-  void setCity(String newCity) {
-    _city = newCity;
+  String? get error => _error;
+
+// Methods
+  void setLoading(bool loading) {
+    _isLoading = loading;
     notifyListeners();
   }
 
-  void setBloodGroup(String newBloodGroup) {
-    _bloodGroup = newBloodGroup;
+  void setError(String? error) {
+    _error = error;
     notifyListeners();
   }
 
-  void addAllergy(String allergy) {
-    _allergies.add(allergy);
+  void selectPatient(String patientId) {
+    _selectedPatient =
+        _patients.firstWhere((patient) => patient.id == patientId);
     notifyListeners();
   }
 
-  void removeAllergy(String allergy) {
-    _allergies.remove(allergy);
-    notifyListeners();
+  Future<void> fetchPatients() async {
+    setLoading(true);
+    setError(null);
+
+    try {
+      // TODO: Implement API call
+      // For now using dummy data
+      _patients = [
+        Patient(
+          id: '1',
+          name: 'Rudrapratap Singh Naruka',
+          email: 'narukarudra2@gmail.com',
+          phone: '1234567890',
+          city: 'Bhilwara',
+          gender: 'Male',
+          bloodGroup: 'A+',
+          allergies: ['Cheese', 'Milk'],
+          medicalRecords: [
+            MedicalRecord(
+              id: '1',
+              title: 'allergic khasi',
+              date: '12-05-2023',
+              fileUrl: 'assets/X-ray.png',
+            ),
+          ],
+        ),
+        // Add more dummy patients
+      ];
+      notifyListeners();
+    } catch (e) {
+      setError(e.toString());
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  Future<void> addPatient(Patient patient) async {
+    setLoading(true);
+    setError(null);
+
+    try {
+      // TODO: Implement API call
+      _patients.add(patient);
+      notifyListeners();
+    } catch (e) {
+      setError(e.toString());
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  Future<void> updatePatient(Patient patient) async {
+    setLoading(true);
+    setError(null);
+
+    try {
+      // TODO: Implement API call
+      final index = _patients.indexWhere((p) => p.id == patient.id);
+      if (index != -1) {
+        _patients[index] = patient;
+        if (_selectedPatient?.id == patient.id) {
+          _selectedPatient = patient;
+        }
+        notifyListeners();
+      }
+    } catch (e) {
+      setError(e.toString());
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  Future<void> addAllergy(String patientId, String allergy) async {
+    setLoading(true);
+    setError(null);
+
+    try {
+      final patient = _patients.firstWhere((p) => p.id == patientId);
+      final updatedPatient = patient.copyWith(
+        allergies: [...patient.allergies, allergy],
+      );
+      await updatePatient(updatedPatient);
+    } catch (e) {
+      setError(e.toString());
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  Future<void> addTherapySession(
+      String patientId, TherapySession session) async {
+    setLoading(true);
+    setError(null);
+
+    try {
+      final patient = _patients.firstWhere((p) => p.id == patientId);
+      final updatedPatient = patient.copyWith(
+        therapySessions: [...patient.therapySessions, session],
+      );
+      await updatePatient(updatedPatient);
+    } catch (e) {
+      setError(e.toString());
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  Future<void> addPayment(String patientId, Payment payment) async {
+    setLoading(true);
+    setError(null);
+
+    try {
+      final patient = _patients.firstWhere((p) => p.id == patientId);
+      final updatedPatient = patient.copyWith(
+        payments: [...patient.payments, payment],
+      );
+      await updatePatient(updatedPatient);
+    } catch (e) {
+      setError(e.toString());
+    } finally {
+      setLoading(false);
+    }
   }
 }

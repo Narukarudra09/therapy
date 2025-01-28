@@ -28,27 +28,32 @@ class _RecordPaymentState extends State<RecordPayment> {
         ),
         actions: [
           Container(
+            margin: EdgeInsets.only(right: 20),
             height: 30,
-            padding: EdgeInsets.symmetric(
-              horizontal: 18,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: 18),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(50),
               color: Color.fromARGB(255, 65, 184, 119),
             ),
             child: Center(
-              child: Text(
-                "Save",
-                style: GoogleFonts.inter(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 100),
+                  // Adjust max width as needed
+                  child: Text(
+                    "Save",
+                    style: GoogleFonts.inter(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ),
             ),
-          ),
-          SizedBox(
-            width: 20,
           ),
         ],
       ),

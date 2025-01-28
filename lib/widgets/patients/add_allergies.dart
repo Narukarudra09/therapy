@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:therapy/providers/super_patient_provider.dart';
 import 'package:therapy/widgets/custom_add_button.dart';
 
 class AddAllergies extends StatefulWidget {
@@ -28,9 +30,31 @@ final List<String> allergies = [
   'Soya',
 ];
 
-final List<bool> selectedAllergies = List.generate(16, (_) => false);
-
 class _AddAllergiesState extends State<AddAllergies> {
+  final List<bool> selectedAllergies =
+      List.generate(allergies.length, (_) => false);
+
+  void _saveAllergies() {
+    final selected = selectedAllergies
+        .asMap()
+        .entries
+        .where((entry) => entry.value)
+        .map((entry) => allergies[entry.key])
+        .toList();
+
+    final patientId = Provider.of<SuperPatientProvider>(context, listen: false)
+        .selectedPatient
+        ?.id;
+
+    if (patientId != null) {
+      for (var allergy in selected) {
+        Provider.of<SuperPatientProvider>(context, listen: false)
+            .addAllergy(patientId, allergy);
+      }
+      Navigator.of(context).pop(); // Navigate back after saving
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,28 +66,36 @@ class _AddAllergiesState extends State<AddAllergies> {
           color: Color.fromARGB(255, 23, 28, 34),
         ),
         actions: [
-          Container(
-            height: 30,
-            padding: EdgeInsets.symmetric(
-              horizontal: 18,
-            ),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(50),
-              color: Color.fromARGB(255, 65, 184, 119),
-            ),
-            child: Center(
-              child: Text(
-                "Save",
-                style: GoogleFonts.inter(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+          GestureDetector(
+            onTap: _saveAllergies,
+            child: Container(
+              margin: EdgeInsets.only(right: 20),
+              height: 30,
+              padding: EdgeInsets.symmetric(horizontal: 18),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(50),
+                color: Color.fromARGB(255, 65, 184, 119),
+              ),
+              child: Center(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 100),
+                    // Adjust max width as needed
+                    child: Text(
+                      "Save",
+                      style: GoogleFonts.inter(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
-          SizedBox(
-            width: 20,
           ),
         ],
       ),
@@ -81,6 +113,7 @@ class _AddAllergiesState extends State<AddAllergies> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
+                      String newAllergy = '';
                       return AlertDialog(
                         backgroundColor: Colors.white,
                         contentPadding: EdgeInsets.all(0),
@@ -104,6 +137,9 @@ class _AddAllergiesState extends State<AddAllergies> {
                                 padding: EdgeInsets.only(
                                     left: 15, right: 15, bottom: 24),
                                 child: TextField(
+                                  onChanged: (value) {
+                                    newAllergy = value;
+                                  },
                                   decoration: InputDecoration(
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(8),
@@ -127,7 +163,9 @@ class _AddAllergiesState extends State<AddAllergies> {
                         ),
                         actions: <Widget>[
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.of(context).pop();
+                            },
                             child: Container(
                               width: 162,
                               height: 50,
@@ -147,7 +185,15 @@ class _AddAllergiesState extends State<AddAllergies> {
                             ),
                           ),
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              if (newAllergy.isNotEmpty) {
+                                setState(() {
+                                  allergies.add(newAllergy);
+                                  selectedAllergies.add(true);
+                                });
+                              }
+                              Navigator.of(context).pop();
+                            },
                             child: Container(
                               width: 162,
                               height: 50,

@@ -1,18 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/super_patient_provider.dart';
 
 class PatientProfile extends StatelessWidget {
-  final String patientName;
-
-  const PatientProfile({super.key, required this.patientName});
-
   @override
   Widget build(BuildContext context) {
-    List<String> allergies = ['Cheese', 'Cheese', 'Cheese'];
+    final patient = Provider.of<SuperPatientProvider>(context).selectedPatient;
+
+    if (patient == null) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "Patient Profile",
+            style: GoogleFonts.inter(
+              color: Color.fromARGB(255, 8, 12, 62),
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        body: Center(
+          child: Text(
+            "No patient selected",
+            style: GoogleFonts.inter(
+              color: Color.fromARGB(255, 23, 28, 34),
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          patientName,
+          patient.name,
           style: GoogleFonts.inter(
             color: Color.fromARGB(255, 8, 12, 62),
             fontSize: 18,
@@ -42,10 +67,10 @@ class PatientProfile extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              _buildInfoRow(Icons.account_circle, patientName),
-              _buildInfoRow(Icons.email_outlined, 'ankitdangi@a2d.co.in'),
-              _buildInfoRow(Icons.phone_android, '9509965856'),
-              _buildInfoRow(Icons.calendar_today_outlined, 'Male'),
+              _buildInfoRow(Icons.account_circle, patient.name),
+              _buildInfoRow(Icons.email_outlined, patient.email),
+              _buildInfoRow(Icons.phone_android, patient.phone),
+              _buildInfoRow(Icons.calendar_today_outlined, patient.gender),
               const SizedBox(height: 16),
               const Divider(
                 color: Color.fromARGB(255, 218, 218, 218),
@@ -74,7 +99,7 @@ class PatientProfile extends StatelessWidget {
                       padding:
                           EdgeInsets.symmetric(horizontal: 16.0, vertical: 6),
                       child: Text(
-                        'A+',
+                        patient.bloodGroup,
                         style: GoogleFonts.inter(
                           color: Color.fromARGB(255, 23, 28, 34),
                           fontSize: 14,
@@ -94,7 +119,7 @@ class PatientProfile extends StatelessWidget {
                     spacing: 8,
                     runSpacing: 8,
                     children: List.generate(
-                      allergies.length,
+                      patient.allergies.length,
                       (index) => Chip(
                         side: BorderSide.none,
                         shape: RoundedRectangleBorder(
@@ -102,7 +127,7 @@ class PatientProfile extends StatelessWidget {
                         ),
                         padding: EdgeInsets.all(0),
                         labelPadding: EdgeInsets.symmetric(horizontal: 8),
-                        label: Text(allergies[index]),
+                        label: Text(patient.allergies[index]),
                         labelStyle: GoogleFonts.inter(
                           color: Color.fromARGB(255, 46, 44, 52),
                           fontSize: 12,
@@ -125,10 +150,10 @@ class PatientProfile extends StatelessWidget {
                   ),
                   Column(
                     children: List.generate(
-                      2,
+                      patient.medicalRecords.length,
                       (index) => _buildRecordItem(
-                        'alergic khasi',
-                        '12-05-2023 • 12:00 am',
+                        patient.medicalRecords[index].title,
+                        patient.medicalRecords[index].date,
                       ),
                     ),
                   ),
@@ -146,9 +171,11 @@ class PatientProfile extends StatelessWidget {
                     ),
                     Column(
                       children: List.generate(
-                        3,
+                        patient.prescriptions.length,
                         (index) => _buildRecordItem(
-                            'alergic khasi', '12-05-2023 • 12:00 am'),
+                          patient.prescriptions[index].title,
+                          patient.prescriptions[index].date,
+                        ),
                       ),
                     ),
                   ],
@@ -165,16 +192,20 @@ class PatientProfile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            text,
-            style: GoogleFonts.inter(
-              color: Color.fromARGB(255, 46, 44, 52),
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
+          Flexible(
+            child: Text(
+              text,
+              style: GoogleFonts.inter(
+                color: Color.fromARGB(255, 46, 44, 52),
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+              overflow: TextOverflow.ellipsis,
+              softWrap: true,
             ),
           ),
-          const Spacer(),
           Icon(
             icon,
             size: 20,
@@ -189,12 +220,7 @@ class PatientProfile extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Color.fromARGB(
-          255,
-          250,
-          250,
-          250,
-        ),
+        color: Color.fromARGB(255, 250, 250, 250),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Color.fromARGB(255, 232, 233, 241)),
       ),
