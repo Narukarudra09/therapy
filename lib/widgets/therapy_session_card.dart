@@ -43,6 +43,7 @@ class TherapySessionCard extends StatelessWidget {
 
   Widget _buildInfoRow(String label, String value) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Flexible(
           child: Text(

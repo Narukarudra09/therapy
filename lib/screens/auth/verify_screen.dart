@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:therapy/screens/auth/patient_detail.dart';
 import 'package:therapy/screens/main_screen.dart';
 import 'package:therapy/widgets/custom_button.dart';
 import 'package:therapy/widgets/verify_otp.dart';
@@ -33,8 +34,18 @@ class _VerifyScreenState extends State<VerifyScreen> {
           role: widget.selectedRole);
 
       if (isVerified) {
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (_) => MainScreen()));
+        if (widget.selectedRole == UserRole.patient) {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (_) => PersonalDetails(phoneNumber: widget.phoneNumber),
+          ));
+        } else {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+                builder: (_) => MainScreen(
+                      patientName: '',
+                    )),
+          );
+        }
       } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text('Invalid OTP')));
@@ -48,6 +59,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         elevation: 0,
         scrolledUnderElevation: 0,

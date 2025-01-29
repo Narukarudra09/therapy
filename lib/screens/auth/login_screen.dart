@@ -20,7 +20,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _phoneController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  // Map role string to UserRole enum
   UserRole _mapStringToUserRole(String role) {
     switch (role) {
       case 'Super Admin':
@@ -40,7 +39,6 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_formKey.currentState!.validate()) {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
-      // Convert selected role string to UserRole enum
       UserRole selectedRole = _mapStringToUserRole(_selectedRole);
 
       bool success = await authProvider.login(
@@ -105,7 +103,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 46),
 
-              // Role Selection
               Row(
                 children: [
                   Text(
@@ -183,7 +180,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 16),
 
-              // Phone Number Input
               Row(
                 children: [
                   Text(

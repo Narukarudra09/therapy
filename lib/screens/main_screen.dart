@@ -19,7 +19,9 @@ import 'center_owner_screens/center_payment_screen.dart';
 import 'center_owner_screens/center_settings_screen.dart';
 
 class MainScreen extends StatelessWidget {
-  const MainScreen({super.key});
+  final String patientName;
+
+  const MainScreen({super.key, required this.patientName});
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +62,7 @@ class MainScreen extends StatelessWidget {
         ][currentIndex];
       case UserRole.patient:
         return [
-          PatientHomeScreen(),
+          PatientHomeScreen(patientName: patientName),
           PatientTherapiesScreen(),
           PatientPaymentScreen(),
           PatientSettingsScreen()
@@ -100,9 +102,9 @@ class MainScreen extends StatelessWidget {
         case UserRole.patient:
           return [
             BottomNavigationBarItem(
-                icon: Icon(Icons.home_filled), label: 'Home'),
+                icon: Icon(Icons.account_circle_rounded), label: 'Home'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.medical_services), label: 'Therapies'),
+                icon: Icon(Icons.home_filled), label: 'Therapies'),
             BottomNavigationBarItem(
                 icon: Icon(Icons.receipt_long), label: 'Payments'),
             BottomNavigationBarItem(
