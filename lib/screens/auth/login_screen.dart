@@ -127,6 +127,11 @@ class _LoginScreenState extends State<LoginScreen> {
               DropdownButtonFormField<String>(
                 icon: Icon(Icons.keyboard_arrow_down),
                 value: _selectedRole,
+                style: GoogleFonts.inter(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: const Color.fromARGB(255, 73, 13, 140),
+                ),
                 borderRadius: BorderRadius.circular(8),
                 iconEnabledColor: const Color.fromARGB(255, 23, 28, 34),
                 iconDisabledColor: const Color.fromARGB(255, 23, 28, 34),

@@ -3,16 +3,16 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:therapy/screens/main_screen.dart';
 import 'package:therapy/widgets/custom_button.dart';
 
-class PersonalDetails extends StatefulWidget {
+class BasicPersonalDetails extends StatefulWidget {
   final String phoneNumber;
 
-  const PersonalDetails({super.key, required this.phoneNumber});
+  const BasicPersonalDetails({super.key, required this.phoneNumber});
 
   @override
-  State<PersonalDetails> createState() => _PersonalDetailsState();
+  State<BasicPersonalDetails> createState() => _BasicPersonalDetailsState();
 }
 
-class _PersonalDetailsState extends State<PersonalDetails> {
+class _BasicPersonalDetailsState extends State<BasicPersonalDetails> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   String? _selectedDate;

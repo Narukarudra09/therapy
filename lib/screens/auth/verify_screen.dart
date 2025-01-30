@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:therapy/screens/auth/patient_detail.dart';
+import 'package:therapy/screens/auth/basic_patient_detail.dart';
+import 'package:therapy/screens/auth/login_screen.dart';
 import 'package:therapy/screens/main_screen.dart';
 import 'package:therapy/widgets/custom_button.dart';
 import 'package:therapy/widgets/verify_otp.dart';
@@ -36,7 +37,8 @@ class _VerifyScreenState extends State<VerifyScreen> {
       if (isVerified) {
         if (widget.selectedRole == UserRole.patient) {
           Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (_) => PersonalDetails(phoneNumber: widget.phoneNumber),
+            builder: (_) =>
+                BasicPersonalDetails(phoneNumber: widget.phoneNumber),
           ));
         } else {
           Navigator.of(context).pushReplacement(
@@ -103,12 +105,22 @@ class _VerifyScreenState extends State<VerifyScreen> {
                   ),
                 ),
                 const SizedBox(width: 6),
-                Text(
-                  "Change",
-                  style: GoogleFonts.inter(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: Color.fromARGB(255, 65, 184, 119),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginScreen(),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    "Change",
+                    style: GoogleFonts.inter(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: Color.fromARGB(255, 65, 184, 119),
+                    ),
                   ),
                 ),
               ],

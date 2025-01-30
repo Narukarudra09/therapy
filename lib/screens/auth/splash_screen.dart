@@ -47,6 +47,7 @@ class _SplashScreenState extends State<SplashScreen> {
               padding: const EdgeInsets.only(bottom: 50),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     "Therapy",
@@ -56,11 +57,13 @@ class _SplashScreenState extends State<SplashScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Text(
-                    "A healthier choice for a healthier you",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
+                  Center(
+                    child: Text(
+                      "A healthier choice for a healthier you",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                 ],
