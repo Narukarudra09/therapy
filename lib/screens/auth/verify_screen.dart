@@ -37,8 +37,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
       if (isVerified) {
         if (widget.selectedRole == UserRole.patient) {
           Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (_) =>
-                BasicPersonalDetails(phoneNumber: widget.phoneNumber),
+            builder: (_) => BasicPersonalDetails(),
           ));
         } else {
           Navigator.of(context).pushReplacement(

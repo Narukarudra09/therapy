@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:therapy/screens/patient_screen/provider/patient_provider.dart';
+import 'package:therapy/screens/patient_screen/update_phone_number.dart';
 
 class CustomProfileScreen extends StatefulWidget {
   const CustomProfileScreen({super.key});
@@ -12,6 +15,7 @@ class CustomProfileScreen extends StatefulWidget {
 class _CustomProfileScreenState extends State<CustomProfileScreen> {
   @override
   Widget build(BuildContext context) {
+    PatientProvider profile = Provider.of<PatientProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("Settings"),
@@ -93,6 +97,7 @@ class _CustomProfileScreenState extends State<CustomProfileScreen> {
               ),
               const SizedBox(height: 8),
               TextFormField(
+                initialValue: profile.patientName,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -138,7 +143,7 @@ class _CustomProfileScreenState extends State<CustomProfileScreen> {
               ),
               const SizedBox(height: 8),
               TextFormField(
-                initialValue: '9509965856',
+                initialValue: profile.phoneNumber,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -161,7 +166,14 @@ class _CustomProfileScreenState extends State<CustomProfileScreen> {
                     ),
                   ),
                   suffixIcon: InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => UpdatePhoneNumber(),
+                        ),
+                      );
+                    },
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: SvgPicture.asset("assets/edit.svg"),

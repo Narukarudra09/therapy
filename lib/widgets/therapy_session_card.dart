@@ -31,7 +31,7 @@ class TherapySessionCard extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             // Date row
-            _buildInfoRow('Date', '2020-05-06 11:24:08'),
+            _buildInfoRow('Date', DateTime.now().toString()),
             const SizedBox(height: 8),
             // Given by row
             _buildInfoRow('Given by', 'Ankit'),

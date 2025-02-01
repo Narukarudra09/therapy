@@ -4,6 +4,7 @@ import 'package:therapy/providers/auth_provider.dart';
 import 'package:therapy/providers/navigation_provider.dart';
 import 'package:therapy/providers/super_patient_provider.dart';
 import 'package:therapy/screens/auth/splash_screen.dart';
+import 'package:therapy/screens/patient_screen/provider/patient_provider.dart';
 
 void main() {
   runApp(
@@ -14,6 +15,7 @@ void main() {
         ChangeNotifierProvider(
           create: (_) => SuperPatientProvider(),
         ),
+        ChangeNotifierProvider(create: (_) => PatientProvider()),
       ],
       child: const MyApp(),
     ),

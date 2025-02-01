@@ -25,30 +25,23 @@ class VerifyOtp extends StatelessWidget {
         keyboardType: TextInputType.number,
         inputFormatters: [LengthLimitingTextInputFormatter(6)],
         decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.white,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: const BorderSide(
-              width: 1,
-              style: BorderStyle.solid,
-              strokeAlign: 1,
-              color: Color.fromARGB(255, 232, 233, 241),
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(
-              width: 1,
-              style: BorderStyle.solid,
-              strokeAlign: 1,
               color: Color.fromARGB(255, 232, 233, 241),
             ),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: const BorderSide(
-              width: 1,
-              style: BorderStyle.solid,
-              strokeAlign: 1,
+              color: Color.fromARGB(255, 232, 233, 241),
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(
               color: Color.fromARGB(255, 232, 233, 241),
             ),
           ),

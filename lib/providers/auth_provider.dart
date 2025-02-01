@@ -12,7 +12,6 @@ class AuthProvider extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
-  // Simulated login process to initiate OTP
   Future<bool> login(UserRole role, String phoneNumber) async {
     _isLoading = true;
     pendingRole = role;
@@ -20,7 +19,6 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      // Simulate OTP sending process
       await Future.delayed(Duration(seconds: 1));
 
       _isLoading = false;
