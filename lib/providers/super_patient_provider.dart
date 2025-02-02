@@ -42,8 +42,6 @@ class SuperPatientProvider extends ChangeNotifier {
     setError(null);
 
     try {
-      // TODO: Implement API call
-      // For now using dummy data
       _patients = [
         Patient(
           id: '1',
@@ -78,7 +76,6 @@ class SuperPatientProvider extends ChangeNotifier {
     setError(null);
 
     try {
-      // TODO: Implement API call
       _patients.add(patient);
       notifyListeners();
     } catch (e) {
@@ -93,7 +90,6 @@ class SuperPatientProvider extends ChangeNotifier {
     setError(null);
 
     try {
-      // TODO: Implement API call
       final index = _patients.indexWhere((p) => p.id == patient.id);
       if (index != -1) {
         _patients[index] = patient;

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-import 'package:therapy/screens/patient_screen/provider/patient_provider.dart';
 
 class PatientTherapiesScreen extends StatelessWidget {
   const PatientTherapiesScreen({super.key});
@@ -33,17 +31,13 @@ class PatientTherapiesScreen extends StatelessWidget {
                 ),
               ],
             ),
-            Consumer<PatientProvider>(
-              builder: (context, provider, child) {
-                return Text(
-                  "Welcome ${provider.patientName}",
-                  style: GoogleFonts.sora(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: const Color.fromARGB(255, 81, 92, 104),
-                  ),
-                );
-              },
+            Text(
+              "Welcome ",
+              style: GoogleFonts.sora(
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+                color: const Color.fromARGB(255, 81, 92, 104),
+              ),
             ),
           ],
         ),

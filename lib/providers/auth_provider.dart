@@ -12,6 +12,8 @@ class AuthProvider extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
+  get userPhoneNumber => null;
+
   Future<bool> login(UserRole role, String phoneNumber) async {
     _isLoading = true;
     pendingRole = role;
@@ -47,19 +49,31 @@ class AuthProvider extends ChangeNotifier {
       switch (role) {
         case UserRole.superAdmin:
           _selectedUser = UserRoles(
-              id: '1', name: 'Super Admin', role: UserRole.superAdmin);
+              id: '1',
+              name: 'Super Admin',
+              role: UserRole.superAdmin,
+              phoneNumber: '');
           break;
         case UserRole.centerOwner:
           _selectedUser = UserRoles(
-              id: '2', name: 'Center Owner', role: UserRole.centerOwner);
+              id: '2',
+              name: 'Center Owner',
+              role: UserRole.centerOwner,
+              phoneNumber: '');
           break;
         case UserRole.therapist:
-          _selectedUser =
-              UserRoles(id: '3', name: 'Therapist', role: UserRole.therapist);
+          _selectedUser = UserRoles(
+              id: '3',
+              name: 'Therapist',
+              role: UserRole.therapist,
+              phoneNumber: '');
           break;
         case UserRole.patient:
-          _selectedUser =
-              UserRoles(id: '4', name: 'Patient', role: UserRole.patient);
+          _selectedUser = UserRoles(
+              id: '4',
+              name: 'Patient',
+              role: UserRole.patient,
+              phoneNumber: '');
           break;
       }
 

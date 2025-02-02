@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-import 'package:therapy/screens/patient_screen/provider/patient_provider.dart';
-import 'package:therapy/screens/patient_screen/update_phone_number.dart';
+import 'package:google_fonts/google_fonts.dart';import 'package:therapy/screens/patient_screen/update_phone_number.dart';
 
 class CustomProfileScreen extends StatefulWidget {
   const CustomProfileScreen({super.key});
@@ -15,7 +12,6 @@ class CustomProfileScreen extends StatefulWidget {
 class _CustomProfileScreenState extends State<CustomProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    PatientProvider profile = Provider.of<PatientProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("Settings"),
@@ -97,7 +93,7 @@ class _CustomProfileScreenState extends State<CustomProfileScreen> {
               ),
               const SizedBox(height: 8),
               TextFormField(
-                initialValue: profile.patientName,
+                initialValue: '',
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -143,7 +139,7 @@ class _CustomProfileScreenState extends State<CustomProfileScreen> {
               ),
               const SizedBox(height: 8),
               TextFormField(
-                initialValue: profile.phoneNumber,
+                initialValue: '',
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,

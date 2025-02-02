@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-import 'package:therapy/screens/patient_screen/provider/patient_provider.dart';
-
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_save_screen.dart';
 
@@ -101,9 +98,6 @@ class _NewPhoneNumberState extends State<NewPhoneNumber> {
             CustomButton(
               title: "Save",
               onTap: () {
-                // Update the phone number in the provider
-                Provider.of<PatientProvider>(context)
-                    .updatePhoneNumber(_phoneController.text);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
