@@ -29,14 +29,20 @@ class MainScreen extends StatelessWidget {
     return Scaffold(
       body: Consumer<NavigationProvider>(
         builder: (context, navProvider, child) {
-          return _buildDashboardForRole(context,
-              authProvider.selectedUser!.role, navProvider.currentIndex);
+          return _buildDashboardForRole(
+            context,
+            authProvider.selectedUser!.role,
+            navProvider.currentIndex,
+          );
         },
       ),
       bottomNavigationBar: Consumer<NavigationProvider>(
         builder: (context, navProvider, child) {
-          return _buildBottomNavigationBar(context,
-              authProvider.selectedUser!.role, navProvider.currentIndex);
+          return _buildBottomNavigationBar(
+            context,
+            authProvider.selectedUser!.role,
+            navProvider.currentIndex,
+          );
         },
       ),
     );

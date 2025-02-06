@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 
-import '../../providers/auth_provider.dart';
 import '../../widgets/custom_button.dart';
 import '../main_screen.dart';
 
@@ -27,8 +25,6 @@ class _BasicPersonalDetailsState extends State<BasicPersonalDetails> {
 
   void _saveDetails() {
     if (_formKey.currentState!.validate()) {
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
-
       // Update patient profile
 
       // Navigate to main screen

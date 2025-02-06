@@ -11,7 +11,6 @@ class SuperPatientProvider extends ChangeNotifier {
   bool _isLoading = false;
   String? _error;
 
-// Getters
   List<Patient> get patients => _patients;
 
   Patient? get selectedPatient => _selectedPatient;
@@ -20,7 +19,6 @@ class SuperPatientProvider extends ChangeNotifier {
 
   String? get error => _error;
 
-// Methods
   void setLoading(bool loading) {
     _isLoading = loading;
     notifyListeners();
@@ -61,7 +59,6 @@ class SuperPatientProvider extends ChangeNotifier {
             ),
           ],
         ),
-        // Add more dummy patients
       ];
       notifyListeners();
     } catch (e) {

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:therapy/screens/patient_screen/report_screen.dart';
 import 'package:therapy/widgets/custom_profile_screen.dart';
+
+import 'medical_history.dart';
 
 class PatientSettingsScreen extends StatelessWidget {
   const PatientSettingsScreen({super.key});
@@ -84,7 +87,13 @@ class PatientSettingsScreen extends StatelessWidget {
             _buildMenuItem(
               icon: Icons.history,
               title: 'Medical History',
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const MedicalHistory()),
+                );
+              },
             ),
             SizedBox(
               height: 12,
@@ -100,7 +109,12 @@ class PatientSettingsScreen extends StatelessWidget {
             _buildMenuItem(
               icon: Icons.report_problem,
               title: 'Report a Problem',
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ReportScreen()),
+                );
+              },
             ),
           ],
         ),
