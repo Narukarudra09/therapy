@@ -56,22 +56,21 @@ class _BloodGroupState extends State<BloodGroup> {
         ],
       ),
       body: ListView.builder(
+        physics: NeverScrollableScrollPhysics(),
         padding: EdgeInsets.only(top: 16, left: 20, right: 20),
         itemCount: bloodGroups.length,
         itemBuilder: (context, index) {
-          return Card(
-            child: RadioListTile<String>(
-              title: Text(bloodGroups[index]),
-              value: bloodGroups[index],
-              groupValue: selectedBloodGroup,
-              activeColor: Color.fromARGB(255, 65, 184, 119),
-              onChanged: (String? value) {
-                setState(() {
-                  selectedBloodGroup = value;
-                });
-              },
-              controlAffinity: ListTileControlAffinity.trailing,
-            ),
+          return RadioListTile<String>(
+            title: Text(bloodGroups[index]),
+            value: bloodGroups[index],
+            groupValue: selectedBloodGroup,
+            activeColor: Color.fromARGB(255, 65, 184, 119),
+            onChanged: (String? value) {
+              setState(() {
+                selectedBloodGroup = value;
+              });
+            },
+            controlAffinity: ListTileControlAffinity.trailing,
           );
         },
       ),
