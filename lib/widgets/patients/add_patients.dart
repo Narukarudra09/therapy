@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'package:therapy/models/patient.dart';
-import 'package:therapy/providers/super_patient_provider.dart';
 import 'package:therapy/widgets/patients/add_allergies.dart';
+
+import '../../state_controllers/super_patient_controller.dart';
 
 class AddPatients extends StatefulWidget {
   const AddPatients({super.key});
@@ -43,9 +44,8 @@ class _AddPatientsState extends State<AddPatients> {
         gender: '',
       );
 
-      Provider.of<SuperPatientProvider>(context, listen: false)
-          .addPatient(newPatient);
-      Navigator.of(context).pop(); // Navigate back after saving
+      Get.find<SuperPatientController>().addPatient(newPatient);
+      Get.back(); // Navigate back after saving
     }
   }
 
@@ -389,12 +389,7 @@ class _AddPatientsState extends State<AddPatients> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => AddAllergies(),
-                                ),
-                              ).then((value) {
+                              Get.to(() => AddAllergies())?.then((value) {
                                 if (value != null && value is List<String>) {
                                   setState(() {
                                     selectedAllergies = value;

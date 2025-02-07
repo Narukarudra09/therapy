@@ -1,38 +1,26 @@
-import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../models/medical_record.dart';
 import '../models/patient.dart';
 import '../models/payment.dart';
 import '../models/therapy_session.dart';
 
-class SuperPatientProvider extends ChangeNotifier {
-  List<Patient> _patients = [];
-  Patient? _selectedPatient;
-  bool _isLoading = false;
-  String? _error;
-
-  List<Patient> get patients => _patients;
-
-  Patient? get selectedPatient => _selectedPatient;
-
-  bool get isLoading => _isLoading;
-
-  String? get error => _error;
+class SuperPatientController extends GetxController {
+  var patients = <Patient>[].obs;
+  var selectedPatient = Rxn<Patient>();
+  var isLoading = false.obs;
+  var error = ''.obs;
 
   void setLoading(bool loading) {
-    _isLoading = loading;
-    notifyListeners();
+    isLoading(loading);
   }
 
-  void setError(String? error) {
-    _error = error;
-    notifyListeners();
+  void setError(String? errorMessage) {
+    error(errorMessage ?? '');
   }
 
   void selectPatient(String patientId) {
-    _selectedPatient =
-        _patients.firstWhere((patient) => patient.id == patientId);
-    notifyListeners();
+    selectedPatient(patients.firstWhere((patient) => patient.id == patientId));
   }
 
   Future<void> fetchPatients() async {
@@ -40,7 +28,7 @@ class SuperPatientProvider extends ChangeNotifier {
     setError(null);
 
     try {
-      _patients = [
+      patients.assignAll([
         Patient(
           id: '1',
           name: 'Rudrapratap Singh Naruka',
@@ -59,8 +47,7 @@ class SuperPatientProvider extends ChangeNotifier {
             ),
           ],
         ),
-      ];
-      notifyListeners();
+      ]);
     } catch (e) {
       setError(e.toString());
     } finally {
@@ -73,8 +60,7 @@ class SuperPatientProvider extends ChangeNotifier {
     setError(null);
 
     try {
-      _patients.add(patient);
-      notifyListeners();
+      patients.add(patient);
     } catch (e) {
       setError(e.toString());
     } finally {
@@ -87,13 +73,12 @@ class SuperPatientProvider extends ChangeNotifier {
     setError(null);
 
     try {
-      final index = _patients.indexWhere((p) => p.id == patient.id);
+      final index = patients.indexWhere((p) => p.id == patient.id);
       if (index != -1) {
-        _patients[index] = patient;
-        if (_selectedPatient?.id == patient.id) {
-          _selectedPatient = patient;
+        patients[index] = patient;
+        if (selectedPatient.value?.id == patient.id) {
+          selectedPatient(patient);
         }
-        notifyListeners();
       }
     } catch (e) {
       setError(e.toString());
@@ -107,7 +92,7 @@ class SuperPatientProvider extends ChangeNotifier {
     setError(null);
 
     try {
-      final patient = _patients.firstWhere((p) => p.id == patientId);
+      final patient = patients.firstWhere((p) => p.id == patientId);
       final updatedPatient = patient.copyWith(
         allergies: [...patient.allergies, allergy],
       );
@@ -125,7 +110,7 @@ class SuperPatientProvider extends ChangeNotifier {
     setError(null);
 
     try {
-      final patient = _patients.firstWhere((p) => p.id == patientId);
+      final patient = patients.firstWhere((p) => p.id == patientId);
       final updatedPatient = patient.copyWith(
         therapySessions: [...patient.therapySessions, session],
       );
@@ -142,7 +127,7 @@ class SuperPatientProvider extends ChangeNotifier {
     setError(null);
 
     try {
-      final patient = _patients.firstWhere((p) => p.id == patientId);
+      final patient = patients.firstWhere((p) => p.id == patientId);
       final updatedPatient = patient.copyWith(
         payments: [...patient.payments, payment],
       );

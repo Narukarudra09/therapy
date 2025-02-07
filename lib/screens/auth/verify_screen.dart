@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'package:therapy/screens/auth/basic_patient_detail.dart';
 import 'package:therapy/screens/auth/login_screen.dart';
 import 'package:therapy/screens/main_screen.dart';
@@ -9,7 +9,7 @@ import 'package:therapy/widgets/custom_button.dart';
 import 'package:therapy/widgets/verify_otp.dart';
 
 import '../../models/user_role.dart';
-import '../../providers/auth_provider.dart';
+import '../../state_controllers/auth_controller.dart';
 
 class VerifyScreen extends StatefulWidget {
   final String phoneNumber;
@@ -26,34 +26,32 @@ class _VerifyScreenState extends State<VerifyScreen> {
   final _otpController = TextEditingController();
 
   void _verifyOtp() async {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final authController = Get.find<AuthController>();
 
     try {
-      bool isVerified = await authProvider.verifyOtp(
+      bool isVerified = await authController.verifyOtp(
           phoneNumber: widget.phoneNumber,
           otp: _otpController.text,
           role: widget.selectedRole);
 
       if (isVerified) {
-        if (widget.selectedRole == UserRole.patient) {
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (_) => BasicPersonalDetails(),
-          ));
+        if (widget.selectedRole == UserRole.patient ||
+            widget.selectedRole == UserRole.therapist) {
+          Get.off(() => BasicPersonalDetails());
         } else {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-                builder: (_) => MainScreen(
-                      patientName: '',
-                    )),
-          );
+          Get.off(() => MainScreen(patientName: ''));
         }
       } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Invalid OTP')));
+        Get.snackbar('Error', 'Invalid OTP',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: Colors.white);
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Verification failed: ${e.toString()}')));
+      Get.snackbar('Error', 'Verification failed: ${e.toString()}',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
     }
   }
 
@@ -106,12 +104,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                 const SizedBox(width: 6),
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => LoginScreen(),
-                      ),
-                    );
+                    Get.off(() => LoginScreen());
                   },
                   child: Text(
                     "Change",

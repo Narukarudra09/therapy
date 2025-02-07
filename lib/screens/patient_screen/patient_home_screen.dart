@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:therapy/widgets/custom_appbar.dart';
 import 'package:therapy/widgets/therapy_session_card.dart';
 
 class PatientHomeScreen extends StatelessWidget {
@@ -13,49 +13,7 @@ class PatientHomeScreen extends StatelessWidget {
     int completedDays = 4;
     int totalDays = 15;
     return Scaffold(
-      appBar: AppBar(
-        title: Column(
-          spacing: 4,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              spacing: 4,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  "assets/logoG.svg",
-                  width: 17,
-                ),
-                Text(
-                  "Therapy",
-                  style: GoogleFonts.poppins(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: const Color.fromARGB(255, 6, 57, 24),
-                  ),
-                ),
-              ],
-            ),
-            Text(
-              "Welcome",
-              style: GoogleFonts.sora(
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-                color: const Color.fromARGB(255, 81, 92, 104),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          GestureDetector(
-              child: CircleAvatar(
-            backgroundImage: AssetImage("assets/profile.png"),
-          )),
-          SizedBox(
-            width: 20,
-          ),
-        ],
-      ),
+      appBar: CustomAppBar(),
       body: Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 24),
         child: SingleChildScrollView(

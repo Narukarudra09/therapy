@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'package:therapy/screens/auth/verify_screen.dart';
 import 'package:therapy/widgets/custom_button.dart';
 
 import '../../models/user_role.dart';
-import '../../providers/auth_provider.dart';
+import '../../state_controllers/auth_controller.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -37,22 +37,23 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _handleLogin() async {
     if (_formKey.currentState!.validate()) {
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final authController = Get.find<AuthController>();
 
       UserRole selectedRole = _mapStringToUserRole(_selectedRole);
 
-      bool success = await authProvider.login(
+      bool success = await authController.login(
           selectedRole, _phoneController.text.toString());
 
       if (success) {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (_) => VerifyScreen(
-                phoneNumber: _phoneController.text.toString(),
-                selectedRole: selectedRole)));
+        Get.off(() => VerifyScreen(
+            phoneNumber: _phoneController.text.toString(),
+            selectedRole: selectedRole));
       } else {
         // Show error message
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Login Failed')));
+        Get.snackbar('Error', 'Login Failed',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: Colors.white);
       }
     }
   }

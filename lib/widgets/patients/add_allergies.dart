@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-import 'package:therapy/providers/super_patient_provider.dart';
 import 'package:therapy/widgets/custom_add_button.dart';
+
+import '../../state_controllers/super_patient_controller.dart';
 
 class AddAllergies extends StatefulWidget {
   const AddAllergies({super.key});
@@ -42,16 +43,14 @@ class _AddAllergiesState extends State<AddAllergies> {
         .map((entry) => allergies[entry.key])
         .toList();
 
-    final patientId = Provider.of<SuperPatientProvider>(context, listen: false)
-        .selectedPatient
-        ?.id;
+    final patientId =
+        Get.find<SuperPatientController>().selectedPatient.value?.id;
 
     if (patientId != null) {
       for (var allergy in selected) {
-        Provider.of<SuperPatientProvider>(context, listen: false)
-            .addAllergy(patientId, allergy);
+        Get.find<SuperPatientController>().addAllergy(patientId, allergy);
       }
-      Navigator.of(context).pop(); // Navigate back after saving
+      Get.back(); // Navigate back after saving
     }
   }
 
@@ -164,7 +163,7 @@ class _AddAllergiesState extends State<AddAllergies> {
                         actions: <Widget>[
                           GestureDetector(
                             onTap: () {
-                              Navigator.of(context).pop();
+                              Get.back();
                             },
                             child: Container(
                               width: 162,
@@ -192,7 +191,7 @@ class _AddAllergiesState extends State<AddAllergies> {
                                   selectedAllergies.add(true);
                                 });
                               }
-                              Navigator.of(context).pop();
+                              Get.back();
                             },
                             child: Container(
                               width: 162,

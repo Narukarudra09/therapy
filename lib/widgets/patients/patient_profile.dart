@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 
-import '../../providers/super_patient_provider.dart';
+import '../../state_controllers/super_patient_controller.dart';
 
 class PatientProfile extends StatelessWidget {
+  const PatientProfile({super.key});
+
   @override
   Widget build(BuildContext context) {
-    final patient = Provider.of<SuperPatientProvider>(context).selectedPatient;
+    final patient = Get.find<SuperPatientController>().selectedPatient.value;
 
     if (patient == null) {
       return Scaffold(

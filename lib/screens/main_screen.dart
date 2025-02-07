@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'package:therapy/screens/patient_screen/patient_home_screen.dart';
 import 'package:therapy/screens/patient_screen/patient_payment_screen.dart';
 import 'package:therapy/screens/patient_screen/patient_settings_screen.dart';
@@ -9,10 +9,13 @@ import 'package:therapy/screens/super_admin_screens/super_centers_screen.dart';
 import 'package:therapy/screens/super_admin_screens/super_patient_screen.dart';
 import 'package:therapy/screens/super_admin_screens/super_payment_screen.dart';
 import 'package:therapy/screens/super_admin_screens/super_therapist_screen.dart';
-
+import 'package:therapy/screens/therapist_screen/therapist_daily_data_screen.dart';
+import 'package:therapy/screens/therapist_screen/therapist_patient_screen.dart';
+import 'package:therapy/screens/therapist_screen/therapist_payment_screen.dart';
+import 'package:therapy/screens/therapist_screen/therapist_settings_screen.dart';
 import '../models/user_role.dart';
-import '../providers/auth_provider.dart';
-import '../providers/navigation_provider.dart';
+import '../state_controllers/auth_controller.dart';
+import '../state_controllers/navigation_controller.dart';
 import 'center_owner_screens/center_daily_data_screen.dart';
 import 'center_owner_screens/center_patient_screen.dart';
 import 'center_owner_screens/center_payment_screen.dart';
@@ -25,26 +28,24 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
+    final authController = Get.find<AuthController>();
+    final navController = Get.find<NavigationController>();
+
     return Scaffold(
-      body: Consumer<NavigationProvider>(
-        builder: (context, navProvider, child) {
-          return _buildDashboardForRole(
-            context,
-            authProvider.selectedUser!.role,
-            navProvider.currentIndex,
-          );
-        },
-      ),
-      bottomNavigationBar: Consumer<NavigationProvider>(
-        builder: (context, navProvider, child) {
-          return _buildBottomNavigationBar(
-            context,
-            authProvider.selectedUser!.role,
-            navProvider.currentIndex,
-          );
-        },
-      ),
+      body: Obx(() {
+        return _buildDashboardForRole(
+          context,
+          authController.selectedUser.value!.role,
+          navController.currentIndex.value,
+        );
+      }),
+      bottomNavigationBar: Obx(() {
+        return _buildBottomNavigationBar(
+          context,
+          authController.selectedUser.value!.role,
+          navController.currentIndex.value,
+        );
+      }),
     );
   }
 
@@ -59,12 +60,18 @@ class MainScreen extends StatelessWidget {
           SuperCentersScreen()
         ][currentIndex];
       case UserRole.centerOwner:
-      case UserRole.therapist:
         return [
           CenterDailyDataScreen(),
           CenterPatientScreen(),
           CenterPaymentScreen(),
           CenterSettingsScreen()
+        ][currentIndex];
+      case UserRole.therapist:
+        return [
+          TherapistDailyDataScreen(),
+          TherapistPatientScreen(),
+          TherapistPaymentScreen(),
+          TherapistSettingsScreen()
         ][currentIndex];
       case UserRole.patient:
         return [
@@ -78,7 +85,7 @@ class MainScreen extends StatelessWidget {
 
   Widget _buildBottomNavigationBar(
       BuildContext context, UserRole role, int currentIndex) {
-    final navProvider = Provider.of<NavigationProvider>(context, listen: false);
+    final navController = Get.find<NavigationController>();
 
     List<BottomNavigationBarItem> getNavItems(UserRole role) {
       switch (role) {
@@ -132,7 +139,7 @@ class MainScreen extends StatelessWidget {
           color: Color.fromARGB(255, 65, 184, 119)),
       currentIndex: currentIndex,
       type: BottomNavigationBarType.fixed,
-      onTap: (index) => navProvider.updateIndex(index),
+      onTap: (index) => navController.updateIndex(index),
       items: getNavItems(role),
     );
   }

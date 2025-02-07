@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:therapy/screens/patient_screen/report_screen.dart';
+import 'package:therapy/widgets/custom_appbar.dart';
 import 'package:therapy/widgets/custom_profile_screen.dart';
 
 import 'medical_history.dart';
@@ -12,49 +12,7 @@ class PatientSettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Column(
-          spacing: 4,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              spacing: 4,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  "assets/logoG.svg",
-                  width: 17,
-                ),
-                Text(
-                  "Therapy",
-                  style: GoogleFonts.poppins(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: const Color.fromARGB(255, 6, 57, 24),
-                  ),
-                ),
-              ],
-            ),
-            Text(
-              "Welcome",
-              style: GoogleFonts.sora(
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-                color: const Color.fromARGB(255, 81, 92, 104),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          GestureDetector(
-              child: CircleAvatar(
-            backgroundImage: AssetImage("assets/profile.png"),
-          )),
-          SizedBox(
-            width: 20,
-          ),
-        ],
-      ),
+      appBar: CustomAppBar(),
       body: Padding(
         padding: EdgeInsets.only(top: 24, left: 20, right: 20),
         child: Column(

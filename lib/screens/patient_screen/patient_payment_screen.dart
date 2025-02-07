@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:therapy/widgets/custom_appbar.dart';
 
 class PatientPaymentScreen extends StatelessWidget {
   const PatientPaymentScreen({super.key});
@@ -9,49 +9,7 @@ class PatientPaymentScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isDebit = false;
     return Scaffold(
-      appBar: AppBar(
-        title: Column(
-          spacing: 4,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              spacing: 4,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  "assets/logoG.svg",
-                  width: 17,
-                ),
-                Text(
-                  "Therapy",
-                  style: GoogleFonts.poppins(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: const Color.fromARGB(255, 6, 57, 24),
-                  ),
-                ),
-              ],
-            ),
-            Text(
-              "Welcom",
-              style: GoogleFonts.sora(
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-                color: const Color.fromARGB(255, 81, 92, 104),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          GestureDetector(
-              child: CircleAvatar(
-            backgroundImage: AssetImage("assets/profile.png"),
-          )),
-          SizedBox(
-            width: 20,
-          ),
-        ],
-      ),
+      appBar: CustomAppBar(),
       body: Padding(
         padding: EdgeInsets.only(top: 16, left: 20, right: 20),
         child: SingleChildScrollView(
