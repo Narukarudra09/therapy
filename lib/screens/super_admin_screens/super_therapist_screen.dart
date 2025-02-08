@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:therapy/widgets/therapist/add_therapist.dart';
 
@@ -55,16 +56,14 @@ class _SuperTherapistsScreenState extends State<SuperTherapistsScreen> {
                         fontWeight: FontWeight.w700,
                         color: const Color.fromARGB(255, 24, 8, 41),
                       ),
+                      overflow: TextOverflow.ellipsis,
                       softWrap: true,
                     ),
                   ),
                   CustomAddButton(
                     title: "Add Center Member",
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => AddTherapist()),
-                      );
+                      Get.to(AddTherapist());
                     },
                   ),
                 ],
@@ -81,15 +80,10 @@ class _SuperTherapistsScreenState extends State<SuperTherapistsScreen> {
                     title: names[index],
                     subtitle: roles[index],
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => TherapistProfile(
-                            therapistName: names[index],
-                            role: roles[index],
-                          ),
-                        ),
-                      );
+                      Get.to(TherapistProfile(
+                        therapistName: names[index],
+                        role: roles[index],
+                      ));
                     },
                   );
                 },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../widgets/custom_button.dart';
@@ -20,21 +21,11 @@ class _BasicPersonalDetailsState extends State<BasicPersonalDetails> {
   @override
   void initState() {
     super.initState();
-    // Initialize controllers with existing data if available
   }
 
   void _saveDetails() {
     if (_formKey.currentState!.validate()) {
-      // Update patient profile
-
-      // Navigate to main screen
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => MainScreen(
-            patientName: '',
-          ),
-        ),
-      );
+      Get.off(MainScreen(patientName: ''));
     }
   }
 
@@ -122,12 +113,7 @@ class _BasicPersonalDetailsState extends State<BasicPersonalDetails> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                      builder: (_) => MainScreen(
-                            patientName: '',
-                          )),
-                );
+                Get.off(MainScreen(patientName: ''));
               },
               child: Text(
                 "Skip",

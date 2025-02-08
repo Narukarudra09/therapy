@@ -143,12 +143,15 @@ class TherapistDailyDataScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "Today's Record",
-                    style: GoogleFonts.inter(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: const Color.fromARGB(255, 24, 8, 41),
+                  Flexible(
+                    child: Text(
+                      "Today's Record",
+                      style: GoogleFonts.inter(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                        color: const Color.fromARGB(255, 24, 8, 41),
+                      ),
+                      softWrap: true,
                     ),
                   ),
                   CustomAddButton(

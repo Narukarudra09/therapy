@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../widgets/center/add_therapy_center.dart';
@@ -37,10 +38,7 @@ class SuperCentersScreen extends StatelessWidget {
                   CustomAddButton(
                     title: "Create Therapy Center",
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ProfileDetailsPage()));
+                      Get.to(ProfileDetailsPage());
                     },
                   ),
                 ],
@@ -53,42 +51,7 @@ class SuperCentersScreen extends StatelessWidget {
                 itemCount: 7,
                 shrinkWrap: true,
                 itemBuilder: (BuildContext context, int index) {
-                  return /*Card(
-                    margin: EdgeInsets.symmetric(vertical: 8),
-                    child: ListTile(
-                      tileColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          color: Color(0xFFEBF6ED),
-                        ),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.asset(
-                          "assets/X-ray.png",
-                          fit: BoxFit.cover,
-                          height: 80,
-                          width: 80,
-                        ),
-                      ),
-                      title: Text(title),
-                      titleTextStyle: GoogleFonts.inter(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: const Color.fromARGB(255, 8, 12, 62),
-                      ),
-                      contentPadding: EdgeInsets.zero,
-                      subtitle: Text(subTitle),
-                      subtitleTextStyle: GoogleFonts.inter(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: const Color.fromARGB(255, 147, 158, 170),
-                      ),
-                      onTap: () {},
-                    ),
-                  );*/
-                      Container(
+                  return Container(
                     margin: EdgeInsets.only(bottom: 16),
                     decoration: BoxDecoration(
                       color: Colors.white,

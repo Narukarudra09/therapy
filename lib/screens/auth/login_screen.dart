@@ -168,12 +168,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 items: ['Super Admin', 'Center Owner', 'Therapist', 'Patient']
                     .map((role) => DropdownMenuItem(
                           value: role,
-                          child: Text(
-                            role,
-                            style: GoogleFonts.inter(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                              color: const Color.fromARGB(255, 73, 13, 140),
+                          child: FittedBox(
+                            child: Text(
+                              role,
+                              style: GoogleFonts.inter(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700,
+                                color: const Color.fromARGB(255, 73, 13, 140),
+                              ),
                             ),
                           ),
                         ))

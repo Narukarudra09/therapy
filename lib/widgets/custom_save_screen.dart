@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:therapy/screens/main_screen.dart';
 
@@ -54,10 +55,7 @@ class SuccessScreen extends StatelessWidget {
             const SizedBox(height: 40),
             TextButton.icon(
               onPressed: () {
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => MainScreen(patientName: '')));
+                Get.off(MainScreen(patientName: ""));
               },
               icon: const Icon(
                 size: 30,

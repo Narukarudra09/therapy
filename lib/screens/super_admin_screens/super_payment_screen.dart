@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../widgets/custom_add_button.dart';
@@ -30,12 +31,7 @@ class _SuperPaymentsScreenState extends State<SuperPaymentsScreen> {
           CustomAddButton(
             title: "Record Payment",
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => RecordPayment(),
-                ),
-              );
+              Get.to(RecordPayment());
             },
           ),
           SizedBox(

@@ -55,6 +55,7 @@ class _SuperPatientScreenState extends State<SuperPatientScreen> {
                         fontWeight: FontWeight.w700,
                         color: const Color.fromARGB(255, 24, 8, 41),
                       ),
+                      softWrap: true,
                     ),
                     CustomAddButton(
                       title: "Add Patients",

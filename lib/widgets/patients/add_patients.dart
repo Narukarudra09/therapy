@@ -254,12 +254,14 @@ class _AddPatientsState extends State<AddPatients> {
                   items: ['Bhilwara']
                       .map((role) => DropdownMenuItem(
                             value: role,
-                            child: Text(
-                              role,
-                              style: GoogleFonts.inter(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                                color: Color(0xFF2E2C34),
+                            child: FittedBox(
+                              child: Text(
+                                role,
+                                style: GoogleFonts.inter(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF2E2C34),
+                                ),
                               ),
                             ),
                           ))
@@ -320,12 +322,14 @@ class _AddPatientsState extends State<AddPatients> {
                   items: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
                       .map((role) => DropdownMenuItem(
                             value: role,
-                            child: Text(
-                              role,
-                              style: GoogleFonts.inter(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xFF2E2C34),
+                            child: FittedBox(
+                              child: Text(
+                                role,
+                                style: GoogleFonts.inter(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Color(0xFF2E2C34),
+                                ),
                               ),
                             ),
                           ))

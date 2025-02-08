@@ -105,7 +105,7 @@ class _ReportScreenState extends State<ReportScreen> {
               ].map((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
-                  child: Text(value),
+                  child: FittedBox(child: Text(value)),
                 );
               }).toList(),
               onChanged: (_) {},

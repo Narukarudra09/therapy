@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:therapy/screens/patient_screen/report_screen.dart';
 import 'package:therapy/widgets/custom_appbar.dart';
@@ -33,10 +34,7 @@ class PatientSettingsScreen extends StatelessWidget {
               icon: Icons.person,
               title: 'Profile',
               onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CustomProfileScreen()));
+                Get.to(CustomProfileScreen());
               },
             ),
             SizedBox(
@@ -46,11 +44,7 @@ class PatientSettingsScreen extends StatelessWidget {
               icon: Icons.history,
               title: 'Medical History',
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const MedicalHistory()),
-                );
+                Get.to(MedicalHistory());
               },
             ),
             SizedBox(
@@ -68,10 +62,7 @@ class PatientSettingsScreen extends StatelessWidget {
               icon: Icons.report_problem,
               title: 'Report a Problem',
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ReportScreen()),
-                );
+                Get.to(ReportScreen());
               },
             ),
           ],

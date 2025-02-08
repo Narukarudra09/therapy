@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';import 'package:therapy/screens/patient_screen/update_phone_number.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:therapy/screens/patient_screen/update_phone_number.dart';
 
 class CustomProfileScreen extends StatefulWidget {
   const CustomProfileScreen({super.key});
@@ -217,7 +218,7 @@ class _CustomProfileScreenState extends State<CustomProfileScreen> {
                 items: ['Bhilwara', 'Jaipur'].map((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child: Text(value),
+                    child: FittedBox(child: Text(value)),
                   );
                 }).toList(),
                 onChanged: (_) {},

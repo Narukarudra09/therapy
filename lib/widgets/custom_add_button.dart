@@ -40,6 +40,8 @@ class CustomAddButton extends StatelessWidget {
               fontWeight: FontWeight.w700,
               color: const Color.fromARGB(255, 73, 13, 140),
             ),
+            softWrap: true,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

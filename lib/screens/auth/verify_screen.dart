@@ -65,87 +65,89 @@ class _VerifyScreenState extends State<VerifyScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                SvgPicture.asset("assets/logoG.svg"),
-                const SizedBox(width: 6),
-                Text(
-                  "Therapy",
-                  style: GoogleFonts.poppins(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: Color.fromARGB(255, 6, 57, 24),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              "OTP Verification",
-              style: GoogleFonts.inter(
-                fontSize: 28,
-                fontWeight: FontWeight.w700,
-                color: Color.fromARGB(255, 23, 28, 34),
-              ),
-            ),
-            Row(
-              children: [
-                Text(
-                  widget.phoneNumber,
-                  style: GoogleFonts.inter(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Color.fromARGB(255, 27, 25, 75),
-                  ),
-                ),
-                const SizedBox(width: 6),
-                GestureDetector(
-                  onTap: () {
-                    Get.off(() => LoginScreen());
-                  },
-                  child: Text(
-                    "Change",
-                    style: GoogleFonts.inter(
-                      fontSize: 16,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  SvgPicture.asset("assets/logoG.svg"),
+                  const SizedBox(width: 6),
+                  Text(
+                    "Therapy",
+                    style: GoogleFonts.poppins(
+                      fontSize: 18,
                       fontWeight: FontWeight.w700,
-                      color: Color.fromARGB(255, 65, 184, 119),
+                      color: Color.fromARGB(255, 6, 57, 24),
                     ),
                   ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Text(
+                "OTP Verification",
+                style: GoogleFonts.inter(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w700,
+                  color: Color.fromARGB(255, 23, 28, 34),
                 ),
-              ],
-            ),
-            const SizedBox(height: 43),
-            Row(
-              children: [
-                Text(
-                  "ENTER OTP",
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: Color.fromARGB(255, 135, 141, 186),
+              ),
+              Row(
+                children: [
+                  Text(
+                    widget.phoneNumber,
+                    style: GoogleFonts.inter(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Color.fromARGB(255, 27, 25, 75),
+                    ),
                   ),
-                ),
-                Text(
-                  "*",
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: Color.fromARGB(255, 255, 43, 43),
+                  const SizedBox(width: 6),
+                  GestureDetector(
+                    onTap: () {
+                      Get.off(() => LoginScreen());
+                    },
+                    child: Text(
+                      "Change",
+                      style: GoogleFonts.inter(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: Color.fromARGB(255, 65, 184, 119),
+                      ),
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            VerifyOtp(controller: _otpController),
-            const SizedBox(height: 52),
-            CustomButton(
-              title: "Verify",
-              onTap: _verifyOtp,
-            )
-          ],
+                ],
+              ),
+              const SizedBox(height: 43),
+              Row(
+                children: [
+                  Text(
+                    "ENTER OTP",
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: Color.fromARGB(255, 135, 141, 186),
+                    ),
+                  ),
+                  Text(
+                    "*",
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: Color.fromARGB(255, 255, 43, 43),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              VerifyOtp(controller: _otpController),
+              const SizedBox(height: 52),
+              CustomButton(
+                title: "Verify",
+                onTap: _verifyOtp,
+              )
+            ],
+          ),
         ),
       ),
     );
