@@ -12,12 +12,12 @@ class AddRecordScreen extends StatefulWidget {
 class _AddRecordScreenState extends State<AddRecordScreen> {
   final TextEditingController _patientNameController = TextEditingController();
   final TextEditingController _givenByController = TextEditingController();
-  String _selectedTherapy = 'Select';
+  String _selectedTherapy = 'Physical Therapy';
+
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
 
   final List<String> therapies = [
-    'Select', // Add a default option
     'Physical Therapy',
     'Occupational Therapy',
     'Speech Therapy',
@@ -173,7 +173,7 @@ class _AddRecordScreenState extends State<AddRecordScreen> {
                 items: therapies.map((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child: Text(value),
+                    child: FittedBox(child: Text(value)),
                   );
                 }).toList(),
                 onChanged: (String? newValue) {
@@ -193,6 +193,72 @@ class _AddRecordScreenState extends State<AddRecordScreen> {
                           initialDate: _selectedDate,
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2101),
+                          builder: (context, child) {
+                            return Theme(
+                              data: Theme.of(context).copyWith(
+                                colorScheme: ColorScheme.light(
+                                  primary: Colors.green.shade400,
+                                  // Selected date color
+                                  onPrimary: Colors.white,
+                                  // Selected date text color
+                                  onSurface:
+                                      Colors.black, // Calendar text color
+                                ),
+                                textButtonTheme: TextButtonThemeData(
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: Colors
+                                        .green.shade400, // Button text color
+                                  ),
+                                ),
+                                datePickerTheme: DatePickerThemeData(
+                                  backgroundColor: Colors.white,
+                                  headerBackgroundColor: Colors.white,
+                                  headerForegroundColor: Colors.black,
+                                  headerHeadlineStyle: const TextStyle(
+                                    fontSize: 32,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                  weekdayStyle: const TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: 15,
+                                  ),
+                                  dayStyle: const TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                  todayBorder: BorderSide(
+                                    color: Colors.green.shade400,
+                                    width: 1,
+                                  ),
+                                  // Shape of the date picker dialog
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(28),
+                                  ),
+                                  // Shape of the selected date
+                                  dayBackgroundColor:
+                                      WidgetStateProperty.resolveWith((states) {
+                                    if (states.contains(WidgetState.selected)) {
+                                      return Colors.green.shade400;
+                                    }
+                                    return null;
+                                  }),
+                                  // Shape of today's date
+                                  todayBackgroundColor:
+                                      WidgetStateProperty.resolveWith((states) {
+                                    if (states.contains(WidgetState.selected)) {
+                                      return Colors.green.shade400;
+                                    }
+                                    return Colors.transparent;
+                                  }),
+                                ),
+                                dialogTheme: DialogTheme(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(28),
+                                  ),
+                                ),
+                              ),
+                              child: child!,
+                            );
+                          },
                         );
                         if (picked != null && picked != _selectedDate) {
                           setState(() {
@@ -211,12 +277,14 @@ class _AddRecordScreenState extends State<AddRecordScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              "${_selectedDate.toLocal()}".split(' ')[0],
-                              style: GoogleFonts.inter(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: const Color.fromARGB(255, 46, 44, 52),
+                            Flexible(
+                              child: Text(
+                                "${_selectedDate.toLocal()}".split(' ')[0],
+                                style: GoogleFonts.inter(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: const Color.fromARGB(255, 46, 44, 52),
+                                ),
                               ),
                             ),
                             Icon(
