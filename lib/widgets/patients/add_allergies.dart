@@ -58,6 +58,10 @@ class _AddAllergiesState extends State<AddAllergies> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
+        shape: UnderlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFFBFD1E3), width: 0.3)),
+        scrolledUnderElevation: 0,
         title: Text("Allergies"),
         titleTextStyle: GoogleFonts.inter(
           fontSize: 16,

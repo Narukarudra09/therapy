@@ -26,6 +26,10 @@ class _VerifyOTPState extends State<VerifyOTP> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
+        elevation: 0,
+        shape: UnderlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFFBFD1E3), width: 0.3)),
+        scrolledUnderElevation: 0,
         title: Text(
           'Verify Phone Number',
           style: GoogleFonts.inter(

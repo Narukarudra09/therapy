@@ -31,7 +31,15 @@ class _ReportScreenState extends State<ReportScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
+        shape: UnderlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFFBFD1E3), width: 0.3)),
+        scrolledUnderElevation: 0,
         title: Text("Report a Problem"),
+        titleTextStyle: GoogleFonts.inter(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: const Color(0xFF171C22)),
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 24, left: 20, right: 20),

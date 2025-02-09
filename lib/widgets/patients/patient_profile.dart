@@ -18,8 +18,8 @@ class PatientProfile extends StatelessWidget {
             "Patient Profile",
             style: GoogleFonts.inter(
               color: Color.fromARGB(255, 8, 12, 62),
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ),

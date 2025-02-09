@@ -1,42 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../models/holiday.dart';
+import '../../state_controllers/super_center_controller.dart';
 import '../custom_add_button.dart';
 
-class HolidayScreen extends StatefulWidget {
-  const HolidayScreen({super.key});
+class HolidayScreen extends StatelessWidget {
+  final SuperCenterController controller = Get.find();
 
-  @override
-  State<HolidayScreen> createState() => _HolidayScreenState();
-}
-
-class _HolidayScreenState extends State<HolidayScreen> {
-  final List<Holiday> holidays = [Holiday()];
+  HolidayScreen({super.key});
 
   void addNewHoliday() {
-    setState(() {
-      holidays.add(Holiday());
-    });
+    // Add logic to add a new holiday
+    String newDay = 'Day ${controller.holidays.length + 1}';
+    controller.holidays[newDay] = false; // Initialize as not a holiday
   }
 
-  void _selectDate(BuildContext context, int index) async {
+  void _selectDate(BuildContext context, String day) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: holidays[index].date ?? DateTime.now(),
+      initialDate: DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
-              primary: Colors.green.shade400, // Selected date color
-              onPrimary: Colors.white, // Selected date text color
-              onSurface: Colors.black, // Calendar text color
+              primary: Colors.green.shade400,
+              onPrimary: Colors.white,
+              onSurface: Colors.black,
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                foregroundColor: Colors.green.shade400, // Button text color
+                foregroundColor: Colors.green.shade400,
               ),
             ),
             datePickerTheme: DatePickerThemeData(
@@ -58,18 +54,15 @@ class _HolidayScreenState extends State<HolidayScreen> {
                 color: Colors.green.shade400,
                 width: 1,
               ),
-              // Shape of the date picker dialog
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(28),
               ),
-              // Shape of the selected date
               dayBackgroundColor: WidgetStateProperty.resolveWith((states) {
                 if (states.contains(WidgetState.selected)) {
                   return Colors.green.shade400;
                 }
                 return null;
               }),
-              // Shape of today's date
               todayBackgroundColor: WidgetStateProperty.resolveWith((states) {
                 if (states.contains(WidgetState.selected)) {
                   return Colors.green.shade400;
@@ -88,10 +81,8 @@ class _HolidayScreenState extends State<HolidayScreen> {
       },
     );
 
-    if (picked != null && picked != holidays[index].date) {
-      setState(() {
-        holidays[index].date = picked;
-      });
+    if (picked != null) {
+      controller.holidays[day] = true;
     }
   }
 
@@ -102,33 +93,41 @@ class _HolidayScreenState extends State<HolidayScreen> {
         title: const Text('Holidays'),
         titleTextStyle: GoogleFonts.inter(
           fontSize: 16,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w500,
           color: Color.fromARGB(255, 23, 28, 34),
         ),
         actions: [
-          Container(
-            margin: EdgeInsets.only(right: 20),
-            height: 30,
-            padding: EdgeInsets.symmetric(horizontal: 18),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(50),
-              color: Color.fromARGB(255, 65, 184, 119),
-            ),
-            child: Center(
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 100),
-                  // Adjust max width as needed
-                  child: Text(
-                    "Save",
-                    style: GoogleFonts.inter(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+          GestureDetector(
+            onTap: () {
+              // Save the holidays
+              controller.updateData({
+                'holidays': controller.holidays.value,
+              });
+              Get.back();
+            },
+            child: Container(
+              margin: EdgeInsets.only(right: 20),
+              height: 30,
+              padding: EdgeInsets.symmetric(horizontal: 18),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(50),
+                color: Color.fromARGB(255, 65, 184, 119),
+              ),
+              child: Center(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 100),
+                    child: Text(
+                      "Save",
+                      style: GoogleFonts.inter(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ),
@@ -141,80 +140,90 @@ class _HolidayScreenState extends State<HolidayScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: holidays.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Holiday ${index + 1}',
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          'Select Date',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 16,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        InkWell(
-                          onTap: () => _selectDate(context, index),
-                          child: Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey.shade300),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  holidays[index].date != null
-                                      ? '${holidays[index].date!.month.toString().padLeft(2, '0')}-'
-                                          '${holidays[index].date!.day.toString().padLeft(2, '0')}-'
-                                          '${holidays[index].date!.year.toString().substring(2)}'
-                                      : 'Select Date',
-                                ),
-                                const Icon(Icons.calendar_today),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          'Message',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 16,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        TextField(
-                          onChanged: (value) {
-                            holidays[index].message = value;
-                          },
-                          decoration: InputDecoration(
-                            hintText: 'Enter message',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                        ),
-                      ],
+              Obx(() {
+                if (controller.holidays.isEmpty) {
+                  return Center(
+                    child: Text(
+                      'No holidays added yet.',
+                      style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                   );
-                },
-              ),
+                }
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: controller.holidays.length,
+                  itemBuilder: (context, index) {
+                    String day = controller.holidays.keys.elementAt(index);
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Holiday ${index + 1}',
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          const Text(
+                            'Select Date',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 16,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          InkWell(
+                            onTap: () => _selectDate(context, day),
+                            child: Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey.shade300),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    controller.holidays[day] == true
+                                        ? 'Date Selected'
+                                        : 'Select Date',
+                                  ),
+                                  const Icon(Icons.calendar_today),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          const Text(
+                            'Message',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 16,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          TextField(
+                            onChanged: (value) {
+                              // Add logic to handle message change
+                            },
+                            decoration: InputDecoration(
+                              hintText: 'Enter message',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              }),
               GestureDetector(
                 onTap: addNewHoliday,
                 child: Container(

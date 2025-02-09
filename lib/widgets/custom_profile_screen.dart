@@ -16,6 +16,14 @@ class _CustomProfileScreenState extends State<CustomProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Settings"),
+        titleTextStyle: GoogleFonts.inter(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Color(0xFF171C22)),
+        elevation: 0,
+        shape: UnderlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFFBFD1E3), width: 0.3)),
+        scrolledUnderElevation: 0,
         actions: [
           InkWell(
             onTap: () {},
@@ -129,11 +137,12 @@ class _CustomProfileScreenState extends State<CustomProfileScreen> {
                     ),
                   ),
                   const SizedBox(width: 4),
-                  const Text(
+                  Text(
                     '*',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 16,
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: const Color.fromARGB(255, 255, 43, 43),
                     ),
                   ),
                 ],

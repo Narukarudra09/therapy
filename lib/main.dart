@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:therapy/screens/auth/splash_screen.dart';
 import 'package:therapy/state_controllers/auth_controller.dart';
 import 'package:therapy/state_controllers/navigation_controller.dart';
+import 'package:therapy/state_controllers/super_center_controller.dart';
 import 'package:therapy/state_controllers/super_patient_controller.dart';
 
 void main() {
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         Get.put(AuthController());
         Get.put(NavigationController());
         Get.put(SuperPatientController());
+        Get.put(SuperCenterController());
       }),
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,

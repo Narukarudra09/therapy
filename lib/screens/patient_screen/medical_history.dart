@@ -40,13 +40,16 @@ class _MedicalHistoryState extends State<MedicalHistory> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text(
+        elevation: 0,
+        shape: UnderlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFFBFD1E3), width: 0.3)),
+        scrolledUnderElevation: 0,
+        title: Text(
           'Medical History',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          style: GoogleFonts.inter(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: Color(0xFF171C22)),
         ),
         actions: [
           InkWell(
@@ -190,8 +193,8 @@ class _MedicalHistoryState extends State<MedicalHistory> {
                 Flexible(
                   child: Text(
                     title,
-                    style: const TextStyle(
-                      fontSize: 20,
+                    style: GoogleFonts.inter(
+                      fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
                     overflow: TextOverflow.ellipsis,
@@ -217,6 +220,7 @@ class _MedicalHistoryState extends State<MedicalHistory> {
   Widget _buildRecordItem(String title, String date, IconData icon,
       {Color? iconColor}) {
     return ListTile(
+      contentPadding: EdgeInsets.symmetric(horizontal: 16),
       leading: Container(
         width: 40,
         height: 40,
@@ -227,11 +231,12 @@ class _MedicalHistoryState extends State<MedicalHistory> {
         child: Icon(icon, color: iconColor),
       ),
       title: Text(title),
+      titleTextStyle: GoogleFonts.inter(
+          fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xFF2E2C34)),
       subtitle: Text(date),
-      trailing: IconButton(
-        icon: const Icon(Icons.close),
-        onPressed: () {},
-      ),
+      subtitleTextStyle:
+          GoogleFonts.inter(fontSize: 12, color: Color(0xFF939EAA)),
+      trailing: Icon(Icons.close),
     );
   }
 }

@@ -17,7 +17,7 @@ class TherapistProfile extends StatelessWidget {
           style: GoogleFonts.inter(
             color: Color.fromARGB(255, 23, 28, 34),
             fontSize: 16,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),

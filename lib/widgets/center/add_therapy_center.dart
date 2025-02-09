@@ -1,44 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../state_controllers/super_center_controller.dart';
 import 'add_working_hours.dart';
 
-class ProfileDetailsPage extends StatefulWidget {
-  const ProfileDetailsPage({super.key});
+class AddTherapyCenter extends StatelessWidget {
+  final bool isEditing;
+  final SuperCenterController controller = Get.find();
 
-  @override
-  _ProfileDetailsPageState createState() => _ProfileDetailsPageState();
-}
-
-class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
-  bool isActive = true;
-  bool isLoginAllowed = true;
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _aboutController = TextEditingController();
-  final TextEditingController _feeController = TextEditingController();
+  AddTherapyCenter({super.key, this.isEditing = false});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         title: FittedBox(
           fit: BoxFit.scaleDown,
           child: Text(
-            'Profile Details',
+            isEditing ? 'Edit Profile Details' : 'Profile Details',
             style: GoogleFonts.inter(
-              color: Colors.black,
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
+              color: Color(0xFF171C22),
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ),
         actions: [
           GestureDetector(
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => WorkingHoursPage()));
+              if (isEditing) {
+                // Save the data
+                controller.updateData({
+                  'isActive': controller.isActive.value,
+                  'isLoginAllowed': controller.isLoginAllowed.value,
+                  'email': controller.emailController.text,
+                  'phone': controller.phoneController.text,
+                  'about': controller.aboutController.text,
+                  'location': controller.locationController.text,
+                  'fee': controller.feeController.text,
+                  'holidays': controller.holidays.value,
+                  'openingTimes': controller.openingTimes.value,
+                  'closingTimes': controller.closingTimes.value,
+                });
+                Get.back();
+              } else {
+                Get.to(() => WorkingHoursScreen());
+              }
             },
             child: Container(
               margin: EdgeInsets.only(right: 20),
@@ -53,9 +61,8 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                   fit: BoxFit.scaleDown,
                   child: ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: 100),
-                    // Adjust max width as needed
                     child: Text(
-                      "Next",
+                      isEditing ? "Save" : "Next",
                       style: GoogleFonts.inter(
                         color: Colors.white,
                         fontSize: 16,
@@ -77,7 +84,6 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Profile Image
               Center(
                 child: Stack(
                   children: [
@@ -109,8 +115,6 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                 ),
               ),
               SizedBox(height: 24),
-
-              // Owner Details Section
               Text(
                 'Owner Details',
                 style: GoogleFonts.inter(
@@ -120,47 +124,45 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                 ),
               ),
               SizedBox(height: 16),
-
-              // Form Fields
               _buildFormField(
                 label: 'Center Email Address',
-                controller: _emailController,
+                controller: controller.emailController,
                 keyboardType: TextInputType.emailAddress,
               ),
               _buildFormField(
                 label: 'Center Phone Number',
-                controller: _phoneController,
+                controller: controller.phoneController,
                 keyboardType: TextInputType.phone,
               ),
               _buildFormField(
                 label: 'About',
                 maxLines: 3,
-                controller: _aboutController,
+                controller: controller.aboutController,
                 keyboardType: TextInputType.text,
               ),
               _buildDropdownField(
                 label: 'Location',
-                value: 'Bhilwara',
+                value: controller.locationController.text,
+                onChanged: (value) {
+                  controller.locationController.text = value!;
+                },
               ),
               _buildFormField(
                 label: 'Fees/Therapy',
-                controller: _feeController,
+                controller: controller.feeController,
                 keyboardType: TextInputType.number,
               ),
-
               SizedBox(height: 16),
-
-              // Toggle Switches
               _buildToggleRow(
                 'Active',
-                isActive,
-                (value) => setState(() => isActive = value),
+                controller.isActive.value,
+                (value) => controller.isActive.value = value,
                 isRequired: true,
               ),
               _buildToggleRow(
                 'Login Allowed',
-                isLoginAllowed,
-                (value) => setState(() => isLoginAllowed = value),
+                controller.isLoginAllowed.value,
+                (value) => controller.isLoginAllowed.value = value,
                 isRequired: true,
               ),
             ],
@@ -190,6 +192,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
         TextFormField(
           controller: controller,
           keyboardType: keyboardType,
+          maxLines: maxLines,
           style: GoogleFonts.inter(
             fontSize: 14,
             fontWeight: FontWeight.w500,
@@ -224,6 +227,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
   Widget _buildDropdownField({
     required String label,
     required String value,
+    required ValueChanged<String?> onChanged,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -237,6 +241,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
         ),
         SizedBox(height: 8),
         DropdownButtonFormField<String>(
+          value: value.isNotEmpty ? value : null,
           icon: Icon(Icons.keyboard_arrow_down),
           borderRadius: BorderRadius.circular(8),
           iconEnabledColor: const Color.fromARGB(255, 23, 28, 34),
@@ -281,9 +286,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                     ),
                   ))
               .toList(),
-          onChanged: (String? newValue) {
-            setState(() {});
-          },
+          onChanged: onChanged,
         ),
         SizedBox(height: 16),
       ],

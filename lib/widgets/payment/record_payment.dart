@@ -22,7 +22,7 @@ class _RecordPaymentState extends State<RecordPayment> {
           'Record Center Payment',
           style: GoogleFonts.inter(
             fontSize: 16,
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w500,
             color: const Color.fromARGB(255, 24, 8, 41),
           ),
         ),

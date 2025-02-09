@@ -16,7 +16,16 @@ class _BloodGroupState extends State<BloodGroup> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
+        shape: UnderlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFFBFD1E3), width: 0.3)),
+        scrolledUnderElevation: 0,
         title: Text("Blood Group"),
+        titleTextStyle: GoogleFonts.inter(
+          color: Color(0xFF171C22),
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+        ),
         actions: [
           InkWell(
             onTap: () {

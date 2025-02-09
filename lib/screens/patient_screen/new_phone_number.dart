@@ -37,6 +37,10 @@ class _NewPhoneNumberState extends State<NewPhoneNumber> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        elevation: 0,
+        shape: UnderlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFFBFD1E3), width: 0.3)),
+        scrolledUnderElevation: 0,
         title: Text(
           'Verify Phone Number',
           style: GoogleFonts.inter(

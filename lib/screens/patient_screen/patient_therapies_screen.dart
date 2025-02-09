@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:therapy/screens/patient_screen/view_therapist.dart';
 import 'package:therapy/widgets/custom_appbar.dart';
 
 class PatientTherapiesScreen extends StatelessWidget {
@@ -91,14 +93,19 @@ class PatientTherapiesScreen extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(height: 11),
-                              Text(
-                                "View Center",
-                                style: GoogleFonts.inter(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14,
-                                  color: Color(0xFF41B877),
-                                  decoration: TextDecoration.underline,
-                                  decorationColor: Color(0xFF41B877),
+                              GestureDetector(
+                                onTap: () {
+                                  Get.to(ViewTherapist());
+                                },
+                                child: Text(
+                                  "View Center",
+                                  style: GoogleFonts.inter(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14,
+                                    color: Color(0xFF41B877),
+                                    decoration: TextDecoration.underline,
+                                    decorationColor: Color(0xFF41B877),
+                                  ),
                                 ),
                               )
                             ],
