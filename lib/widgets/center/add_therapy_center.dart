@@ -18,7 +18,7 @@ class AddTherapyCenter extends StatelessWidget {
         title: FittedBox(
           fit: BoxFit.scaleDown,
           child: Text(
-            isEditing ? 'Edit Profile Details' : 'Profile Details',
+            'Profile Details',
             style: GoogleFonts.inter(
               color: Color(0xFF171C22),
               fontSize: 16,

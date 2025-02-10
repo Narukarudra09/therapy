@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../state_controllers/super_center_controller.dart';
 
@@ -43,27 +43,51 @@ class _WorkingHoursScreenState extends State<WorkingHoursScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
+        scrolledUnderElevation: 0,
+        shape: UnderlineInputBorder(
+          borderSide: BorderSide(color: Color(0xFFBFD1E3), width: 0.3),
         ),
         title: Text(
           'Working Hours',
-          style: TextStyle(color: Colors.black, fontSize: 20),
+          style: GoogleFonts.inter(
+            color: Color(0xFF171C22),
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              onPressed: () {
-                // Handle save
-                Navigator.pop(context);
-              },
-              child: Text('Save'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF4CD964),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+          GestureDetector(
+            onTap: () {
+              // Save the holidays
+              controller.updateData({
+                'holidays': controller.holidays.value,
+              });
+              Get.back();
+            },
+            child: Container(
+              margin: EdgeInsets.only(right: 20),
+              height: 30,
+              padding: EdgeInsets.symmetric(horizontal: 18),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(50),
+                color: Color.fromARGB(255, 65, 184, 119),
+              ),
+              child: Center(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 100),
+                    child: Text(
+                      "Save",
+                      style: GoogleFonts.inter(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -76,7 +100,7 @@ class _WorkingHoursScreenState extends State<WorkingHoursScreen> {
           final day = controller.holidays.keys.elementAt(index);
           return Padding(
             padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -85,30 +109,31 @@ class _WorkingHoursScreenState extends State<WorkingHoursScreen> {
                   children: [
                     Text(
                       day,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
+                      style: GoogleFonts.inter(
+                        color: Color(0xFF2E2C34),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                     Row(
                       children: [
                         Text(
                           'Holiday',
-                          style: TextStyle(
-                            color: Colors.purple.shade200,
-                            fontSize: 16,
+                          style: GoogleFonts.inter(
+                            color: Color(0xFF878DBA),
+                            fontSize: 14,
                           ),
                         ),
                         SizedBox(width: 8),
-                        CupertinoSwitch(
-                          value: controller.holidays[day]!,
-                          activeColor: Color(0xFF4CD964),
-                          onChanged: (bool value) {
-                            setState(() {
-                              controller.toggleHoliday(day, value);
-                            });
-                          },
-                        ),
+                        Obx(() {
+                          return Checkbox(
+                            value: controller.holidays[day]!,
+                            activeColor: Color(0xFF4CD964),
+                            onChanged: (bool? value) {
+                              controller.toggleHoliday(day, value ?? false);
+                            },
+                          );
+                        }),
                       ],
                     ),
                   ],
@@ -122,34 +147,42 @@ class _WorkingHoursScreenState extends State<WorkingHoursScreen> {
                         children: [
                           Text(
                             'Open at',
-                            style: TextStyle(
-                              color: Colors.purple.shade200,
+                            style: GoogleFonts.inter(
+                              color: Color(0xFF878DBA),
                               fontSize: 14,
                             ),
                           ),
                           SizedBox(height: 4),
-                          GestureDetector(
-                            onTap: () => _selectTime(context, day, true),
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 12),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey.shade300),
-                                borderRadius: BorderRadius.circular(8),
+                          Obx(() {
+                            return GestureDetector(
+                              onTap: controller.holidays[day]!
+                                  ? null
+                                  : () => _selectTime(context, day, true),
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 12),
+                                decoration: BoxDecoration(
+                                  border:
+                                      Border.all(color: Colors.grey.shade300),
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: controller.holidays[day]!
+                                      ? Colors.grey[100]
+                                      : Colors.white,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      '${controller.openingTimes[day]!.format(context)}',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                    Icon(Icons.access_time, color: Colors.grey),
+                                  ],
+                                ),
                               ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    '${controller.openingTimes[day]!.format(context)}',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  Icon(Icons.access_time, color: Colors.grey),
-                                ],
-                              ),
-                            ),
-                          ),
+                            );
+                          }),
                         ],
                       ),
                     ),
@@ -160,34 +193,42 @@ class _WorkingHoursScreenState extends State<WorkingHoursScreen> {
                         children: [
                           Text(
                             'Closes at',
-                            style: TextStyle(
-                              color: Colors.purple.shade200,
+                            style: GoogleFonts.inter(
+                              color: Color(0xFF878DBA),
                               fontSize: 14,
                             ),
                           ),
                           SizedBox(height: 4),
-                          GestureDetector(
-                            onTap: () => _selectTime(context, day, false),
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 12),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey.shade300),
-                                borderRadius: BorderRadius.circular(8),
+                          Obx(() {
+                            return GestureDetector(
+                              onTap: controller.holidays[day]!
+                                  ? null
+                                  : () => _selectTime(context, day, false),
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 12),
+                                decoration: BoxDecoration(
+                                  border:
+                                      Border.all(color: Colors.grey.shade300),
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: controller.holidays[day]!
+                                      ? Colors.grey[100]
+                                      : Colors.white,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      '${controller.closingTimes[day]!.format(context)}',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                    Icon(Icons.access_time, color: Colors.grey),
+                                  ],
+                                ),
                               ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    '${controller.closingTimes[day]!.format(context)}',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  Icon(Icons.access_time, color: Colors.grey),
-                                ],
-                              ),
-                            ),
-                          ),
+                            );
+                          }),
                         ],
                       ),
                     ),
