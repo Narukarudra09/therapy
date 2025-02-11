@@ -95,4 +95,8 @@ class SuperCenterController extends GetxController {
       closingTimes[day] = time;
     }
   }
+
+  void updateWorkingHour(Map<String, dynamic> data) {
+    holidays.value = Map<String, bool>.from(data['holidays'] ?? holidays);
+  }
 }

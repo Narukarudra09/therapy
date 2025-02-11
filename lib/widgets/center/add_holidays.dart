@@ -10,11 +10,7 @@ class HolidayScreen extends StatelessWidget {
 
   HolidayScreen({super.key});
 
-  void addNewHoliday() {
-    // Add logic to add a new holiday
-    String newDay = 'Day ${controller.holidays.length + 1}';
-    controller.holidays[newDay] = false; // Initialize as not a holiday
-  }
+  void addNewHoliday() {}
 
   void _selectDate(BuildContext context, String day) async {
     final DateTime? picked = await showDatePicker(

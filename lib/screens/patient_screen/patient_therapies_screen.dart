@@ -95,7 +95,9 @@ class PatientTherapiesScreen extends StatelessWidget {
                               const SizedBox(height: 11),
                               GestureDetector(
                                 onTap: () {
-                                  Get.to(ViewTherapist());
+                                  Get.to(ViewTherapist(
+                                    imageUrl: 'assets/center_profile.png',
+                                  ));
                                 },
                                 child: Text(
                                   "View Center",

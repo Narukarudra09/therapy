@@ -1,63 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:therapy/screens/patient_screen/update_phone_number.dart';
+import 'package:therapy/screens/therapist_screen/update_phone_number.dart';
 
 class CustomProfileScreen extends StatefulWidget {
-  const CustomProfileScreen({super.key});
+  final PreferredSizeWidget? appBar;
+
+  const CustomProfileScreen({super.key, required this.appBar});
 
   @override
   State<CustomProfileScreen> createState() => _CustomProfileScreenState();
 }
 
 class _CustomProfileScreenState extends State<CustomProfileScreen> {
+  final controller = TextEditingController(text: '7878404583');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Settings"),
-        titleTextStyle: GoogleFonts.inter(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: Color(0xFF171C22)),
-        elevation: 0,
-        shape: UnderlineInputBorder(
-            borderSide: BorderSide(color: Color(0xFFBFD1E3), width: 0.3)),
-        scrolledUnderElevation: 0,
-        actions: [
-          InkWell(
-            onTap: () {},
-            child: Container(
-              margin: EdgeInsets.only(right: 20),
-              height: 30,
-              padding: EdgeInsets.symmetric(horizontal: 18),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                color: Color.fromARGB(255, 65, 184, 119),
-              ),
-              child: Center(
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: 100),
-                    // Adjust max width as needed
-                    child: Text(
-                      "Save",
-                      style: GoogleFonts.inter(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+      appBar: widget.appBar,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -149,7 +110,7 @@ class _CustomProfileScreenState extends State<CustomProfileScreen> {
               ),
               const SizedBox(height: 8),
               TextFormField(
-                initialValue: '',
+                controller: controller,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -176,7 +137,9 @@ class _CustomProfileScreenState extends State<CustomProfileScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => UpdatePhoneNumber(),
+                          builder: (context) => UpdatePhoneNumber(
+                            oldNumber: controller.text,
+                          ),
                         ),
                       );
                     },

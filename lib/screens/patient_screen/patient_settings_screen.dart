@@ -34,7 +34,53 @@ class PatientSettingsScreen extends StatelessWidget {
               icon: Icons.person,
               title: 'Profile',
               onTap: () {
-                Get.to(CustomProfileScreen());
+                Get.to(CustomProfileScreen(
+                  appBar: AppBar(
+                    title: Text("Settings"),
+                    titleTextStyle: GoogleFonts.inter(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF171C22)),
+                    elevation: 0,
+                    shape: UnderlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Color(0xFFBFD1E3), width: 0.3)),
+                    scrolledUnderElevation: 0,
+                    actions: [
+                      InkWell(
+                        onTap: () {},
+                        child: Container(
+                          margin: EdgeInsets.only(right: 20),
+                          height: 30,
+                          padding: EdgeInsets.symmetric(horizontal: 18),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: Color.fromARGB(255, 65, 184, 119),
+                          ),
+                          child: Center(
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(maxWidth: 100),
+// Adjust max width as needed
+                                child: Text(
+                                  "Save",
+                                  style: GoogleFonts.inter(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ));
               },
             ),
             SizedBox(

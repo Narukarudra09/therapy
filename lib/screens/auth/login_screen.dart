@@ -243,6 +243,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     if (value!.isEmpty) {
                       return "Please enter your number";
                     }
+                    if (value.length < 10) {
+                      return "Please enter your valid number";
+                    }
                     return null;
                   },
                 ),

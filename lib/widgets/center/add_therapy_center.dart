@@ -39,9 +39,6 @@ class AddTherapyCenter extends StatelessWidget {
                   'about': controller.aboutController.text,
                   'location': controller.locationController.text,
                   'fee': controller.feeController.text,
-                  'holidays': controller.holidays.value,
-                  'openingTimes': controller.openingTimes.value,
-                  'closingTimes': controller.closingTimes.value,
                 });
                 Get.back();
               } else {
