@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:therapy/screens/therapist_screen/update_phone_number.dart';
 
 class CustomProfileScreen extends StatefulWidget {
   final PreferredSizeWidget? appBar;
+  final void Function()? onTap;
 
-  const CustomProfileScreen({super.key, required this.appBar});
+  const CustomProfileScreen(
+      {super.key, required this.appBar, required this.onTap});
 
   @override
   State<CustomProfileScreen> createState() => _CustomProfileScreenState();
@@ -133,16 +134,7 @@ class _CustomProfileScreenState extends State<CustomProfileScreen> {
                     ),
                   ),
                   suffixIcon: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => UpdatePhoneNumber(
-                            oldNumber: controller.text,
-                          ),
-                        ),
-                      );
-                    },
+                    onTap: widget.onTap,
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: SvgPicture.asset("assets/edit.svg"),

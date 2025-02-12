@@ -3,15 +3,21 @@ import 'package:google_fonts/google_fonts.dart';
 
 class TherapistProfile extends StatelessWidget {
   final String therapistName;
-  final String role;
 
-  const TherapistProfile(
-      {super.key, required this.therapistName, required this.role});
+  const TherapistProfile({
+    super.key,
+    required this.therapistName,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        shape: UnderlineInputBorder(
+          borderSide: BorderSide(color: Color(0xFFBFD1E3), width: 0.3),
+        ),
         title: Text(
           therapistName,
           style: GoogleFonts.inter(
@@ -56,7 +62,6 @@ class TherapistProfile extends StatelessWidget {
               _buildInfoItem(therapistName, Icons.account_circle),
               _buildInfoItem('ankitdangi@a2d.co.in', Icons.mail_outline),
               _buildInfoItem('9509965856', Icons.edit_outlined),
-              _buildInfoItem(role, Icons.edit_outlined),
               _buildInfoItem('Jk vihar', Icons.edit_outlined),
               _buildInfoItem('Male', Icons.calendar_today_outlined),
 

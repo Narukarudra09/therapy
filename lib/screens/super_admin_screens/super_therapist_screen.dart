@@ -82,7 +82,6 @@ class _SuperTherapistsScreenState extends State<SuperTherapistsScreen> {
                     onTap: () {
                       Get.to(TherapistProfile(
                         therapistName: names[index],
-                        role: roles[index],
                       ));
                     },
                   );

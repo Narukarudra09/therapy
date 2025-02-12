@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:therapy/screens/patient_screen/report_screen.dart';
+import 'package:therapy/screens/patient_screen/update_phone_number.dart';
 import 'package:therapy/widgets/custom_appbar.dart';
 import 'package:therapy/widgets/custom_profile_screen.dart';
 
@@ -80,6 +81,9 @@ class PatientSettingsScreen extends StatelessWidget {
                       ),
                     ],
                   ),
+                  onTap: () {
+                    Get.to(() => UpdatePhoneNumber());
+                  },
                 ));
               },
             ),

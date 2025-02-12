@@ -12,7 +12,7 @@ class AddRecordScreen extends StatefulWidget {
 class _AddRecordScreenState extends State<AddRecordScreen> {
   final TextEditingController _patientNameController = TextEditingController();
   final TextEditingController _givenByController = TextEditingController();
-  String _selectedTherapy = 'Physical Therapy';
+  List<String> _selectedTherapies = [];
 
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
@@ -25,14 +25,73 @@ class _AddRecordScreenState extends State<AddRecordScreen> {
     'Other'
   ];
 
+  final List<String> therapists = ['Ankit', 'Rudra', 'Nehal'];
+
   void _saveRecord() {
     // Implement save logic here
     print('Patient Name: ${_patientNameController.text}');
-    print('Therapy Type: $_selectedTherapy');
+    print('Therapy Types: $_selectedTherapies');
     print('Date: ${_selectedDate.toLocal()}');
     print('Time: ${_selectedTime.format(context)}');
     print('Given By: ${_givenByController.text}');
     Get.back();
+  }
+
+  void _showTherapySelectionDialog() {
+    List<String> selectedTherapiesCopy = List.from(_selectedTherapies);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Select Therapies'),
+          content: StatefulBuilder(
+            builder: (context, setState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: therapies.map((therapy) {
+                  return CheckboxListTile(
+                    title: Text(therapy),
+                    value: selectedTherapiesCopy.contains(therapy),
+                    onChanged: (bool? value) {
+                      if (value != null && value) {
+                        if (!selectedTherapiesCopy.contains(therapy)) {
+                          setState(() {
+                            selectedTherapiesCopy.add(therapy);
+                          });
+                        }
+                      } else {
+                        if (selectedTherapiesCopy.contains(therapy)) {
+                          setState(() {
+                            selectedTherapiesCopy.remove(therapy);
+                          });
+                        }
+                      }
+                    },
+                  );
+                }).toList(),
+              );
+            },
+          ),
+          actions: [
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                setState(() {
+                  _selectedTherapies = selectedTherapiesCopy;
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -45,6 +104,10 @@ class _AddRecordScreenState extends State<AddRecordScreen> {
           fontWeight: FontWeight.w500,
           color: Color.fromARGB(255, 23, 28, 34),
         ),
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        shape: UnderlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFFBFD1E3), width: 0.3)),
         actions: [
           InkWell(
             onTap: _saveRecord,
@@ -136,57 +199,65 @@ class _AddRecordScreenState extends State<AddRecordScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              DropdownButtonFormField<String>(
-                value: _selectedTherapy,
-                icon: const Icon(Icons.keyboard_arrow_down_outlined),
-                iconEnabledColor: const Color(0xFF171C22),
-                iconDisabledColor: const Color(0xFF171C22),
-                dropdownColor: const Color.fromARGB(255, 243, 243, 253),
-                decoration: InputDecoration(
-                  hintText: "Select",
-                  hintStyle: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: const Color(0xFF2E2C34),
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
+              GestureDetector(
+                onTap: _showTherapySelectionDialog,
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+                  decoration: BoxDecoration(
+                    border:
+                        Border.all(color: Color.fromARGB(255, 232, 233, 241)),
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(
-                      color: Color.fromARGB(255, 232, 233, 241),
-                    ),
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(
-                      color: Color.fromARGB(255, 232, 233, 241),
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(
-                      color: Color.fromARGB(255, 232, 233, 241),
-                    ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          _selectedTherapies.isEmpty
+                              ? "Select"
+                              : _selectedTherapies.join(", "),
+                          style: GoogleFonts.inter(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: const Color.fromARGB(255, 46, 44, 52),
+                          ),
+                        ),
+                      ),
+                      Icon(
+                        Icons.keyboard_arrow_down_outlined,
+                        color: Color(0xFF171C22),
+                      ),
+                    ],
                   ),
                 ),
-                items: therapies.map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        FittedBox(child: Text(value)),
-                        Checkbox(value: true, onChanged: (t) {}),
-                      ],
+              ),
+              const SizedBox(height: 16),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: _selectedTherapies.map((therapy) {
+                  return Chip(
+                    deleteIcon: Icon(Icons.close),
+                    color: WidgetStatePropertyAll(Color(0xFFE9E9E9)),
+                    side: BorderSide.none,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(100),
                     ),
+                    padding: EdgeInsets.all(0),
+                    labelPadding: EdgeInsets.symmetric(horizontal: 8),
+                    label: Text(therapy),
+                    labelStyle: GoogleFonts.inter(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFF2E2C34)),
+                    onDeleted: () {
+                      setState(() {
+                        _selectedTherapies.remove(therapy);
+                      });
+                    },
                   );
                 }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _selectedTherapy = newValue!;
-                  });
-                },
               ),
               const SizedBox(height: 16),
               Row(
@@ -204,16 +275,12 @@ class _AddRecordScreenState extends State<AddRecordScreen> {
                               data: Theme.of(context).copyWith(
                                 colorScheme: ColorScheme.light(
                                   primary: Colors.green.shade400,
-                                  // Selected date color
                                   onPrimary: Colors.white,
-                                  // Selected date text color
-                                  onSurface:
-                                      Colors.black, // Calendar text color
+                                  onSurface: Colors.black,
                                 ),
                                 textButtonTheme: TextButtonThemeData(
                                   style: TextButton.styleFrom(
-                                    foregroundColor: Colors
-                                        .green.shade400, // Button text color
+                                    foregroundColor: Colors.green.shade400,
                                   ),
                                 ),
                                 datePickerTheme: DatePickerThemeData(
@@ -235,11 +302,9 @@ class _AddRecordScreenState extends State<AddRecordScreen> {
                                     color: Colors.green.shade400,
                                     width: 1,
                                   ),
-                                  // Shape of the date picker dialog
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(28),
                                   ),
-                                  // Shape of the selected date
                                   dayBackgroundColor:
                                       WidgetStateProperty.resolveWith((states) {
                                     if (states.contains(WidgetState.selected)) {
@@ -247,7 +312,6 @@ class _AddRecordScreenState extends State<AddRecordScreen> {
                                     }
                                     return null;
                                   }),
-                                  // Shape of today's date
                                   todayBackgroundColor:
                                       WidgetStateProperty.resolveWith((states) {
                                     if (states.contains(WidgetState.selected)) {
@@ -357,15 +421,23 @@ class _AddRecordScreenState extends State<AddRecordScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              TextFormField(
-                controller: _givenByController,
-                keyboardType: TextInputType.text,
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: const Color.fromARGB(255, 46, 44, 52),
-                ),
+              DropdownButtonFormField<String>(
+                value: _givenByController.text.isNotEmpty
+                    ? _givenByController.text
+                    : null,
+                icon: const Icon(Icons.keyboard_arrow_down_outlined),
+                iconEnabledColor: const Color(0xFF171C22),
+                iconDisabledColor: const Color(0xFF171C22),
+                dropdownColor: const Color.fromARGB(255, 243, 243, 253),
                 decoration: InputDecoration(
+                  hintText: "Select",
+                  hintStyle: GoogleFonts.inter(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    color: const Color(0xFF2E2C34),
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide: const BorderSide(
@@ -385,6 +457,17 @@ class _AddRecordScreenState extends State<AddRecordScreen> {
                     ),
                   ),
                 ),
+                items: therapists.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: FittedBox(child: Text(value)),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _givenByController.text = newValue!;
+                  });
+                },
               ),
             ],
           ),
