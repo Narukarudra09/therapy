@@ -27,8 +27,6 @@ class _AddRecordScreenState extends State<AddRecordScreen> {
     'Other'
   ];
 
-  final List<String> therapists = ['Ankit', 'Rudra', 'Nehal'];
-
   void _saveRecord() {
     if (_formKey.currentState!.validate()) {
       Map<String, dynamic> recordData = {
@@ -39,7 +37,6 @@ class _AddRecordScreenState extends State<AddRecordScreen> {
         'givenBy': _givenByController.text,
       };
 
-      // Pass the data back to the previous screen
       Get.back(result: recordData);
     }
   }
@@ -247,7 +244,7 @@ class _AddRecordScreenState extends State<AddRecordScreen> {
                   children: _selectedTherapies.map((therapy) {
                     return Chip(
                       deleteIcon: Icon(Icons.close),
-                      color: MaterialStateProperty.all(Color(0xFFE9E9E9)),
+                      color: WidgetStateProperty.all(Color(0xFFE9E9E9)),
                       side: BorderSide.none,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(100),

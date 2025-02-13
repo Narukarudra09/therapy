@@ -17,14 +17,17 @@ class _AddPatientsState extends State<AddPatients> {
   final _formKey = GlobalKey<FormState>();
   final _mobileNumberController = TextEditingController();
   final _fullNameController = TextEditingController();
+  final _genderController = TextEditingController();
   String city = 'Bhilwara';
   String bloodGroup = 'A+';
   List<String> selectedAllergies = [];
+  List<String> gender = ['Male', 'Female', 'Others'];
 
   @override
   void dispose() {
     _mobileNumberController.dispose();
     _fullNameController.dispose();
+    _genderController.dispose();
     super.dispose();
   }
 
@@ -41,7 +44,7 @@ class _AddPatientsState extends State<AddPatients> {
         therapySessions: [],
         payments: [],
         email: '',
-        gender: '',
+        gender: _genderController.text,
       );
 
       Get.find<SuperPatientController>().addPatient(newPatient);
@@ -54,6 +57,15 @@ class _AddPatientsState extends State<AddPatients> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Add Patients"),
+        titleTextStyle: GoogleFonts.inter(
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          color: Color.fromARGB(255, 23, 28, 34),
+        ),
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        shape: UnderlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFFBFD1E3), width: 0.3)),
         actions: [
           InkWell(
             onTap: _savePatient,
@@ -184,6 +196,75 @@ class _AddPatientsState extends State<AddPatients> {
                           color: Color.fromARGB(255, 232, 233, 241)),
                     ),
                   ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Please enter the full name";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  "Gender",
+                  style: GoogleFonts.inter(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    color: const Color.fromARGB(255, 135, 141, 186),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                DropdownButtonFormField<String>(
+                  value: _genderController.text.isNotEmpty
+                      ? _genderController.text
+                      : null,
+                  icon: Icon(Icons.keyboard_arrow_down),
+                  borderRadius: BorderRadius.circular(8),
+                  iconEnabledColor: const Color.fromARGB(255, 23, 28, 34),
+                  iconDisabledColor: const Color.fromARGB(255, 23, 28, 34),
+                  dropdownColor: const Color.fromARGB(255, 243, 243, 253),
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(
+                          color: Color.fromARGB(255, 232, 233, 241)),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(
+                          color: Color.fromARGB(255, 232, 233, 241)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(
+                          color: Color.fromARGB(255, 232, 233, 241)),
+                    ),
+                  ),
+                  items: gender
+                      .map((role) => DropdownMenuItem(
+                            value: role,
+                            child: FittedBox(
+                              child: Text(
+                                role,
+                                style: GoogleFonts.inter(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF2E2C34),
+                                ),
+                              ),
+                            ),
+                          ))
+                      .toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _genderController.text = newValue!;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please select a gender";
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 12),
                 Text(
@@ -237,6 +318,12 @@ class _AddPatientsState extends State<AddPatients> {
                     setState(() {
                       city = newValue!;
                     });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please select a city";
+                    }
+                    return null;
                   },
                 ),
                 const SizedBox(height: 16),
@@ -300,6 +387,12 @@ class _AddPatientsState extends State<AddPatients> {
                     setState(() {
                       bloodGroup = newValue!;
                     });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please select a blood group";
+                    }
+                    return null;
                   },
                 ),
                 const SizedBox(height: 8),
