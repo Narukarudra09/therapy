@@ -97,7 +97,7 @@ class _TherapistState extends State<Therapist> {
                   leading: CircleAvatar(
                     backgroundImage: AssetImage(therapist['image']),
                   ),
-                  title: Flexible(child: Text(therapist['name'])),
+                  title: Text(therapist['name']),
                   titleTextStyle: GoogleFonts.inter(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,

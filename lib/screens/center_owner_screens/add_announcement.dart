@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+
+import '../../state_controllers/super_center_controller.dart';
 
 class AddAnnouncement extends StatefulWidget {
   const AddAnnouncement({super.key});
@@ -11,8 +15,25 @@ class AddAnnouncement extends StatefulWidget {
 class _AddAnnouncementState extends State<AddAnnouncement> {
   String selectedAnnouncement = 'Active';
   bool showPatientSelection = false;
-  final controller = TextEditingController();
+  final messageController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  String? selectedPatient;
+
+  final announcementController = Get.find<SuperCenterController>();
+
+  void _saveAnnouncement() {
+    if (_formKey.currentState!.validate()) {
+      // Collect the data
+      Map<String, dynamic> announcementData = {
+        'message': messageController.text,
+        'date': DateFormat('dd-MM-yyyy • hh:mm a').format(DateTime.now()),
+        'medium': announcementController.selectedMediums.join(', '),
+        'patient': selectedPatient,
+      };
+
+      Get.back(result: announcementData);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +50,7 @@ class _AddAnnouncementState extends State<AddAnnouncement> {
         scrolledUnderElevation: 0,
         actions: [
           InkWell(
-            onTap: () {},
+            onTap: _saveAnnouncement,
             child: Container(
               margin: EdgeInsets.only(right: 20),
               height: 30,
@@ -43,7 +64,6 @@ class _AddAnnouncementState extends State<AddAnnouncement> {
                   fit: BoxFit.scaleDown,
                   child: ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: 100),
-                    // Adjust max width as needed
                     child: Text(
                       "Save",
                       style: GoogleFonts.inter(
@@ -126,6 +146,9 @@ class _AddAnnouncementState extends State<AddAnnouncement> {
                   setState(() {
                     selectedAnnouncement = value!;
                     showPatientSelection = value == 'Specific';
+                    if (!showPatientSelection) {
+                      selectedPatient = null;
+                    }
                   });
                 },
               ),
@@ -144,8 +167,7 @@ class _AddAnnouncementState extends State<AddAnnouncement> {
                   iconEnabledColor: const Color(0xFF171C22),
                   iconDisabledColor: const Color(0xFF171C22),
                   dropdownColor: const Color.fromARGB(255, 243, 243, 253),
-                  value: 'Ankit',
-                  // Default value
+                  value: selectedPatient,
                   style: GoogleFonts.inter(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
@@ -187,7 +209,11 @@ class _AddAnnouncementState extends State<AddAnnouncement> {
                         ),
                       )
                       .toList(),
-                  onChanged: (value) {},
+                  onChanged: (value) {
+                    setState(() {
+                      selectedPatient = value!;
+                    });
+                  },
                 ),
               ],
               SizedBox(height: 16),
@@ -204,7 +230,7 @@ class _AddAnnouncementState extends State<AddAnnouncement> {
                 key: _formKey,
                 child: TextFormField(
                   maxLines: 6,
-                  controller: controller,
+                  controller: messageController,
                   keyboardType: TextInputType.text,
                   style: GoogleFonts.inter(
                     fontSize: 14,
@@ -246,10 +272,52 @@ class _AddAnnouncementState extends State<AddAnnouncement> {
                 ),
               ),
               SizedBox(height: 16),
-              customListTile(Icons.notifications_active_rounded,
-                  "Push Notification", true, (y) {}),
+              Text(
+                "Selected Mediums:",
+                style: GoogleFonts.inter(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: const Color(0xFF2E2C34),
+                ),
+              ),
               SizedBox(height: 8),
-              customListTile(Icons.sms_rounded, "SMS", true, (y) {}),
+              Obx(() {
+                return Wrap(
+                  spacing: 8,
+                  children: announcementController.selectedMediums
+                      .map((medium) => Chip(
+                            label: Text(medium),
+                            backgroundColor: Color(0xFFE9E9E9),
+                            deleteIcon: Icon(Icons.close),
+                            onDeleted: () {
+                              announcementController.toggleMedium(medium);
+                            },
+                          ))
+                      .toList(),
+                );
+              }),
+              SizedBox(height: 16),
+              Obx(() {
+                return customListTile(
+                  Icons.notifications_active_rounded,
+                  "Push Notification",
+                  announcementController.isMediumSelected('Push Notification'),
+                  (value) {
+                    announcementController.toggleMedium('Push Notification');
+                  },
+                );
+              }),
+              SizedBox(height: 8),
+              Obx(() {
+                return customListTile(
+                  Icons.sms_rounded,
+                  "SMS",
+                  announcementController.isMediumSelected('SMS'),
+                  (value) {
+                    announcementController.toggleMedium('SMS');
+                  },
+                );
+              }),
             ],
           ),
         ),
@@ -277,6 +345,7 @@ Widget customListTile(
       value: value,
       onChanged: onChanged,
       activeColor: Color(0xFF41B877),
+      checkColor: Colors.white,
     ),
   );
 }

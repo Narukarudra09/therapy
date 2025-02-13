@@ -4,6 +4,9 @@ import 'package:get/get.dart';
 class SuperCenterController extends GetxController {
   final isActive = true.obs;
   final isLoginAllowed = true.obs;
+  var records = <Map<String, dynamic>>[].obs;
+  var announcements = <Map<String, dynamic>>[].obs;
+  var selectedMediums = <String>[].obs;
 
   // Use TextEditingController for text fields
   final TextEditingController emailController = TextEditingController();
@@ -98,5 +101,25 @@ class SuperCenterController extends GetxController {
 
   void updateWorkingHour(Map<String, dynamic> data) {
     holidays.value = Map<String, bool>.from(data['holidays'] ?? holidays);
+  }
+
+  void addRecord(Map<String, dynamic> record) {
+    records.add(record);
+  }
+
+  void addAnnouncement(Map<String, dynamic> announcement) {
+    announcements.add(announcement);
+  }
+
+  void toggleMedium(String medium) {
+    if (selectedMediums.contains(medium)) {
+      selectedMediums.remove(medium);
+    } else {
+      selectedMediums.add(medium);
+    }
+  }
+
+  bool isMediumSelected(String medium) {
+    return selectedMediums.contains(medium);
   }
 }

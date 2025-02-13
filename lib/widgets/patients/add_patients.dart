@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:therapy/models/patient.dart';
-import 'package:therapy/widgets/patients/add_allergies.dart';
 
+import '../../models/patient.dart';
 import '../../state_controllers/super_patient_controller.dart';
+import 'add_allergies.dart';
 
 class AddPatients extends StatefulWidget {
   const AddPatients({super.key});
@@ -54,11 +54,6 @@ class _AddPatientsState extends State<AddPatients> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Add Patients"),
-        titleTextStyle: GoogleFonts.inter(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-          color: Color.fromARGB(255, 23, 28, 34),
-        ),
         actions: [
           InkWell(
             onTap: _savePatient,
@@ -71,21 +66,12 @@ class _AddPatientsState extends State<AddPatients> {
                 color: Color.fromARGB(255, 65, 184, 119),
               ),
               child: Center(
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: 100),
-                    // Adjust max width as needed
-                    child: Text(
-                      "Save",
-                      style: GoogleFonts.inter(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                child: Text(
+                  "Save",
+                  style: GoogleFonts.inter(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
@@ -94,11 +80,7 @@ class _AddPatientsState extends State<AddPatients> {
         ],
       ),
       body: Padding(
-        padding: EdgeInsets.only(
-          left: 20,
-          right: 20,
-          top: 20,
-        ),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 20),
         child: SingleChildScrollView(
           child: Form(
             key: _formKey,
@@ -113,9 +95,7 @@ class _AddPatientsState extends State<AddPatients> {
                     color: Color.fromARGB(255, 23, 28, 34),
                   ),
                 ),
-                const SizedBox(
-                  height: 12,
-                ),
+                const SizedBox(height: 12),
                 Row(
                   children: [
                     Text(
@@ -149,20 +129,17 @@ class _AddPatientsState extends State<AddPatients> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: const BorderSide(
-                        color: Color.fromARGB(255, 232, 233, 241),
-                      ),
+                          color: Color.fromARGB(255, 232, 233, 241)),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: const BorderSide(
-                        color: Color.fromARGB(255, 232, 233, 241),
-                      ),
+                          color: Color.fromARGB(255, 232, 233, 241)),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: const BorderSide(
-                        color: Color.fromARGB(255, 232, 233, 241),
-                      ),
+                          color: Color.fromARGB(255, 232, 233, 241)),
                     ),
                   ),
                   validator: (value) {
@@ -172,9 +149,7 @@ class _AddPatientsState extends State<AddPatients> {
                     return null;
                   },
                 ),
-                const SizedBox(
-                  height: 12,
-                ),
+                const SizedBox(height: 12),
                 Text(
                   "Full Name",
                   style: GoogleFonts.inter(
@@ -196,26 +171,21 @@ class _AddPatientsState extends State<AddPatients> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: const BorderSide(
-                        color: Color.fromARGB(255, 232, 233, 241),
-                      ),
+                          color: Color.fromARGB(255, 232, 233, 241)),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: const BorderSide(
-                        color: Color.fromARGB(255, 232, 233, 241),
-                      ),
+                          color: Color.fromARGB(255, 232, 233, 241)),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: const BorderSide(
-                        color: Color.fromARGB(255, 232, 233, 241),
-                      ),
+                          color: Color.fromARGB(255, 232, 233, 241)),
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 12,
-                ),
+                const SizedBox(height: 12),
                 Text(
                   "City",
                   style: GoogleFonts.inter(
@@ -235,20 +205,17 @@ class _AddPatientsState extends State<AddPatients> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: const BorderSide(
-                        color: Color.fromARGB(255, 232, 233, 241),
-                      ),
+                          color: Color.fromARGB(255, 232, 233, 241)),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: const BorderSide(
-                        color: Color.fromARGB(255, 232, 233, 241),
-                      ),
+                          color: Color.fromARGB(255, 232, 233, 241)),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: const BorderSide(
-                        color: Color.fromARGB(255, 232, 233, 241),
-                      ),
+                          color: Color.fromARGB(255, 232, 233, 241)),
                     ),
                   ),
                   items: ['Bhilwara']
@@ -281,9 +248,7 @@ class _AddPatientsState extends State<AddPatients> {
                     color: Color.fromARGB(255, 23, 28, 34),
                   ),
                 ),
-                const SizedBox(
-                  height: 16,
-                ),
+                const SizedBox(height: 16),
                 Text(
                   "Blood Group",
                   style: GoogleFonts.inter(
@@ -303,20 +268,17 @@ class _AddPatientsState extends State<AddPatients> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: const BorderSide(
-                        color: Color.fromARGB(255, 232, 233, 241),
-                      ),
+                          color: Color.fromARGB(255, 232, 233, 241)),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: const BorderSide(
-                        color: Color.fromARGB(255, 232, 233, 241),
-                      ),
+                          color: Color.fromARGB(255, 232, 233, 241)),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: const BorderSide(
-                        color: Color.fromARGB(255, 232, 233, 241),
-                      ),
+                          color: Color.fromARGB(255, 232, 233, 241)),
                     ),
                   ),
                   items: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
@@ -335,16 +297,12 @@ class _AddPatientsState extends State<AddPatients> {
                           ))
                       .toList(),
                   onChanged: (String? newValue) {
-                    setState(
-                      () {
-                        bloodGroup = newValue!;
-                      },
-                    );
+                    setState(() {
+                      bloodGroup = newValue!;
+                    });
                   },
                 ),
-                const SizedBox(
-                  height: 8,
-                ),
+                const SizedBox(height: 8),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                   width: MediaQuery.of(context).size.width,
@@ -352,8 +310,7 @@ class _AddPatientsState extends State<AddPatients> {
                       borderRadius: BorderRadius.circular(10),
                       color: Color.fromARGB(255, 250, 250, 250),
                       border: Border.all(
-                        color: Color.fromARGB(255, 232, 233, 241),
-                      )),
+                          color: Color.fromARGB(255, 232, 233, 241))),
                   child: Column(
                     children: [
                       Row(
@@ -411,9 +368,7 @@ class _AddPatientsState extends State<AddPatients> {
                     ],
                   ),
                 ),
-                const SizedBox(
-                  height: 8,
-                ),
+                const SizedBox(height: 8),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                   width: MediaQuery.of(context).size.width,
@@ -421,8 +376,7 @@ class _AddPatientsState extends State<AddPatients> {
                       borderRadius: BorderRadius.circular(10),
                       color: Color.fromARGB(255, 250, 250, 250),
                       border: Border.all(
-                        color: Color.fromARGB(255, 232, 233, 241),
-                      )),
+                          color: Color.fromARGB(255, 232, 233, 241))),
                   child: Column(
                     children: [
                       Row(
@@ -448,9 +402,7 @@ class _AddPatientsState extends State<AddPatients> {
                     ],
                   ),
                 ),
-                const SizedBox(
-                  height: 8,
-                ),
+                const SizedBox(height: 8),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                   width: MediaQuery.of(context).size.width,
@@ -458,8 +410,7 @@ class _AddPatientsState extends State<AddPatients> {
                       borderRadius: BorderRadius.circular(10),
                       color: Color.fromARGB(255, 250, 250, 250),
                       border: Border.all(
-                        color: Color.fromARGB(255, 232, 233, 241),
-                      )),
+                          color: Color.fromARGB(255, 232, 233, 241))),
                   child: Column(
                     children: [
                       Row(

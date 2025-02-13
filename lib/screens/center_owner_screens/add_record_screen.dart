@@ -28,13 +28,16 @@ class _AddRecordScreenState extends State<AddRecordScreen> {
   final List<String> therapists = ['Ankit', 'Rudra', 'Nehal'];
 
   void _saveRecord() {
-    // Implement save logic here
-    print('Patient Name: ${_patientNameController.text}');
-    print('Therapy Types: $_selectedTherapies');
-    print('Date: ${_selectedDate.toLocal()}');
-    print('Time: ${_selectedTime.format(context)}');
-    print('Given By: ${_givenByController.text}');
-    Get.back();
+    Map<String, dynamic> recordData = {
+      'patientName': _patientNameController.text,
+      'therapyTypes': _selectedTherapies,
+      'date': _selectedDate,
+      'time': _selectedTime.format(context),
+      'givenBy': _givenByController.text,
+    };
+
+    // Pass the data back to the previous screen
+    Get.back(result: recordData);
   }
 
   void _showTherapySelectionDialog() {
@@ -232,10 +235,9 @@ class _AddRecordScreenState extends State<AddRecordScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 8),
               Wrap(
-                spacing: 8,
-                runSpacing: 8,
+                spacing: 4,
                 children: _selectedTherapies.map((therapy) {
                   return Chip(
                     deleteIcon: Icon(Icons.close),
@@ -274,32 +276,34 @@ class _AddRecordScreenState extends State<AddRecordScreen> {
                             return Theme(
                               data: Theme.of(context).copyWith(
                                 colorScheme: ColorScheme.light(
-                                  primary: Colors.green.shade400,
+                                  primary: Color(0xFF41B877),
                                   onPrimary: Colors.white,
-                                  onSurface: Colors.black,
+                                  onSurface: Color(0xFF1D1B20),
                                 ),
                                 textButtonTheme: TextButtonThemeData(
                                   style: TextButton.styleFrom(
-                                    foregroundColor: Colors.green.shade400,
+                                    foregroundColor: Color(0xFF41B877),
                                   ),
                                 ),
                                 datePickerTheme: DatePickerThemeData(
                                   backgroundColor: Colors.white,
                                   headerBackgroundColor: Colors.white,
-                                  headerForegroundColor: Colors.black,
-                                  headerHeadlineStyle: const TextStyle(
+                                  headerForegroundColor: Color(0xFF49454F),
+                                  headerHeadlineStyle: GoogleFonts.roboto(
                                     fontSize: 32,
                                     fontWeight: FontWeight.normal,
+                                    color: Color(0xFF49454F),
                                   ),
-                                  weekdayStyle: const TextStyle(
-                                    color: Colors.black87,
+                                  weekdayStyle: GoogleFonts.roboto(
+                                    color: Color(0xFF49454F),
                                     fontSize: 15,
                                   ),
-                                  dayStyle: const TextStyle(
+                                  dayStyle: GoogleFonts.roboto(
                                     fontSize: 16,
+                                    color: Color(0xFF1D1B20),
                                   ),
                                   todayBorder: BorderSide(
-                                    color: Colors.green.shade400,
+                                    color: Color(0xFF41B877),
                                     width: 1,
                                   ),
                                   shape: RoundedRectangleBorder(
@@ -308,14 +312,14 @@ class _AddRecordScreenState extends State<AddRecordScreen> {
                                   dayBackgroundColor:
                                       WidgetStateProperty.resolveWith((states) {
                                     if (states.contains(WidgetState.selected)) {
-                                      return Colors.green.shade400;
+                                      return Color(0xFF41B877);
                                     }
                                     return null;
                                   }),
                                   todayBackgroundColor:
                                       WidgetStateProperty.resolveWith((states) {
                                     if (states.contains(WidgetState.selected)) {
-                                      return Colors.green.shade400;
+                                      return Color(0xFF41B877);
                                     }
                                     return Colors.transparent;
                                   }),

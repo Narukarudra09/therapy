@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:therapy/screens/center_owner_screens/add_announcement.dart';
+import 'package:therapy/screens/center_owner_screens/announcement.dart';
 import 'package:therapy/screens/center_owner_screens/therapist.dart';
 import 'package:therapy/screens/center_owner_screens/update_phone_number.dart';
 import 'package:therapy/screens/center_owner_screens/view_therapist.dart';
@@ -127,7 +127,7 @@ class CenterSettingsScreen extends StatelessWidget {
               icon: Icons.celebration,
               title: 'Announcement',
               onTap: () {
-                Get.to(() => AddAnnouncement());
+                Get.to(() => Announcement());
               },
             ),
           ],

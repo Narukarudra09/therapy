@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:therapy/widgets/custom_add_button.dart';
 
-import '../../state_controllers/super_patient_controller.dart';
+import '../custom_add_button.dart';
 
 class AddAllergies extends StatefulWidget {
   const AddAllergies({super.key});
@@ -12,65 +11,47 @@ class AddAllergies extends StatefulWidget {
   State<AddAllergies> createState() => _AddAllergiesState();
 }
 
-final List<String> allergies = [
-  'Cheese',
-  'Curd',
-  'Egg',
-  'Garlic',
-  'Gluten',
-  'Lemon',
-  'Meat',
-  'Milk',
-  'Nuts',
-  'Oats',
-  'Other Fruits',
-  'Peanut',
-  'Peppers',
-  'Preserved Foods',
-  'Shellfish/Fish',
-  'Soya',
-];
-
 class _AddAllergiesState extends State<AddAllergies> {
-  final List<bool> selectedAllergies =
-      List.generate(allergies.length, (_) => false);
-
-  void _saveAllergies() {
-    final selected = selectedAllergies
-        .asMap()
-        .entries
-        .where((entry) => entry.value)
-        .map((entry) => allergies[entry.key])
-        .toList();
-
-    final patientId =
-        Get.find<SuperPatientController>().selectedPatient.value?.id;
-
-    if (patientId != null) {
-      for (var allergy in selected) {
-        Get.find<SuperPatientController>().addAllergy(patientId, allergy);
-      }
-      Get.back(); // Navigate back after saving
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final List<String> allergies = [
+      'Cheese',
+      'Curd',
+      'Egg',
+      'Garlic',
+      'Gluten',
+      'Lemon',
+      'Meat',
+      'Milk',
+      'Nuts',
+      'Oats',
+      'Other Fruits',
+      'Peanut',
+      'Peppers',
+      'Preserved Foods',
+      'Shellfish/Fish',
+      'Soya',
+    ];
+    final List<bool> selectedAllergies =
+        List.generate(allergies.length, (_) => false);
+
+    void saveAllergies() {
+      final selected = selectedAllergies
+          .asMap()
+          .entries
+          .where((entry) => entry.value)
+          .map((entry) => allergies[entry.key])
+          .toList();
+
+      Get.back(result: selected); // Return the selected allergies
+    }
+
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        shape: UnderlineInputBorder(
-            borderSide: BorderSide(color: Color(0xFFBFD1E3), width: 0.3)),
-        scrolledUnderElevation: 0,
         title: Text("Allergies"),
-        titleTextStyle: GoogleFonts.inter(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-          color: Color.fromARGB(255, 23, 28, 34),
-        ),
         actions: [
           GestureDetector(
-            onTap: _saveAllergies,
+            onTap: saveAllergies,
             child: Container(
               margin: EdgeInsets.only(right: 20),
               height: 30,
@@ -80,21 +61,12 @@ class _AddAllergiesState extends State<AddAllergies> {
                 color: Color.fromARGB(255, 65, 184, 119),
               ),
               child: Center(
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: 100),
-                    // Adjust max width as needed
-                    child: Text(
-                      "Save",
-                      style: GoogleFonts.inter(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                child: Text(
+                  "Save",
+                  style: GoogleFonts.inter(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
@@ -103,11 +75,7 @@ class _AddAllergiesState extends State<AddAllergies> {
         ],
       ),
       body: Padding(
-        padding: EdgeInsets.only(
-          left: 20,
-          right: 20,
-          top: 16,
-        ),
+        padding: EdgeInsets.only(left: 20, right: 20, top: 16),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -118,7 +86,6 @@ class _AddAllergiesState extends State<AddAllergies> {
                     builder: (BuildContext context) {
                       String newAllergy = '';
                       return AlertDialog(
-                        backgroundColor: Colors.white,
                         contentPadding: EdgeInsets.all(0),
                         titlePadding: EdgeInsets.only(
                             left: 21, right: 21, top: 24, bottom: 15),
@@ -126,11 +93,6 @@ class _AddAllergiesState extends State<AddAllergies> {
                         insetPadding: EdgeInsets.symmetric(horizontal: 20),
                         actionsPadding: EdgeInsets.only(top: 24, bottom: 32),
                         title: Center(child: Text('Add New')),
-                        titleTextStyle: GoogleFonts.sora(
-                          color: Color.fromARGB(255, 0, 0, 0),
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                        ),
                         content: SizedBox(
                           width: 500,
                           height: MediaQuery.of(context).size.height * 0.119,
@@ -147,16 +109,10 @@ class _AddAllergiesState extends State<AddAllergies> {
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(8),
                                       borderSide: BorderSide(
-                                        color:
-                                            Color.fromARGB(255, 232, 233, 241),
-                                      ),
+                                          color: Color.fromARGB(
+                                              255, 232, 233, 241)),
                                     ),
                                     hintText: 'Write Here',
-                                    hintStyle: GoogleFonts.inter(
-                                      color: Color.fromARGB(255, 46, 44, 52),
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                    ),
                                   ),
                                 ),
                               ),

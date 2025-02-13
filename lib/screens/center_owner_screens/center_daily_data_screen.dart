@@ -4,18 +4,16 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:therapy/screens/center_owner_screens/add_record_screen.dart';
 import 'package:therapy/widgets/custom_appbar.dart';
 
+import '../../state_controllers/super_center_controller.dart';
 import '../../widgets/custom_add_button.dart';
 
-class CenterDailyDataScreen extends StatefulWidget {
+class CenterDailyDataScreen extends StatelessWidget {
   const CenterDailyDataScreen({super.key});
 
   @override
-  State<CenterDailyDataScreen> createState() => _CenterDailyDataScreenState();
-}
-
-class _CenterDailyDataScreenState extends State<CenterDailyDataScreen> {
-  @override
   Widget build(BuildContext context) {
+    final controller = Get.put(SuperCenterController());
+
     return Scaffold(
       appBar: CustomAppBar(),
       body: Padding(
@@ -60,7 +58,7 @@ class _CenterDailyDataScreenState extends State<CenterDailyDataScreen> {
                                 ),
                                 width: 80,
                                 height: 80,
-                              )
+                              ),
                             ],
                           ),
                           Column(
@@ -84,7 +82,7 @@ class _CenterDailyDataScreenState extends State<CenterDailyDataScreen> {
                                     )),
                                 width: 80,
                                 height: 80,
-                              )
+                              ),
                             ],
                           ),
                         ],
@@ -161,62 +159,67 @@ class _CenterDailyDataScreenState extends State<CenterDailyDataScreen> {
                   ),
                   CustomAddButton(
                     title: "Add Record",
-                    onTap: () {
-                      Get.to(AddRecordScreen());
+                    onTap: () async {
+                      final result = await Get.to(AddRecordScreen());
+                      if (result != null) {
+                        controller.addRecord(result);
+                      }
                     },
                   ),
                 ],
               ),
               SizedBox(height: 16),
-              ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: 5,
-                itemBuilder: (context, index) {
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: Color.fromARGB(255, 235, 246, 237),
+              Obx(() {
+                return ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: controller.records.length,
+                  itemBuilder: (context, index) {
+                    final record = controller.records[index];
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: Color.fromARGB(255, 235, 246, 237),
+                        ),
                       ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Patient Name",
-                            style: GoogleFonts.inter(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              record['patientName'].toString(),
+                              style: GoogleFonts.inter(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
-                                color: Color(0xFF080C3E)),
-                          ),
-                          Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: [
-                              TherapyTag(text: 'Thymus + Chest'),
-                              TherapyTag(text: 'Thymus + Chest'),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          // Date row
-                          _buildInfoRow(
-                            'Date',
-                            "${DateTime.now().day.toString()}-${DateTime.now().month.toString()}-${DateTime.now().year} ${DateTime.now().hour.toString()}:${DateTime.now().minute.toString()}:${DateTime.now().second.toString()}",
-                          ),
-                          const SizedBox(height: 8),
-                          // Given by row
-                          _buildInfoRow('Given by', 'Ankit'),
-                        ],
+                                color: Color(0xFF080C3E),
+                              ),
+                            ),
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: record['therapyTypes']
+                                  .map<Widget>(
+                                      (therapy) => TherapyTag(text: therapy))
+                                  .toList(),
+                            ),
+                            const SizedBox(height: 16),
+                            _buildInfoRow(
+                              'Date',
+                              '${record['date'].day}-${record['date'].month}-${record['date'].year} ${record['time']}',
+                            ),
+                            const SizedBox(height: 8),
+                            _buildInfoRow('Given by', record['givenBy']),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
-              ),
+                    );
+                  },
+                );
+              }),
             ],
           ),
         ),
