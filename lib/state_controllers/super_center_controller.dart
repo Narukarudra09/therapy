@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:therapy/models/center_owner.dart';
 
+import '../models/holiday.dart';
+
 class SuperCenterController extends GetxController {
   final isActive = true.obs;
   final isLoginAllowed = true.obs;
+  var holidays = <String, Holiday>{}.obs;
+
   var records = <Map<String, dynamic>>[].obs;
   var announcements = <Map<String, dynamic>>[].obs;
   var selectedMediums = <String>[].obs;
@@ -19,7 +23,7 @@ class SuperCenterController extends GetxController {
       name: "Dr.Rudra",
       role: "Owner",
       phoneNumber: "7878404583",
-      email: "narukarudra09@gmail,com",
+      email: "narukarudra09@gmail.com",
       about:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
       location: "Pandariya, kawardha(kabirdham), CHHATTISGARH",
@@ -27,15 +31,9 @@ class SuperCenterController extends GetxController {
       workingHours: {},
       holidays: []);
 
-  final holidays = {
-    'Monday': false,
-    'Tuesday': false,
-    'Wednesday': false,
-    'Thursday': false,
-    'Friday': false,
-    'Saturday': true,
-    'Sunday': true,
-  }.obs;
+  void updateData(Map<String, dynamic> data) {
+    holidays.assignAll(data['holidays'] as Map<String, Holiday>);
+  }
 
   final openingTimes = {
     'Monday': TimeOfDay(hour: 00, minute: 0),
@@ -67,38 +65,12 @@ class SuperCenterController extends GetxController {
     super.onClose();
   }
 
-  void setInitialData(Map<String, dynamic> data) {
-    isActive.value = data['isActive'] ?? true;
-    isLoginAllowed.value = data['isLoginAllowed'] ?? true;
-    emailController.text = data['email'] ?? '';
-    phoneController.text = data['phone'] ?? '';
-    aboutController.text = data['about'] ?? '';
-    locationController.text = data['location'] ?? 'Bhilwara';
-    feeController.text = data['fee'] ?? '';
-    holidays.value = Map<String, bool>.from(data['holidays'] ?? {});
-    openingTimes.value =
-        Map<String, TimeOfDay>.from(data['openingTimes'] ?? {});
-    closingTimes.value =
-        Map<String, TimeOfDay>.from(data['closingTimes'] ?? {});
-  }
-
-  void updateData(Map<String, dynamic> data) {
-    isActive.value = data['isActive'] ?? isActive.value;
-    isLoginAllowed.value = data['isLoginAllowed'] ?? isLoginAllowed.value;
-    emailController.text = data['email'] ?? emailController.text;
-    phoneController.text = data['phone'] ?? phoneController.text;
-    aboutController.text = data['about'] ?? aboutController.text;
-    locationController.text = data['location'] ?? locationController.text;
-    feeController.text = data['fee'] ?? feeController.text;
-    holidays.value = Map<String, bool>.from(data['holidays'] ?? holidays);
-    openingTimes.value =
-        Map<String, TimeOfDay>.from(data['openingTimes'] ?? openingTimes);
-    closingTimes.value =
-        Map<String, TimeOfDay>.from(data['closingTimes'] ?? closingTimes);
-  }
-
   void toggleHoliday(String day, bool isHoliday) {
-    holidays[day] = isHoliday;
+    if (isHoliday) {
+      holidays[day] = Holiday();
+    } else {
+      holidays.remove(day);
+    }
   }
 
   void setTime(String day, TimeOfDay time, bool isOpeningTime) {
@@ -110,7 +82,7 @@ class SuperCenterController extends GetxController {
   }
 
   void updateWorkingHour(Map<String, dynamic> data) {
-    holidays.value = Map<String, bool>.from(data['holidays'] ?? holidays);
+    holidays.value = Map<String, Holiday>.from(data['holidays'] ?? holidays);
   }
 
   void addRecord(Map<String, dynamic> record) {

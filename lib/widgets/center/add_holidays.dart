@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../models/holiday.dart';
 import '../../state_controllers/super_center_controller.dart';
 import '../custom_add_button.dart';
 
@@ -10,7 +11,11 @@ class HolidayScreen extends StatelessWidget {
 
   HolidayScreen({super.key});
 
-  void addNewHoliday() {}
+  void addNewHoliday() {
+    // Logic to add a new holiday entry
+    String newHolidayKey = 'Holiday ${controller.holidays.length + 1}';
+    controller.holidays[newHolidayKey] = Holiday();
+  }
 
   void _selectDate(BuildContext context, String day) async {
     final DateTime? picked = await showDatePicker(
@@ -78,7 +83,7 @@ class HolidayScreen extends StatelessWidget {
     );
 
     if (picked != null) {
-      controller.holidays[day] = true;
+      controller.holidays[day]?.date = picked;
     }
   }
 
@@ -151,13 +156,14 @@ class HolidayScreen extends StatelessWidget {
                   itemCount: controller.holidays.length,
                   itemBuilder: (context, index) {
                     String day = controller.holidays.keys.elementAt(index);
+                    Holiday holiday = controller.holidays[day]!;
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 16.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Holiday ${index + 1}',
+                            day,
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -185,8 +191,9 @@ class HolidayScreen extends StatelessWidget {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    controller.holidays[day] == true
-                                        ? 'Date Selected'
+                                    holiday.date != null
+                                        ? '${holiday.date!.toLocal()}'
+                                            .split(' ')[0]
                                         : 'Select Date',
                                   ),
                                   const Icon(Icons.calendar_today),
@@ -205,7 +212,7 @@ class HolidayScreen extends StatelessWidget {
                           const SizedBox(height: 8),
                           TextField(
                             onChanged: (value) {
-                              // Add logic to handle message change
+                              holiday.message = value;
                             },
                             decoration: InputDecoration(
                               hintText: 'Enter message',

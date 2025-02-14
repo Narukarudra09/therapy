@@ -5,9 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../state_controllers/super_center_controller.dart';
 
 class WorkingHoursScreen extends StatefulWidget {
-  const WorkingHoursScreen({
-    super.key,
-  });
+  const WorkingHoursScreen({super.key});
 
   @override
   _WorkingHoursScreenState createState() => _WorkingHoursScreenState();
@@ -58,8 +56,8 @@ class _WorkingHoursScreenState extends State<WorkingHoursScreen> {
         actions: [
           GestureDetector(
             onTap: () {
-              // Save the holidays
-              controller.updateData({
+              // Save the working hours
+              controller.updateWorkingHour({
                 'holidays': controller.holidays.value,
               });
               Get.back();
@@ -94,70 +92,69 @@ class _WorkingHoursScreenState extends State<WorkingHoursScreen> {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: controller.holidays.length,
-        itemBuilder: (context, index) {
-          final day = controller.holidays.keys.elementAt(index);
-          return Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      day,
-                      style: GoogleFonts.inter(
-                        color: Color(0xFF2E2C34),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          'Holiday',
-                          style: GoogleFonts.inter(
-                            color: Color(0xFF878DBA),
-                            fontSize: 14,
-                          ),
+      body: Obx(() {
+        return ListView.builder(
+          itemCount: controller.openingTimes.length,
+          itemBuilder: (context, index) {
+            final day = controller.openingTimes.keys.elementAt(index);
+            final holiday = controller.holidays[day];
+            return Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        day,
+                        style: GoogleFonts.inter(
+                          color: Color(0xFF2E2C34),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
                         ),
-                        SizedBox(width: 8),
-                        Obx(() {
-                          return Checkbox(
-                            value: controller.holidays[day]!,
-                            activeColor: Color(0xFF4CD964),
-                            onChanged: (bool? value) {
-                              controller.toggleHoliday(day, value ?? false);
-                            },
-                          );
-                        }),
-                      ],
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      ),
+                      Row(
                         children: [
                           Text(
-                            'Open at',
+                            'Holiday',
                             style: GoogleFonts.inter(
                               color: Color(0xFF878DBA),
                               fontSize: 14,
                             ),
                           ),
-                          SizedBox(height: 4),
-                          Obx(() {
-                            return GestureDetector(
-                              onTap: controller.holidays[day]!
-                                  ? null
-                                  : () => _selectTime(context, day, true),
+                          SizedBox(width: 8),
+                          Checkbox(
+                            value: holiday != null,
+                            activeColor: Color(0xFF4CD964),
+                            onChanged: (bool? value) {
+                              controller.toggleHoliday(day, value ?? false);
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Open at',
+                              style: GoogleFonts.inter(
+                                color: Color(0xFF878DBA),
+                                fontSize: 14,
+                              ),
+                            ),
+                            SizedBox(height: 4),
+                            GestureDetector(
+                              onTap: holiday == null
+                                  ? () => _selectTime(context, day, true)
+                                  : null,
                               child: Container(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 16, vertical: 12),
@@ -165,9 +162,9 @@ class _WorkingHoursScreenState extends State<WorkingHoursScreen> {
                                   border:
                                       Border.all(color: Colors.grey.shade300),
                                   borderRadius: BorderRadius.circular(8),
-                                  color: controller.holidays[day]!
-                                      ? Colors.grey[100]
-                                      : Colors.white,
+                                  color: holiday == null
+                                      ? Colors.white
+                                      : Colors.grey[100],
                                 ),
                                 child: Row(
                                   mainAxisAlignment:
@@ -182,29 +179,27 @@ class _WorkingHoursScreenState extends State<WorkingHoursScreen> {
                                   ],
                                 ),
                               ),
-                            );
-                          }),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Closes at',
-                            style: GoogleFonts.inter(
-                              color: Color(0xFF878DBA),
-                              fontSize: 14,
                             ),
-                          ),
-                          SizedBox(height: 4),
-                          Obx(() {
-                            return GestureDetector(
-                              onTap: controller.holidays[day]!
-                                  ? null
-                                  : () => _selectTime(context, day, false),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Closes at',
+                              style: GoogleFonts.inter(
+                                color: Color(0xFF878DBA),
+                                fontSize: 14,
+                              ),
+                            ),
+                            SizedBox(height: 4),
+                            GestureDetector(
+                              onTap: holiday == null
+                                  ? () => _selectTime(context, day, false)
+                                  : null,
                               child: Container(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 16, vertical: 12),
@@ -212,9 +207,9 @@ class _WorkingHoursScreenState extends State<WorkingHoursScreen> {
                                   border:
                                       Border.all(color: Colors.grey.shade300),
                                   borderRadius: BorderRadius.circular(8),
-                                  color: controller.holidays[day]!
-                                      ? Colors.grey[100]
-                                      : Colors.white,
+                                  color: holiday == null
+                                      ? Colors.white
+                                      : Colors.grey[100],
                                 ),
                                 child: Row(
                                   mainAxisAlignment:
@@ -229,18 +224,18 @@ class _WorkingHoursScreenState extends State<WorkingHoursScreen> {
                                   ],
                                 ),
                               ),
-                            );
-                          }),
-                        ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          );
-        },
-      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      }),
     );
   }
 }

@@ -4,35 +4,30 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../state_controllers/super_center_controller.dart';
 
-class ViewTherapist extends StatefulWidget {
+class ViewTherapist extends StatelessWidget {
   final String imageUrl;
+  final SuperCenterController controller = Get.put(SuperCenterController());
 
-  const ViewTherapist({super.key, required this.imageUrl});
-
-  @override
-  State<ViewTherapist> createState() => _ViewTherapistState();
-}
-
-class _ViewTherapistState extends State<ViewTherapist> {
-  final List<String> days = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday'
-  ];
+  ViewTherapist({super.key, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(SuperCenterController());
-    final owner = controller.owner;
+    final List<String> days = [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday'
+    ];
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         shape: UnderlineInputBorder(
-            borderSide: BorderSide(color: Color(0xFFBFD1E3), width: 0.3)),
+          borderSide: BorderSide(color: Color(0xFFBFD1E3), width: 0.3),
+        ),
         scrolledUnderElevation: 0,
         title: Text(
           "Details",
@@ -47,7 +42,7 @@ class _ViewTherapistState extends State<ViewTherapist> {
         child: Column(
           children: [
             Image.asset(
-              widget.imageUrl,
+              imageUrl,
               fit: BoxFit.cover,
               height: 160,
               width: MediaQuery.of(context).size.width,
@@ -62,14 +57,13 @@ class _ViewTherapistState extends State<ViewTherapist> {
                     children: [
                       CircleAvatar(
                           radius: 24,
-                          backgroundImage: AssetImage(widget.imageUrl)),
+                          backgroundImage: AssetImage("assets/profile.png")),
                       SizedBox(width: 12),
                       Column(
-                        spacing: 2,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            owner.name,
+                            'Dr. N Sera',
                             style: GoogleFonts.inter(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -98,13 +92,11 @@ class _ViewTherapistState extends State<ViewTherapist> {
                   SizedBox(height: 12),
                   ListTile(
                     contentPadding: EdgeInsets.zero,
-                    minVerticalPadding: 3,
-                    minTileHeight: 3,
                     leading: Icon(
                       Icons.phone_in_talk_sharp,
                       color: Color(0xFF939EAA),
                     ),
-                    title: Text(owner.phoneNumber),
+                    title: Text('9509965856'),
                     titleTextStyle: GoogleFonts.inter(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
@@ -117,13 +109,11 @@ class _ViewTherapistState extends State<ViewTherapist> {
                       ),
                     ),
                     contentPadding: EdgeInsets.zero,
-                    minVerticalPadding: 12,
-                    minTileHeight: 12,
                     leading: Icon(
                       Icons.mail_outline_rounded,
                       color: Color(0xFF939EAA),
                     ),
-                    title: Text(owner.email),
+                    title: Text('mailto:mail@example.com'),
                     titleTextStyle: GoogleFonts.inter(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
@@ -139,7 +129,7 @@ class _ViewTherapistState extends State<ViewTherapist> {
                   ),
                   SizedBox(height: 12),
                   Text(
-                    owner.about,
+                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
                     style: GoogleFonts.inter(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
@@ -160,7 +150,7 @@ class _ViewTherapistState extends State<ViewTherapist> {
                   ),
                   SizedBox(height: 12),
                   Text(
-                    owner.location,
+                    'Pandariya, kawardha(kabirdham), CHATTISGARH',
                     style: GoogleFonts.inter(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
@@ -180,7 +170,7 @@ class _ViewTherapistState extends State<ViewTherapist> {
                   ),
                   SizedBox(height: 12),
                   Text(
-                    '₹${owner.fees}/Therapy',
+                    '₹1000/Therapy',
                     style: GoogleFonts.inter(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
@@ -254,6 +244,52 @@ class _ViewTherapistState extends State<ViewTherapist> {
                       ),
                     ],
                   ),
+                  SizedBox(height: 12),
+                  Obx(() {
+                    final holidays = controller.holidays.entries
+                        .where((entry) => entry.value.date != null)
+                        .toList();
+
+                    if (holidays.isEmpty) {
+                      return Text(
+                        'No holidays added yet.',
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                      );
+                    }
+
+                    return ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: holidays.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final holiday = holidays[index];
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 6.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '${holiday.value.message}'.split(' ')[0],
+                                style: GoogleFonts.inter(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xFF4E5661),
+                                ),
+                              ),
+                              Text(
+                                "Holiday",
+                                style: GoogleFonts.inter(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xFF939EAA),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  }),
                 ],
               ),
             ),
