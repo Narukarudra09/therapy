@@ -4,11 +4,16 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:therapy/screens/patient_screen/view_therapist.dart';
 import 'package:therapy/widgets/custom_appbar.dart';
 
+import '../../state_controllers/super_center_controller.dart';
+
 class PatientTherapiesScreen extends StatelessWidget {
   const PatientTherapiesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(SuperCenterController());
+    final _owner = controller.owner;
+    final String image = 'assets/center_profile.png';
     return Scaffold(
       appBar: CustomAppBar(),
       body: Padding(
@@ -29,7 +34,7 @@ class PatientTherapiesScreen extends StatelessWidget {
               ),
               ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: 5,
+                itemCount: 1,
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   return Container(
@@ -50,7 +55,7 @@ class PatientTherapiesScreen extends StatelessWidget {
                             bottomLeft: Radius.circular(12),
                           ),
                           child: Image.asset(
-                            "assets/center.png",
+                            image,
                             width: 100,
                             height: 120,
                             fit: BoxFit.cover,
@@ -80,7 +85,7 @@ class PatientTherapiesScreen extends StatelessWidget {
                               SizedBox(
                                 width: 250,
                                 child: Text(
-                                  'Sector 38, Noida, Uttar Pradesh 201301',
+                                  _owner.location,
                                   style: GoogleFonts.inter(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w400,
@@ -96,7 +101,7 @@ class PatientTherapiesScreen extends StatelessWidget {
                               GestureDetector(
                                 onTap: () {
                                   Get.to(ViewTherapist(
-                                    imageUrl: 'assets/center_profile.png',
+                                    imageUrl: image,
                                   ));
                                 },
                                 child: Text(

@@ -174,7 +174,8 @@ class _WorkingHoursScreenState extends State<WorkingHoursScreen> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      '${controller.openingTimes[day]!.format(context)}',
+                                      controller.openingTimes[day]!
+                                          .format(context),
                                       style: TextStyle(fontSize: 16),
                                     ),
                                     Icon(Icons.access_time, color: Colors.grey),
@@ -220,7 +221,8 @@ class _WorkingHoursScreenState extends State<WorkingHoursScreen> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      '${controller.closingTimes[day]!.format(context)}',
+                                      controller.closingTimes[day]!
+                                          .format(context),
                                       style: TextStyle(fontSize: 16),
                                     ),
                                     Icon(Icons.access_time, color: Colors.grey),

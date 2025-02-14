@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../../state_controllers/super_center_controller.dart';
 
 class ViewTherapist extends StatefulWidget {
   final String imageUrl;
@@ -23,6 +26,8 @@ class _ViewTherapistState extends State<ViewTherapist> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(SuperCenterController());
+    final owner = controller.owner;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -57,14 +62,14 @@ class _ViewTherapistState extends State<ViewTherapist> {
                     children: [
                       CircleAvatar(
                           radius: 24,
-                          backgroundImage: AssetImage("assets/profile.png")),
+                          backgroundImage: AssetImage(widget.imageUrl)),
                       SizedBox(width: 12),
                       Column(
                         spacing: 2,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Dr. N Sera',
+                            owner.name,
                             style: GoogleFonts.inter(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -99,7 +104,7 @@ class _ViewTherapistState extends State<ViewTherapist> {
                       Icons.phone_in_talk_sharp,
                       color: Color(0xFF939EAA),
                     ),
-                    title: Text('9509965856'),
+                    title: Text(owner.phoneNumber),
                     titleTextStyle: GoogleFonts.inter(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
@@ -118,7 +123,7 @@ class _ViewTherapistState extends State<ViewTherapist> {
                       Icons.mail_outline_rounded,
                       color: Color(0xFF939EAA),
                     ),
-                    title: Text('mailto:mail@example.com'),
+                    title: Text(owner.email),
                     titleTextStyle: GoogleFonts.inter(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
@@ -134,7 +139,7 @@ class _ViewTherapistState extends State<ViewTherapist> {
                   ),
                   SizedBox(height: 12),
                   Text(
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                    owner.about,
                     style: GoogleFonts.inter(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
@@ -155,7 +160,7 @@ class _ViewTherapistState extends State<ViewTherapist> {
                   ),
                   SizedBox(height: 12),
                   Text(
-                    'Pandariya, kawardha(kabirdham), CHATTISGARH',
+                    owner.location,
                     style: GoogleFonts.inter(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
@@ -175,7 +180,7 @@ class _ViewTherapistState extends State<ViewTherapist> {
                   ),
                   SizedBox(height: 12),
                   Text(
-                    '₹1000/Therapy',
+                    '₹${owner.fees}/Therapy',
                     style: GoogleFonts.inter(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,

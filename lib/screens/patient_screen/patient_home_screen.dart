@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:therapy/widgets/custom_appbar.dart';
-import 'package:therapy/widgets/therapy_session_card.dart';
+
+import '../../state_controllers/super_center_controller.dart';
 
 class PatientHomeScreen extends StatelessWidget {
   final String patientName;
@@ -12,6 +14,7 @@ class PatientHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     int completedDays = 4;
     int totalDays = 15;
+    final controller = Get.put(SuperCenterController());
     return Scaffold(
       appBar: CustomAppBar(),
       body: Padding(
@@ -282,15 +285,128 @@ class PatientHomeScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 10),
-              ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: 4,
-                itemBuilder: (context, index) {
-                  return TherapySessionCard();
-                },
-              ),
+              if (controller.records.isEmpty)
+                Center(
+                  child: Text(
+                    "No therapy history",
+                    style: GoogleFonts.inter(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF180829),
+                    ),
+                  ),
+                )
+              else
+                ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: controller.records.length,
+                  itemBuilder: (context, index) {
+                    final record = controller.records[index];
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: Color.fromARGB(255, 235, 246, 237),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Tags row
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: record['therapyTypes']
+                                  .map<Widget>(
+                                      (therapy) => TherapyTag(text: therapy))
+                                  .toList(),
+                            ),
+                            const SizedBox(height: 16),
+                            _buildInfoRow(
+                              'Date',
+                              '${record['date'].day}-${record['date'].month}-${record['date'].year} ${record['time']}',
+                            ),
+                            const SizedBox(height: 8),
+                            _buildInfoRow('Given by', record['givenBy']),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+Widget _buildInfoRow(String label, String value) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Flexible(
+        child: Text(
+          label,
+          style: GoogleFonts.inter(
+            color: Color.fromARGB(255, 55, 61, 69),
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+          ),
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+      const SizedBox(width: 8),
+      Flexible(
+        flex: 2,
+        child: Text(
+          value,
+          style: GoogleFonts.inter(
+            color: Color.fromARGB(255, 147, 158, 170),
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+          ),
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.right,
+        ),
+      ),
+    ],
+  );
+}
+
+class TherapyTag extends StatelessWidget {
+  final String text;
+
+  const TherapyTag({
+    super.key,
+    required this.text,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 12,
+        vertical: 6,
+      ),
+      decoration: BoxDecoration(
+        color: Color.fromARGB(255, 233, 233, 233),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          text,
+          style: GoogleFonts.inter(
+            color: Color.fromARGB(255, 46, 44, 52),
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),

@@ -25,7 +25,7 @@ class _BasicPersonalDetailsState extends State<BasicPersonalDetails> {
 
   void _saveDetails() {
     if (_formKey.currentState!.validate()) {
-      Get.off(MainScreen(patientName: ''));
+      Get.off(MainScreen(userName: ''));
     }
   }
 
@@ -113,7 +113,7 @@ class _BasicPersonalDetailsState extends State<BasicPersonalDetails> {
           actions: [
             TextButton(
               onPressed: () {
-                Get.off(MainScreen(patientName: ''));
+                Get.off(MainScreen(userName: ''));
               },
               child: Text(
                 "Skip",

@@ -30,7 +30,8 @@ class ViewTherapist extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         shape: UnderlineInputBorder(
-            borderSide: BorderSide(color: Color(0xFFBFD1E3), width: 0.3)),
+          borderSide: BorderSide(color: Color(0xFFBFD1E3), width: 0.3),
+        ),
         scrolledUnderElevation: 0,
         title: Text(
           "Details",

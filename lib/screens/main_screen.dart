@@ -13,6 +13,7 @@ import 'package:therapy/screens/therapist_screen/therapist_daily_data_screen.dar
 import 'package:therapy/screens/therapist_screen/therapist_patient_screen.dart';
 import 'package:therapy/screens/therapist_screen/therapist_payment_screen.dart';
 import 'package:therapy/screens/therapist_screen/therapist_settings_screen.dart';
+
 import '../models/user_role.dart';
 import '../state_controllers/auth_controller.dart';
 import '../state_controllers/navigation_controller.dart';
@@ -22,9 +23,9 @@ import 'center_owner_screens/center_payment_screen.dart';
 import 'center_owner_screens/center_settings_screen.dart';
 
 class MainScreen extends StatelessWidget {
-  final String patientName;
+  final String userName;
 
-  const MainScreen({super.key, required this.patientName});
+  const MainScreen({super.key, required this.userName});
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +76,7 @@ class MainScreen extends StatelessWidget {
         ][currentIndex];
       case UserRole.patient:
         return [
-          PatientHomeScreen(patientName: patientName),
+          PatientHomeScreen(patientName: userName),
           PatientTherapiesScreen(),
           PatientPaymentScreen(),
           PatientSettingsScreen()

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:therapy/models/center_owner.dart';
 
 class SuperCenterController extends GetxController {
   final isActive = true.obs;
@@ -8,14 +9,24 @@ class SuperCenterController extends GetxController {
   var announcements = <Map<String, dynamic>>[].obs;
   var selectedMediums = <String>[].obs;
 
-  // Use TextEditingController for text fields
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController aboutController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
   final TextEditingController feeController = TextEditingController();
 
-  // Working Hours Data
+  CenterOwner owner = CenterOwner(
+      name: "Dr.Rudra",
+      role: "Owner",
+      phoneNumber: "7878404583",
+      email: "narukarudra09@gmail,com",
+      about:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      location: "Pandariya, kawardha(kabirdham), CHHATTISGARH",
+      fees: "250",
+      workingHours: {},
+      holidays: []);
+
   final holidays = {
     'Monday': false,
     'Tuesday': false,
@@ -48,7 +59,6 @@ class SuperCenterController extends GetxController {
 
   @override
   void onClose() {
-    // Dispose of controllers
     emailController.dispose();
     phoneController.dispose();
     aboutController.dispose();

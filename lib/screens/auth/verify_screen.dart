@@ -39,7 +39,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
             widget.selectedRole == UserRole.therapist) {
           Get.off(() => BasicPersonalDetails());
         } else {
-          Get.off(() => MainScreen(patientName: ''));
+          Get.off(() => MainScreen(userName: ''));
         }
       } else {
         Get.snackbar('Error', 'Invalid OTP',

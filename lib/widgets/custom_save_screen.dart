@@ -55,7 +55,7 @@ class SuccessScreen extends StatelessWidget {
             const SizedBox(height: 40),
             TextButton.icon(
               onPressed: () {
-                Get.off(MainScreen(patientName: ""));
+                Get.off(MainScreen(userName: ""));
               },
               icon: const Icon(
                 size: 30,
