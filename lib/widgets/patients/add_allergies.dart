@@ -43,7 +43,7 @@ class _AddAllergiesState extends State<AddAllergies> {
           .map((entry) => allergies[entry.key])
           .toList();
 
-      Get.back(result: selected); // Return the selected allergies
+      Get.back(result: selected);
     }
 
     return Scaffold(

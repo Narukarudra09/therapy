@@ -2,12 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:therapy/widgets/custom_appbar.dart';
 
-class PatientPaymentScreen extends StatelessWidget {
+class PatientPaymentScreen extends StatefulWidget {
   const PatientPaymentScreen({super.key});
 
   @override
+  State<PatientPaymentScreen> createState() => _PatientPaymentScreenState();
+}
+
+class _PatientPaymentScreenState extends State<PatientPaymentScreen> {
+  @override
   Widget build(BuildContext context) {
-    bool isDebit = false;
+    final List<Map<String, dynamic>> transactions = [
+      {
+        'isDebit': true,
+        'name': 'Gardens Galleria Par',
+        'date': '11:00 AM & 23 Apr 2021',
+        'amount': 100
+      },
+      {
+        'isDebit': false,
+        'name': 'Pharmacy Purchase',
+        'date': '02:30 PM & 24 Apr 2021',
+        'amount': 150
+      },
+      {
+        'isDebit': true,
+        'name': 'Doctor Consultation',
+        'date': '09:00 AM & 25 Apr 2021',
+        'amount': 200
+      },
+    ];
+
     return Scaffold(
       appBar: CustomAppBar(),
       body: Padding(
@@ -17,9 +42,15 @@ class PatientPaymentScreen extends StatelessWidget {
             padding: EdgeInsets.zero,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: 10,
+            itemCount: transactions.length,
             separatorBuilder: (context, index) => const Divider(height: 1),
             itemBuilder: (context, index) {
+              final transaction = transactions[index];
+              final isDebit = transaction['isDebit'];
+              final name = transaction['name'];
+              final date = transaction['date'];
+              final amount = transaction['amount'];
+
               return Padding(
                 padding: const EdgeInsets.all(16),
                 child: Row(
@@ -43,13 +74,12 @@ class PatientPaymentScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 16),
-                    // Name and date
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Gardens Galleria Par",
+                            name,
                             style: GoogleFonts.inter(
                               color: Color.fromARGB(255, 8, 12, 62),
                               fontSize: 14,
@@ -58,7 +88,7 @@ class PatientPaymentScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            '11:00 AM & 23 Apr 2021',
+                            date,
                             style: GoogleFonts.inter(
                               color: Color.fromARGB(255, 147, 158, 170),
                               fontSize: 14,
@@ -68,13 +98,12 @@ class PatientPaymentScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    // Amount and payment method
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          '${isDebit ? "-" : "+"}₹ 100',
+                          '${isDebit ? "-" : "+"}₹ $amount',
                           style: GoogleFonts.inter(
                             fontSize: 16,
                             fontWeight: FontWeight.w700,

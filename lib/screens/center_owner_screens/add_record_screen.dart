@@ -36,7 +36,6 @@ class _AddRecordScreenState extends State<AddRecordScreen> {
       'givenBy': _givenByController.text,
     };
 
-    // Pass the data back to the previous screen
     Get.back(result: recordData);
   }
 

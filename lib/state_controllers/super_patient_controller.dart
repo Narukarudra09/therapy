@@ -10,6 +10,7 @@ class SuperPatientController extends GetxController {
   var selectedPatient = Rxn<Patient>();
   var isLoading = false.obs;
   var error = ''.obs;
+  final RxList allergies = [].obs;
 
   void setLoading(bool loading) {
     isLoading(loading);

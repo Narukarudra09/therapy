@@ -12,7 +12,8 @@ class MedicalHistory extends StatefulWidget {
 
 class _MedicalHistoryState extends State<MedicalHistory> {
   String bloodGroup = 'A+';
-  List<String> allergies = ['Cheese', 'Cheese', 'Cheese'];
+  List<String> allergies = [];
+
   final List<Map<String, dynamic>> medicalRecords = [
     {'title': 'alergic khasi', 'date': '12-05-2023 • 12:00 am'},
     {'title': 'alergic khasi', 'date': '12-05-2023 • 12:00 am'},
@@ -123,13 +124,19 @@ class _MedicalHistoryState extends State<MedicalHistory> {
                           ))
                       .toList(),
                 ),
-              ), onTap: () {
-            Navigator.push(
+              ), onTap: () async {
+            final selectedAllergies = await Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => AddAllergies(),
               ),
             );
+            if (selectedAllergies != null &&
+                selectedAllergies is List<String>) {
+              setState(() {
+                allergies = selectedAllergies;
+              });
+            }
           }),
           const SizedBox(height: 16),
           _buildSection(
@@ -210,7 +217,6 @@ class _MedicalHistoryState extends State<MedicalHistory> {
               ],
             ),
           ),
-          const Divider(height: 1),
           content,
         ],
       ),

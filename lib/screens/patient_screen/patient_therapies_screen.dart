@@ -12,7 +12,7 @@ class PatientTherapiesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(SuperCenterController());
-    final _owner = controller.owner;
+    final owner = controller.owner;
     final String image = 'assets/center_profile.png';
     return Scaffold(
       appBar: CustomAppBar(),
@@ -85,7 +85,7 @@ class PatientTherapiesScreen extends StatelessWidget {
                               SizedBox(
                                 width: 250,
                                 child: Text(
-                                  _owner.location,
+                                  owner.location,
                                   style: GoogleFonts.inter(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w400,
