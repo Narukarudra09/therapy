@@ -3,7 +3,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomAppBar({super.key});
+  final String userName;
+
+  const CustomAppBar({super.key, required this.userName});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ],
           ),
           Text(
-            "Welcome",
+            "Welcome $userName",
             style: GoogleFonts.sora(
               fontSize: 12,
               fontWeight: FontWeight.w400,
@@ -43,8 +45,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         GestureDetector(
             child: CircleAvatar(
-              backgroundImage: AssetImage("assets/profile.png"),
-            )),
+          backgroundImage: AssetImage("assets/profile.png"),
+        )),
         SizedBox(
           width: 20,
         ),

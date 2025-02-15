@@ -8,7 +8,9 @@ class TherapistPatientScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: CustomAppBar(
+        userName: '',
+      ),
       body: Padding(
         padding: const EdgeInsets.only(top: 16, left: 20, right: 20),
         child: SingleChildScrollView(

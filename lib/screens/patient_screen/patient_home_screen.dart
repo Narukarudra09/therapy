@@ -16,7 +16,9 @@ class PatientHomeScreen extends StatelessWidget {
     int totalDays = 15;
     final controller = Get.put(SuperCenterController());
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: CustomAppBar(
+        userName: patientName,
+      ),
       body: Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 24),
         child: SingleChildScrollView(

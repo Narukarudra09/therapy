@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../state_controllers/super_patient_controller.dart';
 
 class CustomProfileScreen extends StatefulWidget {
   final PreferredSizeWidget? appBar;
   final void Function()? onTap;
+  final String username;
 
   const CustomProfileScreen(
-      {super.key, required this.appBar, required this.onTap});
+      {super.key,
+      required this.appBar,
+      required this.onTap,
+      required this.username});
 
   @override
   State<CustomProfileScreen> createState() => _CustomProfileScreenState();
@@ -15,9 +22,12 @@ class CustomProfileScreen extends StatefulWidget {
 
 class _CustomProfileScreenState extends State<CustomProfileScreen> {
   final controller = TextEditingController(text: '7878404583');
+  final SuperPatientController patientController = Get.find();
 
   @override
   Widget build(BuildContext context) {
+    final patient = patientController.selectedPatient.value;
+
     return Scaffold(
       appBar: widget.appBar,
       body: SingleChildScrollView(
@@ -64,7 +74,7 @@ class _CustomProfileScreenState extends State<CustomProfileScreen> {
               ),
               const SizedBox(height: 8),
               TextFormField(
-                initialValue: '',
+                initialValue: widget.username,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -152,7 +162,7 @@ class _CustomProfileScreenState extends State<CustomProfileScreen> {
               ),
               const SizedBox(height: 8),
               DropdownButtonFormField<String>(
-                value: 'Bhilwara',
+                value: patient?.city ?? 'Bhilwara',
                 icon: Icon(Icons.keyboard_arrow_down_outlined),
                 iconEnabledColor: const Color(0xFF171C22),
                 iconDisabledColor: const Color(0xFF171C22),

@@ -16,7 +16,9 @@ class SuperCentersScreen extends StatelessWidget {
     final String subTitle = "Sector 38, Noida, Uttar Pradesh 201301";
     final String imageUrl = "assets/center_profile.png";
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: CustomAppBar(
+        userName: '',
+      ),
       body: Padding(
         padding: const EdgeInsets.only(top: 16.0, left: 20, right: 20),
         child: SingleChildScrollView(

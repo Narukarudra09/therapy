@@ -14,7 +14,9 @@ class TherapistDailyDataScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(SuperCenterController());
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: CustomAppBar(
+        userName: '',
+      ),
       body: Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 16),
         child: SingleChildScrollView(

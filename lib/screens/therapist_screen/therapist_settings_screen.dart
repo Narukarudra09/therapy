@@ -61,6 +61,7 @@ class TherapistSettingsScreen extends StatelessWidget {
           ),
         );
       },
+      username: '',
     );
   }
 }

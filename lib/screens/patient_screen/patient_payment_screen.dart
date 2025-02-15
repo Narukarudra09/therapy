@@ -3,7 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:therapy/widgets/custom_appbar.dart';
 
 class PatientPaymentScreen extends StatefulWidget {
-  const PatientPaymentScreen({super.key});
+  final String patientName;
+
+  const PatientPaymentScreen({super.key, required this.patientName});
 
   @override
   State<PatientPaymentScreen> createState() => _PatientPaymentScreenState();
@@ -34,7 +36,9 @@ class _PatientPaymentScreenState extends State<PatientPaymentScreen> {
     ];
 
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: CustomAppBar(
+        userName: widget.patientName,
+      ),
       body: Padding(
         padding: EdgeInsets.only(top: 16, left: 20, right: 20),
         child: SingleChildScrollView(

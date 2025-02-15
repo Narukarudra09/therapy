@@ -10,7 +10,6 @@ class SuperPatientController extends GetxController {
   var selectedPatient = Rxn<Patient>();
   var isLoading = false.obs;
   var error = ''.obs;
-  final RxList allergies = [].obs;
 
   void setLoading(bool loading) {
     isLoading(loading);
@@ -88,20 +87,15 @@ class SuperPatientController extends GetxController {
     }
   }
 
-  Future<void> addAllergy(String patientId, String allergy) async {
-    setLoading(true);
-    setError(null);
-
-    try {
-      final patient = patients.firstWhere((p) => p.id == patientId);
-      final updatedPatient = patient.copyWith(
-        allergies: [...patient.allergies, allergy],
+  // Method to save basic details
+  void saveBasicDetails(String name, String email, String? dateOfBirth) {
+    if (selectedPatient.value != null) {
+      final updatedPatient = selectedPatient.value!.copyWith(
+        name: name,
+        email: email,
+        dateOfBirth: dateOfBirth,
       );
-      await updatePatient(updatedPatient);
-    } catch (e) {
-      setError(e.toString());
-    } finally {
-      setLoading(false);
+      updatePatient(updatedPatient);
     }
   }
 
@@ -138,5 +132,51 @@ class SuperPatientController extends GetxController {
     } finally {
       setLoading(false);
     }
+  }
+
+  var allergies = <String>[
+    'Cheese',
+    'Curd',
+    'Egg',
+    'Garlic',
+    'Gluten',
+    'Lemon',
+    'Meat',
+    'Milk',
+    'Nuts',
+    'Oats',
+    'Other Fruits',
+    'Peanut',
+    'Peppers',
+    'Preserved Foods',
+    'Shellfish/Fish',
+    'Soya',
+  ].obs;
+
+  var selectedAllergies = <bool>[].obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    // Initialize selectedAllergies with the same length as allergies
+    selectedAllergies.value = List.generate(allergies.length, (_) => false);
+  }
+
+  void addAllergy(String newAllergy) {
+    allergies.add(newAllergy);
+    selectedAllergies.add(true);
+  }
+
+  void toggleSelection(int index) {
+    selectedAllergies[index] = !selectedAllergies[index];
+  }
+
+  List<String> getSelectedAllergies() {
+    return selectedAllergies
+        .asMap()
+        .entries
+        .where((entry) => entry.value)
+        .map((entry) => allergies[entry.key])
+        .toList();
   }
 }

@@ -7,7 +7,9 @@ import 'package:therapy/widgets/custom_appbar.dart';
 import '../../state_controllers/super_center_controller.dart';
 
 class PatientTherapiesScreen extends StatelessWidget {
-  const PatientTherapiesScreen({super.key});
+  final String patientName;
+
+  const PatientTherapiesScreen({super.key, required this.patientName});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +17,9 @@ class PatientTherapiesScreen extends StatelessWidget {
     final owner = controller.owner;
     final String image = 'assets/center_profile.png';
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: CustomAppBar(
+        userName: patientName,
+      ),
       body: Padding(
         padding: EdgeInsets.only(top: 16, left: 20, right: 20),
         child: SingleChildScrollView(

@@ -39,7 +39,9 @@ class _SuperTherapistsScreenState extends State<SuperTherapistsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: CustomAppBar(
+        userName: '',
+      ),
       body: Padding(
         padding: const EdgeInsets.only(top: 16.0, left: 20, right: 20),
         child: SingleChildScrollView(

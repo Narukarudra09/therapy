@@ -77,9 +77,9 @@ class MainScreen extends StatelessWidget {
       case UserRole.patient:
         return [
           PatientHomeScreen(patientName: userName),
-          PatientTherapiesScreen(),
-          PatientPaymentScreen(),
-          PatientSettingsScreen()
+          PatientTherapiesScreen(patientName: userName),
+          PatientPaymentScreen(patientName: userName),
+          PatientSettingsScreen(patientName: userName)
         ][currentIndex];
     }
   }

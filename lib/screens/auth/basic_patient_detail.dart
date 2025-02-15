@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../state_controllers/super_patient_controller.dart';
 import '../../widgets/custom_button.dart';
 import '../main_screen.dart';
 
@@ -17,15 +18,29 @@ class _BasicPersonalDetailsState extends State<BasicPersonalDetails> {
   final _emailController = TextEditingController();
   String? _selectedDate;
   final _formKey = GlobalKey<FormState>();
+  final SuperPatientController controller = Get.put(SuperPatientController());
 
   @override
   void initState() {
     super.initState();
+    if (controller.selectedPatient.value != null) {
+      final patient = controller.selectedPatient.value!;
+      _nameController.text = patient.name;
+      _emailController.text = patient.email;
+      _selectedDate = patient.dateOfBirth;
+    }
   }
 
   void _saveDetails() {
     if (_formKey.currentState!.validate()) {
-      Get.off(MainScreen(userName: ''));
+      controller.saveBasicDetails(
+        _nameController.text,
+        _emailController.text,
+        _selectedDate,
+      );
+      Get.off(() => MainScreen(
+            userName: _nameController.text,
+          ));
     }
   }
 

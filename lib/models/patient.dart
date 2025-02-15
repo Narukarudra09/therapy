@@ -17,6 +17,7 @@ class Patient {
   final List<Prescription> prescriptions;
   final List<TherapySession> therapySessions;
   final List<Payment> payments;
+  String? dateOfBirth;
 
   Patient({
     required this.id,
@@ -31,6 +32,7 @@ class Patient {
     this.prescriptions = const [],
     this.therapySessions = const [],
     this.payments = const [],
+    this.dateOfBirth,
   });
 
   Patient copyWith({
@@ -46,6 +48,7 @@ class Patient {
     List<Prescription>? prescriptions,
     List<TherapySession>? therapySessions,
     List<Payment>? payments,
+    String? dateOfBirth,
   }) {
     return Patient(
       id: id ?? this.id,
@@ -60,6 +63,7 @@ class Patient {
       therapySessions: therapySessions ?? this.therapySessions,
       payments: payments ?? this.payments,
       gender: gender ?? this.gender,
+      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
     );
   }
 }

@@ -2,47 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../state_controllers/super_patient_controller.dart';
 import '../custom_add_button.dart';
 
-class AddAllergies extends StatefulWidget {
+class AddAllergies extends StatelessWidget {
   const AddAllergies({super.key});
 
   @override
-  State<AddAllergies> createState() => _AddAllergiesState();
-}
-
-class _AddAllergiesState extends State<AddAllergies> {
-  @override
   Widget build(BuildContext context) {
-    final List<String> allergies = [
-      'Cheese',
-      'Curd',
-      'Egg',
-      'Garlic',
-      'Gluten',
-      'Lemon',
-      'Meat',
-      'Milk',
-      'Nuts',
-      'Oats',
-      'Other Fruits',
-      'Peanut',
-      'Peppers',
-      'Preserved Foods',
-      'Shellfish/Fish',
-      'Soya',
-    ];
-    final List<bool> selectedAllergies =
-        List.generate(allergies.length, (_) => false);
+    final SuperPatientController controller = Get.put(SuperPatientController());
 
     void saveAllergies() {
-      final selected = selectedAllergies
-          .asMap()
-          .entries
-          .where((entry) => entry.value)
-          .map((entry) => allergies[entry.key])
-          .toList();
-
+      final selected = controller.getSelectedAllergies();
       Get.back(result: selected);
     }
 
@@ -146,10 +117,7 @@ class _AddAllergiesState extends State<AddAllergies> {
                           GestureDetector(
                             onTap: () {
                               if (newAllergy.isNotEmpty) {
-                                setState(() {
-                                  allergies.add(newAllergy);
-                                  selectedAllergies.add(true);
-                                });
+                                controller.addAllergy(newAllergy);
                               }
                               Get.back();
                             },
@@ -192,26 +160,29 @@ class _AddAllergiesState extends State<AddAllergies> {
                   ),
                 ),
               ),
-              ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: allergies.length,
-                itemBuilder: (context, index) {
-                  return CheckboxListTile(
-                    side: BorderSide(
-                        color: Color.fromARGB(255, 224, 227, 231), width: 2),
-                    activeColor: Color.fromARGB(255, 65, 184, 119),
-                    checkboxShape: OvalBorder(),
-                    title: Text(allergies[index]),
-                    value: selectedAllergies[index],
-                    onChanged: (value) {
-                      setState(() {
-                        selectedAllergies[index] = value!;
-                      });
-                    },
-                  );
-                },
-              ),
+              Obx(() {
+                return ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: controller.allergies.length,
+                  itemBuilder: (context, index) {
+                    return Obx(() {
+                      return CheckboxListTile(
+                        side: BorderSide(
+                            color: Color.fromARGB(255, 224, 227, 231),
+                            width: 2),
+                        activeColor: Color.fromARGB(255, 65, 184, 119),
+                        checkboxShape: OvalBorder(),
+                        title: Text(controller.allergies[index]),
+                        value: controller.selectedAllergies[index],
+                        onChanged: (value) {
+                          controller.toggleSelection(index);
+                        },
+                      );
+                    });
+                  },
+                );
+              }),
             ],
           ),
         ),

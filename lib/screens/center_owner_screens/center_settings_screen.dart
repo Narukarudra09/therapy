@@ -15,7 +15,9 @@ class CenterSettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: CustomAppBar(
+        userName: '',
+      ),
       body: Padding(
         padding: EdgeInsets.only(top: 24, left: 20, right: 20),
         child: Column(
@@ -87,6 +89,7 @@ class CenterSettingsScreen extends StatelessWidget {
                             oldNumber: '',
                           ));
                     },
+                    username: '',
                   ),
                 );
               },

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:therapy/screens/patient_screen/blood_group.dart';
-import 'package:therapy/widgets/patients/add_allergies.dart';
+
+import '../../widgets/patients/add_allergies.dart';
+import 'blood_group.dart';
 
 class MedicalHistory extends StatefulWidget {
   const MedicalHistory({super.key});
