@@ -52,7 +52,7 @@ class SuperCentersScreen extends StatelessWidget {
               ),
               ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: 7,
+                itemCount: 1,
                 shrinkWrap: true,
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
