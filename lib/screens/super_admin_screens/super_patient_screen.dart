@@ -9,37 +9,24 @@ import 'package:therapy/widgets/patients/patient_detail.dart';
 
 import '../../state_controllers/super_patient_controller.dart';
 
-class SuperPatientScreen extends StatefulWidget {
+class SuperPatientScreen extends StatelessWidget {
   const SuperPatientScreen({super.key});
 
   @override
-  State<SuperPatientScreen> createState() => _SuperPatientScreenState();
-}
-
-class _SuperPatientScreenState extends State<SuperPatientScreen> {
-  final SuperPatientController _controller = Get.find<SuperPatientController>();
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _controller.fetchPatients();
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final SuperPatientController controller =
+        Get.find<SuperPatientController>();
     return Scaffold(
       appBar: CustomAppBar(
         userName: '',
       ),
       body: Obx(() {
-        if (_controller.isLoading.value) {
+        if (controller.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
         }
 
-        if (_controller.error.value.isNotEmpty) {
-          return Center(child: Text(_controller.error.value));
+        if (controller.error.value.isNotEmpty) {
+          return Center(child: Text(controller.error.value));
         }
 
         return Padding(
@@ -70,15 +57,15 @@ class _SuperPatientScreenState extends State<SuperPatientScreen> {
                 const SizedBox(height: 24),
                 ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: _controller.patients.length,
+                  itemCount: controller.patients.length,
                   shrinkWrap: true,
                   itemBuilder: (BuildContext context, int index) {
-                    final patient = _controller.patients[index];
+                    final patient = controller.patients[index];
                     return CustomListTile(
                       title: patient.name,
                       subtitle: patient.email,
                       onTap: () {
-                        _controller.selectPatient(patient.id);
+                        controller.selectPatient(patient.id);
                         Get.to(() => PatientDetail(patientName: patient.name));
                       },
                     );

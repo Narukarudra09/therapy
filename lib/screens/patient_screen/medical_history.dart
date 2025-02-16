@@ -1,45 +1,20 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:therapy/state_controllers/super_patient_controller.dart';
 
 import '../../widgets/patients/add_allergies.dart';
 import 'blood_group.dart';
 
-class MedicalHistory extends StatefulWidget {
+class MedicalHistory extends StatelessWidget {
   const MedicalHistory({super.key});
 
   @override
-  _MedicalHistoryState createState() => _MedicalHistoryState();
-}
-
-class _MedicalHistoryState extends State<MedicalHistory> {
-  String bloodGroup = 'A+';
-  List<String> allergies = [];
-
-  final List<Map<String, dynamic>> medicalRecords = [
-    {'title': 'alergic khasi', 'date': '12-05-2023 • 12:00 am'},
-    {'title': 'alergic khasi', 'date': '12-05-2023 • 12:00 am'},
-    {'title': 'alergic khasi', 'date': '12-05-2023 • 12:00 am'},
-  ];
-  final List<Map<String, dynamic>> prescriptions = [
-    {'title': 'alergic khasi', 'date': '12-05-2023 • 12:00 am', 'isPdf': false},
-    {'title': 'alergic khasi', 'date': '12-05-2023 • 12:00 am', 'isPdf': false},
-    {'title': 'alergic khasi', 'date': '12-05-2023 • 12:00 am', 'isPdf': true},
-  ];
-
-  void _deleteAllergy(String allergy) {
-    setState(() {
-      allergies.remove(allergy);
-    });
-  }
-
-  void _updateBloodGroup(String newBloodGroup) {
-    setState(() {
-      bloodGroup = newBloodGroup;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final SuperPatientController controller = Get.put(SuperPatientController());
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -91,12 +66,12 @@ class _MedicalHistoryState extends State<MedicalHistory> {
         children: [
           _buildSection(
               'Blood Group',
-              ListTile(
-                title: Text(
-                  bloodGroup,
-                  style: const TextStyle(fontSize: 18),
-                ),
-              ), onTap: () async {
+              Obx(() => ListTile(
+                    title: Text(
+                      controller.bloodGroup.value,
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                  )), onTap: () async {
             final newBloodGroup = await Navigator.push(
               context,
               MaterialPageRoute(
@@ -104,28 +79,34 @@ class _MedicalHistoryState extends State<MedicalHistory> {
               ),
             );
             if (newBloodGroup != null) {
-              _updateBloodGroup(newBloodGroup);
+              controller.updateBloodGroup(newBloodGroup);
             }
           }),
           const SizedBox(height: 16),
           _buildSection(
               'Allergies',
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Wrap(
-                  spacing: 8,
-                  children: allergies
-                      .map((allergy) => Chip(
-                            label: Text(allergy),
-                            deleteIcon: const Icon(Icons.close),
-                            onDeleted: () {
-                              _deleteAllergy(allergy);
-                            },
-                            backgroundColor: Colors.grey[200],
-                          ))
-                      .toList(),
-                ),
-              ), onTap: () async {
+              Obx(() => Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Wrap(
+                      spacing: 4,
+                      children: controller.allergies
+                          .map((allergy) => Chip(
+                                side: BorderSide.none,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                                padding: EdgeInsets.all(0),
+                                labelPadding: EdgeInsets.only(left: 8),
+                                label: Text(allergy),
+                                deleteIcon: const Icon(Icons.close),
+                                onDeleted: () {
+                                  controller.deleteAllergy(allergy);
+                                },
+                                backgroundColor: Colors.grey[200],
+                              ))
+                          .toList(),
+                    ),
+                  )), onTap: () async {
             final selectedAllergies = await Navigator.push(
               context,
               MaterialPageRoute(
@@ -134,39 +115,39 @@ class _MedicalHistoryState extends State<MedicalHistory> {
             );
             if (selectedAllergies != null &&
                 selectedAllergies is List<String>) {
-              setState(() {
-                allergies = selectedAllergies;
-              });
+              controller.allergies.assignAll(selectedAllergies);
             }
           }),
           const SizedBox(height: 16),
           _buildSection(
             'Medical Records',
-            Column(
-              children: medicalRecords
-                  .map((record) => _buildRecordItem(
-                        record['title'],
-                        record['date'],
-                        Icons.medical_services,
-                      ))
-                  .toList(),
-            ),
+            Obx(() => Column(
+                  children: controller.medicalRecords
+                      .map((record) => _buildRecordItem(
+                            record['title'],
+                            record['date'],
+                            record['imagePath'],
+                            onDelete: () => controller.deleteRecord(record),
+                          ))
+                      .toList(),
+                )),
+            onTap: () => controller.pickImage(ImageSource.gallery, false),
           ),
           const SizedBox(height: 16),
           _buildSection(
             'Past Prescriptions',
-            Column(
-              children: prescriptions
-                  .map((prescription) => _buildRecordItem(
-                        prescription['title'],
-                        prescription['date'],
-                        prescription['isPdf']
-                            ? Icons.picture_as_pdf
-                            : Icons.medical_services,
-                        iconColor: prescription['isPdf'] ? Colors.red : null,
-                      ))
-                  .toList(),
-            ),
+            Obx(() => Column(
+                  children: controller.prescriptions
+                      .map((prescription) => _buildRecordItem(
+                            prescription['title'],
+                            prescription['date'],
+                            prescription['imagePath'],
+                            onDelete: () =>
+                                controller.deletePrescription(prescription),
+                          ))
+                      .toList(),
+                )),
+            onTap: () => controller.pickImage(ImageSource.gallery, true),
           ),
         ],
       ),
@@ -224,8 +205,8 @@ class _MedicalHistoryState extends State<MedicalHistory> {
     );
   }
 
-  Widget _buildRecordItem(String title, String date, IconData icon,
-      {Color? iconColor}) {
+  Widget _buildRecordItem(String title, String date, String imagePath,
+      {void Function()? onDelete}) {
     return ListTile(
       contentPadding: EdgeInsets.symmetric(horizontal: 16),
       leading: Container(
@@ -234,8 +215,13 @@ class _MedicalHistoryState extends State<MedicalHistory> {
         decoration: BoxDecoration(
           color: Color(0xFFFAFAFA),
           borderRadius: BorderRadius.circular(8),
+          image: imagePath != null
+              ? DecorationImage(
+                  image: FileImage(File(imagePath)),
+                  fit: BoxFit.cover,
+                )
+              : null,
         ),
-        child: Icon(icon, color: iconColor),
       ),
       title: Text(title),
       titleTextStyle: GoogleFonts.inter(
@@ -243,7 +229,10 @@ class _MedicalHistoryState extends State<MedicalHistory> {
       subtitle: Text(date),
       subtitleTextStyle:
           GoogleFonts.inter(fontSize: 12, color: Color(0xFF939EAA)),
-      trailing: Icon(Icons.close),
+      trailing: IconButton(
+        icon: Icon(Icons.close),
+        onPressed: onDelete,
+      ),
     );
   }
 }

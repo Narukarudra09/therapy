@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 import '../models/medical_record.dart';
 import '../models/patient.dart';
@@ -178,5 +180,45 @@ class SuperPatientController extends GetxController {
         .where((entry) => entry.value)
         .map((entry) => allergies[entry.key])
         .toList();
+  }
+
+  var bloodGroup = 'A+'.obs;
+
+  var medicalRecords = <Map<String, dynamic>>[].obs;
+  var prescriptions = <Map<String, dynamic>>[].obs;
+
+  void updateBloodGroup(String newBloodGroup) {
+    bloodGroup.value = newBloodGroup;
+  }
+
+  void deleteAllergy(String allergy) {
+    allergies.remove(allergy);
+  }
+
+  Future<void> pickImage(ImageSource source, bool isPrescription) async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(source: source);
+
+    if (image != null) {
+      String imageName = image.name;
+      String imageTime =
+          DateFormat('dd-MM-yyyy • hh:mm a').format(DateTime.now());
+
+      if (isPrescription) {
+        prescriptions.add(
+            {'title': imageName, 'date': imageTime, 'imagePath': image.path});
+      } else {
+        medicalRecords.add(
+            {'title': imageName, 'date': imageTime, 'imagePath': image.path});
+      }
+    }
+  }
+
+  void deleteRecord(Map<String, dynamic> record) {
+    medicalRecords.remove(record);
+  }
+
+  void deletePrescription(Map<String, dynamic> prescription) {
+    prescriptions.remove(prescription);
   }
 }
