@@ -23,7 +23,7 @@ class _AddPatientsState extends State<AddPatients> {
   final _emailController = TextEditingController();
   final _genderController = TextEditingController();
   String city = 'Bhilwara';
-  String bloodGroup = 'A+';
+
   List<String> selectedAllergies = [];
   List<String> gender = ['Male', 'Female', 'Others'];
   final SuperPatientController controller = Get.put(SuperPatientController());
@@ -44,7 +44,7 @@ class _AddPatientsState extends State<AddPatients> {
         name: _fullNameController.text,
         phone: _mobileNumberController.text,
         city: city,
-        bloodGroup: bloodGroup,
+        bloodGroup: controller.bloodGroup.toString(),
         allergies: selectedAllergies,
         medicalRecords: [],
         therapySessions: [],
@@ -54,7 +54,7 @@ class _AddPatientsState extends State<AddPatients> {
       );
 
       Get.find<SuperPatientController>().addPatient(newPatient);
-      Get.back(); // Navigate back after saving
+      Get.back();
     }
   }
 
@@ -436,7 +436,7 @@ class _AddPatientsState extends State<AddPatients> {
                       .toList(),
                   onChanged: (String? newValue) {
                     setState(() {
-                      bloodGroup = newValue!;
+                      controller.bloodGroup = newValue! as RxString;
                     });
                   },
                   validator: (value) {
@@ -465,8 +465,8 @@ class _AddPatientsState extends State<AddPatients> {
                           Text(
                             "Allergies",
                             style: GoogleFonts.inter(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
                               color: const Color.fromARGB(255, 46, 44, 52),
                             ),
                           ),
@@ -489,20 +489,27 @@ class _AddPatientsState extends State<AddPatients> {
                       ),
                       Wrap(
                         spacing: 4,
-                        children: controller.allergies
+                        children: selectedAllergies
                             .map((allergy) => Chip(
                                   side: BorderSide.none,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(100),
                                   ),
                                   padding: EdgeInsets.all(0),
-                                  labelPadding: EdgeInsets.only(left: 8),
+                                  labelPadding:
+                                      EdgeInsets.symmetric(horizontal: 8),
                                   label: Text(allergy),
+                                  labelStyle: GoogleFonts.inter(
+                                    color: Color.fromARGB(255, 46, 44, 52),
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                   deleteIcon: const Icon(Icons.close),
                                   onDeleted: () {
                                     controller.deleteAllergy(allergy);
                                   },
-                                  backgroundColor: Colors.grey[200],
+                                  backgroundColor:
+                                      Color.fromARGB(255, 233, 233, 233),
                                 ))
                             .toList(),
                       ),

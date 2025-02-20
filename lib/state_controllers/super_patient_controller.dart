@@ -196,8 +196,8 @@ class SuperPatientController extends GetxController {
   }
 
   Future<void> pickImage(ImageSource source, bool isPrescription) async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: source);
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: source);
 
     if (image != null) {
       String imageName = image.name;

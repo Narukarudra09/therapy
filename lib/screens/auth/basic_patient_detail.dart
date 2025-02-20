@@ -16,9 +16,11 @@ class BasicPersonalDetails extends StatefulWidget {
 class _BasicPersonalDetailsState extends State<BasicPersonalDetails> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
+  final _genderController = TextEditingController();
   String? _selectedDate;
   final _formKey = GlobalKey<FormState>();
   final SuperPatientController controller = Get.put(SuperPatientController());
+  List<String> gender = ['Male', 'Female', 'Others'];
 
   @override
   void initState() {
@@ -250,6 +252,71 @@ class _BasicPersonalDetailsState extends State<BasicPersonalDetails> {
                     },
                   ),
                   const SizedBox(height: 16),
+                  Text(
+                    "Gender",
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: const Color.fromARGB(255, 135, 141, 186),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  DropdownButtonFormField<String>(
+                    value: _genderController.text.isNotEmpty
+                        ? _genderController.text
+                        : null,
+                    icon: Icon(Icons.keyboard_arrow_down),
+                    borderRadius: BorderRadius.circular(8),
+                    iconEnabledColor: const Color.fromARGB(255, 23, 28, 34),
+                    iconDisabledColor: const Color.fromARGB(255, 23, 28, 34),
+                    dropdownColor: const Color.fromARGB(255, 243, 243, 253),
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(
+                            color: Color.fromARGB(255, 232, 233, 241)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(
+                            color: Color.fromARGB(255, 232, 233, 241)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(
+                            color: Color.fromARGB(255, 232, 233, 241)),
+                      ),
+                    ),
+                    items: gender
+                        .map((role) => DropdownMenuItem(
+                              value: role,
+                              child: FittedBox(
+                                child: Text(
+                                  role,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xFF2E2C34),
+                                  ),
+                                ),
+                              ),
+                            ))
+                        .toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _genderController.text = newValue!;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please select a gender";
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
                   Text(
                     "Date of Birth",
                     style: GoogleFonts.inter(

@@ -8,7 +8,6 @@ class SuperCenterController extends GetxController {
   final isActive = true.obs;
   final isLoginAllowed = true.obs;
   var holidays = <String, Holiday>{}.obs;
-
   var records = <Map<String, dynamic>>[].obs;
   var announcements = <Map<String, dynamic>>[].obs;
   var selectedMediums = <String>[].obs;

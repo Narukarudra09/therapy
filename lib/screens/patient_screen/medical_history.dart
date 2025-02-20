@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:therapy/state_controllers/super_patient_controller.dart';
 
+import '../../state_controllers/super_patient_controller.dart';
 import '../../widgets/patients/add_allergies.dart';
 import 'blood_group.dart';
 
