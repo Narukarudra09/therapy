@@ -12,16 +12,6 @@ class ViewTherapist extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> days = [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday'
-    ];
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -91,6 +81,7 @@ class ViewTherapist extends StatelessWidget {
                   ),
                   SizedBox(height: 12),
                   ListTile(
+                    minTileHeight: 0,
                     contentPadding: EdgeInsets.zero,
                     leading: Icon(
                       Icons.phone_in_talk_sharp,
@@ -103,6 +94,7 @@ class ViewTherapist extends StatelessWidget {
                         color: Color(0xFF939EAA)),
                   ),
                   ListTile(
+                    minTileHeight: 0,
                     shape: UnderlineInputBorder(
                       borderSide: BorderSide(
                         color: Color(0xFFEBF6ED),
@@ -195,38 +187,46 @@ class ViewTherapist extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 12),
-                  ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: 7,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 6.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              days[index],
-                              style: GoogleFonts.inter(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xFF4E5661),
+                  Obx(() {
+                    return Column(
+                      children: controller.openingTimes.entries.map((entry) {
+                        final day = entry.key;
+                        final openingTime = entry.value;
+                        final closingTime = controller.closingTimes[day];
+                        final isHoliday = controller.holidays[day] != null;
+
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                day,
+                                style: GoogleFonts.inter(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Color(0xFF4E5661),
+                                ),
                               ),
-                            ),
-                            Text(
-                              '10:15 am–11 pm',
-                              style: GoogleFonts.inter(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xFF939EAA),
+                              Text(
+                                isHoliday
+                                    ? "Holiday"
+                                    : "${openingTime.format(context)} - ${closingTime?.format(context)}",
+                                style: GoogleFonts.inter(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                  color: isHoliday
+                                      ? Colors.red
+                                      : Color(0xFF939EAA),
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                  SizedBox(height: 12),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    );
+                  }),
+                  SizedBox(height: 24),
                   Divider(
                     color: Color(0xFFEBF6ED),
                   ),
@@ -247,7 +247,7 @@ class ViewTherapist extends StatelessWidget {
                   SizedBox(height: 12),
                   Obx(() {
                     final holidays = controller.holidays.entries
-                        .where((entry) => entry.value.date != null)
+                        .where((entry) => entry.value != null)
                         .toList();
 
                     if (holidays.isEmpty) {
@@ -269,7 +269,7 @@ class ViewTherapist extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                '${holiday.value.message}'.split(' ')[0],
+                                holiday.value.message,
                                 style: GoogleFonts.inter(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w400,

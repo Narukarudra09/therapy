@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CenterOwner {
+  final String centerName;
   final String name;
   final String role;
   final String phoneNumber;
@@ -12,6 +13,7 @@ class CenterOwner {
   final List<String> holidays;
 
   CenterOwner({
+    required this.centerName,
     required this.name,
     required this.role,
     required this.phoneNumber,
@@ -25,6 +27,7 @@ class CenterOwner {
 
   factory CenterOwner.fromJson(Map<String, dynamic> json) {
     return CenterOwner(
+      centerName: json['CenterOwner'],
       name: json['name'],
       role: json['role'],
       phoneNumber: json['phoneNumber'],
@@ -42,6 +45,7 @@ class CenterOwner {
 
   Map<String, dynamic> toJson() {
     return {
+      "centerName": centerName,
       'name': name,
       'role': role,
       'phoneNumber': phoneNumber,

@@ -16,16 +16,6 @@ class ViewTherapist extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> days = [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday'
-    ];
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -106,6 +96,7 @@ class ViewTherapist extends StatelessWidget {
                   ),
                   SizedBox(height: 12),
                   ListTile(
+                    minTileHeight: 0,
                     contentPadding: EdgeInsets.zero,
                     leading: Icon(
                       Icons.phone_in_talk_sharp,
@@ -118,6 +109,7 @@ class ViewTherapist extends StatelessWidget {
                         color: Color(0xFF939EAA)),
                   ),
                   ListTile(
+                    minTileHeight: 0,
                     shape: UnderlineInputBorder(
                       borderSide: BorderSide(
                         color: Color(0xFFEBF6ED),
@@ -220,7 +212,46 @@ class ViewTherapist extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 12),
-                  SizedBox(height: 12),
+                  Obx(() {
+                    return Column(
+                      children: controller.openingTimes.entries.map((entry) {
+                        final day = entry.key;
+                        final openingTime = entry.value;
+                        final closingTime = controller.closingTimes[day];
+                        final isHoliday = controller.holidays[day] != null;
+
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                day,
+                                style: GoogleFonts.inter(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Color(0xFF4E5661),
+                                ),
+                              ),
+                              Text(
+                                isHoliday
+                                    ? "Holiday"
+                                    : "${openingTime.format(context)} - ${closingTime?.format(context)}",
+                                style: GoogleFonts.inter(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                  color: isHoliday
+                                      ? Colors.red
+                                      : Color(0xFF939EAA),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    );
+                  }),
+                  SizedBox(height: 24),
                   Divider(
                     color: Color(0xFFEBF6ED),
                   ),
@@ -251,7 +282,7 @@ class ViewTherapist extends StatelessWidget {
                   SizedBox(height: 12),
                   Obx(() {
                     final holidays = controller.holidays.entries
-                        .where((entry) => entry.value == true)
+                        .where((entry) => entry.value != null)
                         .toList();
 
                     if (holidays.isEmpty) {
@@ -271,17 +302,18 @@ class ViewTherapist extends StatelessWidget {
                           padding: const EdgeInsets.only(bottom: 6.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                holiday.key,
+                                holiday.value.message,
                                 style: GoogleFonts.inter(
                                   fontSize: 14,
-                                  fontWeight: FontWeight.w400,
+                                  fontWeight: FontWeight.w500,
                                   color: Color(0xFF4E5661),
                                 ),
                               ),
                               Text(
-                                "Holiday",
+                                'Holiday',
                                 style: GoogleFonts.inter(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w400,

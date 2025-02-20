@@ -1,41 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:therapy/widgets/center/add_holidays.dart';
 
 import '../../state_controllers/super_center_controller.dart';
 
-class WorkingHoursScreen extends StatefulWidget {
-  const WorkingHoursScreen({super.key});
+class WorkingHoursScreen extends StatelessWidget {
+  final bool isEditing;
 
-  @override
-  _WorkingHoursScreenState createState() => _WorkingHoursScreenState();
-}
-
-class _WorkingHoursScreenState extends State<WorkingHoursScreen> {
-  final SuperCenterController controller = Get.find();
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  Future<void> _selectTime(
-      BuildContext context, String day, bool isOpening) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: isOpening
-          ? controller.openingTimes[day]!
-          : controller.closingTimes[day]!,
-    );
-    if (picked != null) {
-      setState(() {
-        controller.setTime(day, picked, isOpening);
-      });
-    }
-  }
+  const WorkingHoursScreen({super.key, this.isEditing = false});
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<SuperCenterController>();
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -56,11 +34,14 @@ class _WorkingHoursScreenState extends State<WorkingHoursScreen> {
         actions: [
           GestureDetector(
             onTap: () {
-              // Save the working hours
-              controller.updateWorkingHour({
-                'holidays': controller.holidays.value,
-              });
-              Get.back();
+              if (isEditing) {
+                controller.updateWorkingHour({
+                  'holidays': controller.holidays.value,
+                });
+                Get.back();
+              } else {
+                Get.to(() => HolidayScreen());
+              }
             },
             child: Container(
               margin: EdgeInsets.only(right: 20),
@@ -76,7 +57,7 @@ class _WorkingHoursScreenState extends State<WorkingHoursScreen> {
                   child: ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: 100),
                     child: Text(
-                      "Save",
+                      isEditing ? "Save" : "Next",
                       style: GoogleFonts.inter(
                         color: Colors.white,
                         fontSize: 16,
@@ -151,35 +132,37 @@ class _WorkingHoursScreenState extends State<WorkingHoursScreen> {
                               ),
                             ),
                             SizedBox(height: 4),
-                            GestureDetector(
-                              onTap: holiday == null
-                                  ? () => _selectTime(context, day, true)
-                                  : null,
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 12),
-                                decoration: BoxDecoration(
-                                  border:
-                                      Border.all(color: Colors.grey.shade300),
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: holiday == null
-                                      ? Colors.white
-                                      : Colors.grey[100],
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      controller.openingTimes[day]!
-                                          .format(context),
-                                      style: TextStyle(fontSize: 16),
+                            Obx(() => GestureDetector(
+                                  onTap: holiday == null
+                                      ? () => _selectTime(
+                                          context, day, true, controller)
+                                      : null,
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 12),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.grey.shade300),
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: holiday == null
+                                          ? Colors.white
+                                          : Colors.grey[100],
                                     ),
-                                    Icon(Icons.access_time, color: Colors.grey),
-                                  ],
-                                ),
-                              ),
-                            ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          controller.openingTimes[day]!
+                                              .format(context),
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                        Icon(Icons.access_time,
+                                            color: Colors.grey),
+                                      ],
+                                    ),
+                                  ),
+                                )),
                           ],
                         ),
                       ),
@@ -196,35 +179,37 @@ class _WorkingHoursScreenState extends State<WorkingHoursScreen> {
                               ),
                             ),
                             SizedBox(height: 4),
-                            GestureDetector(
-                              onTap: holiday == null
-                                  ? () => _selectTime(context, day, false)
-                                  : null,
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 12),
-                                decoration: BoxDecoration(
-                                  border:
-                                      Border.all(color: Colors.grey.shade300),
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: holiday == null
-                                      ? Colors.white
-                                      : Colors.grey[100],
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      controller.closingTimes[day]!
-                                          .format(context),
-                                      style: TextStyle(fontSize: 16),
+                            Obx(() => GestureDetector(
+                                  onTap: holiday == null
+                                      ? () => _selectTime(
+                                          context, day, false, controller)
+                                      : null,
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 12),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.grey.shade300),
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: holiday == null
+                                          ? Colors.white
+                                          : Colors.grey[100],
                                     ),
-                                    Icon(Icons.access_time, color: Colors.grey),
-                                  ],
-                                ),
-                              ),
-                            ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          controller.closingTimes[day]!
+                                              .format(context),
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                        Icon(Icons.access_time,
+                                            color: Colors.grey),
+                                      ],
+                                    ),
+                                  ),
+                                )),
                           ],
                         ),
                       ),
@@ -237,5 +222,18 @@ class _WorkingHoursScreenState extends State<WorkingHoursScreen> {
         );
       }),
     );
+  }
+
+  Future<void> _selectTime(BuildContext context, String day, bool isOpening,
+      SuperCenterController controller) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: isOpening
+          ? controller.openingTimes[day]!
+          : controller.closingTimes[day]!,
+    );
+    if (picked != null) {
+      controller.setTime(day, picked, isOpening);
+    }
   }
 }
