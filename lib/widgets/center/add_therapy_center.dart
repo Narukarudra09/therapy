@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
-import '../../state_controllers/super_center_controller.dart';
+import '../../state_controllers/super_center_provider.dart';
 import 'add_working_hours.dart';
 
 class AddTherapyCenter extends StatelessWidget {
   final bool isEditing;
-  final SuperCenterController controller = Get.find();
 
-  AddTherapyCenter({super.key, this.isEditing = false});
+  const AddTherapyCenter({super.key, this.isEditing = false});
 
   @override
   Widget build(BuildContext context) {
+    final controller = Provider.of<SuperCenterProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: FittedBox(
@@ -32,17 +33,20 @@ class AddTherapyCenter extends StatelessWidget {
               if (isEditing) {
                 // Save the data
                 controller.updateData({
-                  'isActive': controller.isActive.value,
-                  'isLoginAllowed': controller.isLoginAllowed.value,
+                  'isActive': controller.isActive,
+                  'isLoginAllowed': controller.isLoginAllowed,
                   'email': controller.emailController.text,
                   'phone': controller.phoneController.text,
                   'about': controller.aboutController.text,
                   'location': controller.locationController.text,
                   'fee': controller.feeController.text,
                 });
-                Get.back();
+                Navigator.pop(context);
               } else {
-                Get.to(() => WorkingHoursScreen());
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => WorkingHoursScreen()),
+                );
               }
             },
             child: Container(
@@ -152,14 +156,14 @@ class AddTherapyCenter extends StatelessWidget {
               SizedBox(height: 16),
               _buildToggleRow(
                 'Active',
-                controller.isActive.value,
-                (value) => controller.isActive.value = value,
+                controller.isActive,
+                (value) => controller.isActive = value,
                 isRequired: true,
               ),
               _buildToggleRow(
                 'Login Allowed',
-                controller.isLoginAllowed.value,
-                (value) => controller.isLoginAllowed.value = value,
+                controller.isLoginAllowed,
+                (value) => controller.isLoginAllowed = value,
                 isRequired: true,
               ),
             ],
@@ -323,7 +327,7 @@ class AddTherapyCenter extends StatelessWidget {
             onChanged: onChanged,
             activeColor: Color(0xFF41B877),
             inactiveThumbColor: Colors.white,
-            thumbColor: WidgetStatePropertyAll(Colors.white),
+            thumbColor: MaterialStateProperty.all(Colors.white),
             activeTrackColor: Color(0xFF41B877),
           ),
         ],

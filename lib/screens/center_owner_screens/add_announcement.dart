@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-
-import '../../state_controllers/super_center_controller.dart';
+import 'package:provider/provider.dart';
+import '../../state_controllers/super_center_provider.dart';
 
 class AddAnnouncement extends StatefulWidget {
   const AddAnnouncement({super.key});
@@ -19,24 +18,26 @@ class _AddAnnouncementState extends State<AddAnnouncement> {
   final _formKey = GlobalKey<FormState>();
   String? selectedPatient;
 
-  final announcementController = Get.find<SuperCenterController>();
-
   void _saveAnnouncement() {
     if (_formKey.currentState!.validate()) {
+      final provider = Provider.of<SuperCenterProvider>(context, listen: false);
       // Collect the data
       Map<String, dynamic> announcementData = {
         'message': messageController.text,
         'date': DateFormat('dd-MM-yyyy • hh:mm a').format(DateTime.now()),
-        'medium': announcementController.selectedMediums.join(', '),
+        'medium': provider.selectedMediums.join(', '),
         'patient': selectedPatient,
       };
 
-      Get.back(result: announcementData);
+      provider.addAnnouncement(announcementData);
+      Navigator.of(context).pop();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<SuperCenterProvider>(context);
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
@@ -281,43 +282,37 @@ class _AddAnnouncementState extends State<AddAnnouncement> {
                 ),
               ),
               SizedBox(height: 8),
-              Obx(() {
-                return Wrap(
-                  spacing: 8,
-                  children: announcementController.selectedMediums
-                      .map((medium) => Chip(
-                            label: Text(medium),
-                            backgroundColor: Color(0xFFE9E9E9),
-                            deleteIcon: Icon(Icons.close),
-                            onDeleted: () {
-                              announcementController.toggleMedium(medium);
-                            },
-                          ))
-                      .toList(),
-                );
-              }),
+              Wrap(
+                spacing: 8,
+                children: provider.selectedMediums
+                    .map((medium) => Chip(
+                          label: Text(medium),
+                          backgroundColor: Color(0xFFE9E9E9),
+                          deleteIcon: Icon(Icons.close),
+                          onDeleted: () {
+                            provider.toggleMedium(medium);
+                          },
+                        ))
+                    .toList(),
+              ),
               SizedBox(height: 16),
-              Obx(() {
-                return customListTile(
-                  Icons.notifications_active_rounded,
-                  "Push Notification",
-                  announcementController.isMediumSelected('Push Notification'),
-                  (value) {
-                    announcementController.toggleMedium('Push Notification');
-                  },
-                );
-              }),
+              customListTile(
+                Icons.notifications_active_rounded,
+                "Push Notification",
+                provider.isMediumSelected('Push Notification'),
+                (value) {
+                  provider.toggleMedium('Push Notification');
+                },
+              ),
               SizedBox(height: 8),
-              Obx(() {
-                return customListTile(
-                  Icons.sms_rounded,
-                  "SMS",
-                  announcementController.isMediumSelected('SMS'),
-                  (value) {
-                    announcementController.toggleMedium('SMS');
-                  },
-                );
-              }),
+              customListTile(
+                Icons.sms_rounded,
+                "SMS",
+                provider.isMediumSelected('SMS'),
+                (value) {
+                  provider.toggleMedium('SMS');
+                },
+              ),
             ],
           ),
         ),

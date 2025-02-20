@@ -1,4 +1,4 @@
-import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
@@ -7,22 +7,34 @@ import '../models/patient.dart';
 import '../models/payment.dart';
 import '../models/therapy_session.dart';
 
-class SuperPatientController extends GetxController {
-  var patients = <Patient>[].obs;
-  var selectedPatient = Rxn<Patient>();
-  var isLoading = false.obs;
-  var error = ''.obs;
+class SuperPatientProvider extends ChangeNotifier {
+  List<Patient> _patients = [];
+  Patient? _selectedPatient;
+  bool _isLoading = false;
+  String _error = '';
+
+  List<Patient> get patients => _patients;
+
+  Patient? get selectedPatient => _selectedPatient;
+
+  bool get isLoading => _isLoading;
+
+  String get error => _error;
 
   void setLoading(bool loading) {
-    isLoading(loading);
+    _isLoading = loading;
+    notifyListeners();
   }
 
   void setError(String? errorMessage) {
-    error(errorMessage ?? '');
+    _error = errorMessage ?? '';
+    notifyListeners();
   }
 
   void selectPatient(String patientId) {
-    selectedPatient(patients.firstWhere((patient) => patient.id == patientId));
+    _selectedPatient =
+        _patients.firstWhere((patient) => patient.id == patientId);
+    notifyListeners();
   }
 
   Future<void> fetchPatients() async {
@@ -30,7 +42,7 @@ class SuperPatientController extends GetxController {
     setError(null);
 
     try {
-      patients.assignAll([
+      _patients = [
         Patient(
           id: '1',
           name: 'Rudrapratap Singh Naruka',
@@ -49,7 +61,8 @@ class SuperPatientController extends GetxController {
             ),
           ],
         ),
-      ]);
+      ];
+      notifyListeners();
     } catch (e) {
       setError(e.toString());
     } finally {
@@ -62,7 +75,8 @@ class SuperPatientController extends GetxController {
     setError(null);
 
     try {
-      patients.add(patient);
+      _patients.add(patient);
+      notifyListeners();
     } catch (e) {
       setError(e.toString());
     } finally {
@@ -75,12 +89,13 @@ class SuperPatientController extends GetxController {
     setError(null);
 
     try {
-      final index = patients.indexWhere((p) => p.id == patient.id);
+      final index = _patients.indexWhere((p) => p.id == patient.id);
       if (index != -1) {
-        patients[index] = patient;
-        if (selectedPatient.value?.id == patient.id) {
-          selectedPatient(patient);
+        _patients[index] = patient;
+        if (_selectedPatient?.id == patient.id) {
+          _selectedPatient = patient;
         }
+        notifyListeners();
       }
     } catch (e) {
       setError(e.toString());
@@ -89,10 +104,9 @@ class SuperPatientController extends GetxController {
     }
   }
 
-  // Method to save basic details
   void saveBasicDetails(String name, String email, String? dateOfBirth) {
-    if (selectedPatient.value != null) {
-      final updatedPatient = selectedPatient.value!.copyWith(
+    if (_selectedPatient != null) {
+      final updatedPatient = _selectedPatient!.copyWith(
         name: name,
         email: email,
         dateOfBirth: dateOfBirth,
@@ -107,7 +121,7 @@ class SuperPatientController extends GetxController {
     setError(null);
 
     try {
-      final patient = patients.firstWhere((p) => p.id == patientId);
+      final patient = _patients.firstWhere((p) => p.id == patientId);
       final updatedPatient = patient.copyWith(
         therapySessions: [...patient.therapySessions, session],
       );
@@ -124,7 +138,7 @@ class SuperPatientController extends GetxController {
     setError(null);
 
     try {
-      final patient = patients.firstWhere((p) => p.id == patientId);
+      final patient = _patients.firstWhere((p) => p.id == patientId);
       final updatedPatient = patient.copyWith(
         payments: [...patient.payments, payment],
       );
@@ -136,7 +150,7 @@ class SuperPatientController extends GetxController {
     }
   }
 
-  var allergies = <String>[
+  List<String> _allergies = [
     'Cheese',
     'Curd',
     'Egg',
@@ -153,46 +167,60 @@ class SuperPatientController extends GetxController {
     'Preserved Foods',
     'Shellfish/Fish',
     'Soya',
-  ].obs;
+  ];
+  List<bool> _selectedAllergies = [];
 
-  var selectedAllergies = <bool>[].obs;
+  List<String> get allergies => _allergies;
 
-  @override
-  void onInit() {
-    super.onInit();
-    // Initialize selectedAllergies with the same length as allergies
-    selectedAllergies.value = List.generate(allergies.length, (_) => false);
+  List<bool> get selectedAllergies => _selectedAllergies;
+
+  SuperPatientProvider() {
+    _selectedAllergies = List.generate(_allergies.length, (_) => false);
   }
 
   void addAllergy(String newAllergy) {
-    allergies.add(newAllergy);
-    selectedAllergies.add(true);
+    _allergies.add(newAllergy);
+    _selectedAllergies.add(true);
+    notifyListeners();
   }
 
   void toggleSelection(int index) {
-    selectedAllergies[index] = !selectedAllergies[index];
+    _selectedAllergies[index] = !_selectedAllergies[index];
+    notifyListeners();
   }
 
   List<String> getSelectedAllergies() {
-    return selectedAllergies
+    return _selectedAllergies
         .asMap()
         .entries
         .where((entry) => entry.value)
-        .map((entry) => allergies[entry.key])
+        .map((entry) => _allergies[entry.key])
         .toList();
   }
 
-  var bloodGroup = 'A+'.obs;
+  String _bloodGroup = 'A+';
 
-  var medicalRecords = <Map<String, dynamic>>[].obs;
-  var prescriptions = <Map<String, dynamic>>[].obs;
+  String get bloodGroup => _bloodGroup;
+
+  List<Map<String, dynamic>> _medicalRecords = [];
+  List<Map<String, dynamic>> _prescriptions = [];
+
+  List<Map<String, dynamic>> get medicalRecords => _medicalRecords;
+
+  List<Map<String, dynamic>> get prescriptions => _prescriptions;
 
   void updateBloodGroup(String newBloodGroup) {
-    bloodGroup.value = newBloodGroup;
+    _bloodGroup = newBloodGroup;
+    notifyListeners();
   }
 
   void deleteAllergy(String allergy) {
-    allergies.remove(allergy);
+    int index = _allergies.indexOf(allergy);
+    if (index != -1) {
+      _allergies.removeAt(index);
+      _selectedAllergies.removeAt(index);
+      notifyListeners();
+    }
   }
 
   Future<void> pickImage(ImageSource source, bool isPrescription) async {
@@ -205,20 +233,23 @@ class SuperPatientController extends GetxController {
           DateFormat('dd-MM-yyyy • hh:mm a').format(DateTime.now());
 
       if (isPrescription) {
-        prescriptions.add(
+        _prescriptions.add(
             {'title': imageName, 'date': imageTime, 'imagePath': image.path});
       } else {
-        medicalRecords.add(
+        _medicalRecords.add(
             {'title': imageName, 'date': imageTime, 'imagePath': image.path});
       }
+      notifyListeners();
     }
   }
 
   void deleteRecord(Map<String, dynamic> record) {
-    medicalRecords.remove(record);
+    _medicalRecords.remove(record);
+    notifyListeners();
   }
 
   void deletePrescription(Map<String, dynamic> prescription) {
-    prescriptions.remove(prescription);
+    _prescriptions.remove(prescription);
+    notifyListeners();
   }
 }

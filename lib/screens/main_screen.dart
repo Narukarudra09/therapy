@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:therapy/screens/patient_screen/patient_home_screen.dart';
 import 'package:therapy/screens/patient_screen/patient_payment_screen.dart';
 import 'package:therapy/screens/patient_screen/patient_settings_screen.dart';
@@ -13,10 +13,10 @@ import 'package:therapy/screens/therapist_screen/therapist_daily_data_screen.dar
 import 'package:therapy/screens/therapist_screen/therapist_patient_screen.dart';
 import 'package:therapy/screens/therapist_screen/therapist_payment_screen.dart';
 import 'package:therapy/screens/therapist_screen/therapist_settings_screen.dart';
+import 'package:therapy/state_controllers/navigation_provider.dart';
 
 import '../models/user_role.dart';
-import '../state_controllers/auth_controller.dart';
-import '../state_controllers/navigation_controller.dart';
+import '../state_controllers/auth_provider.dart';
 import 'center_owner_screens/center_daily_data_screen.dart';
 import 'center_owner_screens/center_patient_screen.dart';
 import 'center_owner_screens/center_payment_screen.dart';
@@ -29,24 +29,20 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authController = Get.find<AuthController>();
-    final navController = Get.find<NavigationController>();
+    final authProvider = Provider.of<AuthProvider>(context);
+    final navController = Provider.of<NavigationProvider>(context);
 
     return Scaffold(
-      body: Obx(() {
-        return _buildDashboardForRole(
-          context,
-          authController.selectedUser.value!.role,
-          navController.currentIndex.value,
-        );
-      }),
-      bottomNavigationBar: Obx(() {
-        return _buildBottomNavigationBar(
-          context,
-          authController.selectedUser.value!.role,
-          navController.currentIndex.value,
-        );
-      }),
+      body: _buildDashboardForRole(
+        context,
+        authProvider.selectedUser!.role,
+        navController.currentIndex,
+      ),
+      bottomNavigationBar: _buildBottomNavigationBar(
+        context,
+        authProvider.selectedUser!.role,
+        navController.currentIndex,
+      ),
     );
   }
 
@@ -86,7 +82,7 @@ class MainScreen extends StatelessWidget {
 
   Widget _buildBottomNavigationBar(
       BuildContext context, UserRole role, int currentIndex) {
-    final navController = Get.find<NavigationController>();
+    final navController = Provider.of<NavigationProvider>(context);
 
     List<BottomNavigationBarItem> getNavItems(UserRole role) {
       switch (role) {

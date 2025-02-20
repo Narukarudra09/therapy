@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:therapy/screens/auth/splash_screen.dart';
-import 'package:therapy/state_controllers/auth_controller.dart';
-import 'package:therapy/state_controllers/navigation_controller.dart';
-import 'package:therapy/state_controllers/super_center_controller.dart';
-import 'package:therapy/state_controllers/super_patient_controller.dart';
+import 'package:therapy/state_controllers/auth_provider.dart';
+import 'package:therapy/state_controllers/navigation_provider.dart';
+import 'package:therapy/state_controllers/super_center_provider.dart';
+import 'package:therapy/state_controllers/super_patient_provider.dart';
 
 void main() {
   runApp(
-    const MyApp(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => NavigationProvider()),
+        ChangeNotifierProvider(create: (_) => SuperPatientProvider()),
+        ChangeNotifierProvider(create: (_) => SuperCenterProvider()),
+      ],
+      child: const MyApp(),
+    ),
   );
 }
 
@@ -17,16 +25,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Therapy App',
       home: SplashScreen(),
-      initialBinding: BindingsBuilder(() {
-        Get.put(AuthController());
-        Get.put(NavigationController());
-        Get.put(SuperPatientController());
-        Get.put(SuperCenterController());
-      }),
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
         appBarTheme: AppBarTheme(

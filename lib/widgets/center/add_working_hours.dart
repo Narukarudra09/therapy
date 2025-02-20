@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:therapy/widgets/center/add_holidays.dart';
 
-import '../../state_controllers/super_center_controller.dart';
+import '../../state_controllers/super_center_provider.dart';
 
 class WorkingHoursScreen extends StatelessWidget {
   final bool isEditing;
@@ -12,7 +12,7 @@ class WorkingHoursScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<SuperCenterController>();
+    final controller = Provider.of<SuperCenterProvider>(context);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -36,11 +36,14 @@ class WorkingHoursScreen extends StatelessWidget {
             onTap: () {
               if (isEditing) {
                 controller.updateWorkingHour({
-                  'holidays': controller.holidays.value,
+                  'holidays': controller.holidays,
                 });
-                Get.back();
+                Navigator.pop(context);
               } else {
-                Get.to(() => HolidayScreen());
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HolidayScreen()),
+                );
               }
             },
             child: Container(
@@ -73,159 +76,153 @@ class WorkingHoursScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Obx(() {
-        return ListView.builder(
-          itemCount: controller.openingTimes.length,
-          itemBuilder: (context, index) {
-            final day = controller.openingTimes.keys.elementAt(index);
-            final holiday = controller.holidays[day];
-            return Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        day,
-                        style: GoogleFonts.inter(
-                          color: Color(0xFF2E2C34),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
+      body: ListView.builder(
+        itemCount: controller.openingTimes.length,
+        itemBuilder: (context, index) {
+          final day = controller.openingTimes.keys.elementAt(index);
+          final holiday = controller.holidays[day];
+          return Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      day,
+                      style: GoogleFonts.inter(
+                        color: Color(0xFF2E2C34),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
                       ),
-                      Row(
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          'Holiday',
+                          style: GoogleFonts.inter(
+                            color: Color(0xFF878DBA),
+                            fontSize: 14,
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Checkbox(
+                          value: holiday != null,
+                          activeColor: Color(0xFF4CD964),
+                          onChanged: (bool? value) {
+                            controller.toggleHoliday(day, value ?? false);
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Holiday',
+                            'Open at',
                             style: GoogleFonts.inter(
                               color: Color(0xFF878DBA),
                               fontSize: 14,
                             ),
                           ),
-                          SizedBox(width: 8),
-                          Checkbox(
-                            value: holiday != null,
-                            activeColor: Color(0xFF4CD964),
-                            onChanged: (bool? value) {
-                              controller.toggleHoliday(day, value ?? false);
-                            },
+                          SizedBox(height: 4),
+                          GestureDetector(
+                            onTap: holiday == null
+                                ? () =>
+                                    _selectTime(context, day, true, controller)
+                                : null,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 12),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey.shade300),
+                                borderRadius: BorderRadius.circular(8),
+                                color: holiday == null
+                                    ? Colors.white
+                                    : Colors.grey[100],
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    controller.openingTimes[day]!
+                                        .format(context),
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  Icon(Icons.access_time, color: Colors.grey),
+                                ],
+                              ),
+                            ),
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                  SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Open at',
-                              style: GoogleFonts.inter(
-                                color: Color(0xFF878DBA),
-                                fontSize: 14,
+                    ),
+                    SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Closes at',
+                            style: GoogleFonts.inter(
+                              color: Color(0xFF878DBA),
+                              fontSize: 14,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          GestureDetector(
+                            onTap: holiday == null
+                                ? () =>
+                                    _selectTime(context, day, false, controller)
+                                : null,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 12),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey.shade300),
+                                borderRadius: BorderRadius.circular(8),
+                                color: holiday == null
+                                    ? Colors.white
+                                    : Colors.grey[100],
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    controller.closingTimes[day]!
+                                        .format(context),
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  Icon(Icons.access_time, color: Colors.grey),
+                                ],
                               ),
                             ),
-                            SizedBox(height: 4),
-                            Obx(() => GestureDetector(
-                                  onTap: holiday == null
-                                      ? () => _selectTime(
-                                          context, day, true, controller)
-                                      : null,
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 12),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: Colors.grey.shade300),
-                                      borderRadius: BorderRadius.circular(8),
-                                      color: holiday == null
-                                          ? Colors.white
-                                          : Colors.grey[100],
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          controller.openingTimes[day]!
-                                              .format(context),
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                                        Icon(Icons.access_time,
-                                            color: Colors.grey),
-                                      ],
-                                    ),
-                                  ),
-                                )),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Closes at',
-                              style: GoogleFonts.inter(
-                                color: Color(0xFF878DBA),
-                                fontSize: 14,
-                              ),
-                            ),
-                            SizedBox(height: 4),
-                            Obx(() => GestureDetector(
-                                  onTap: holiday == null
-                                      ? () => _selectTime(
-                                          context, day, false, controller)
-                                      : null,
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 12),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: Colors.grey.shade300),
-                                      borderRadius: BorderRadius.circular(8),
-                                      color: holiday == null
-                                          ? Colors.white
-                                          : Colors.grey[100],
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          controller.closingTimes[day]!
-                                              .format(context),
-                                          style: TextStyle(fontSize: 16),
-                                        ),
-                                        Icon(Icons.access_time,
-                                            color: Colors.grey),
-                                      ],
-                                    ),
-                                  ),
-                                )),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      }),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
   Future<void> _selectTime(BuildContext context, String day, bool isOpening,
-      SuperCenterController controller) async {
+      SuperCenterProvider controller) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: isOpening

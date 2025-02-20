@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:therapy/widgets/custom_appbar.dart';
 
-import '../../state_controllers/super_center_controller.dart';
+import '../../state_controllers/super_center_provider.dart';
 
 class PatientHomeScreen extends StatelessWidget {
   final String patientName;
@@ -14,7 +14,8 @@ class PatientHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     int completedDays = 4;
     int totalDays = 15;
-    final controller = Get.put(SuperCenterController());
+    final controller = Provider.of<SuperCenterProvider>(context);
+
     return Scaffold(
       appBar: CustomAppBar(
         userName: patientName,
@@ -44,22 +45,24 @@ class PatientHomeScreen extends StatelessWidget {
                                 width: 100,
                                 height: 100,
                                 decoration: BoxDecoration(
-                                    color: Color(0xFFAB83E2),
-                                    borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(100),
-                                      bottomLeft: Radius.circular(100),
-                                    )),
+                                  color: Color(0xFFAB83E2),
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(100),
+                                    bottomLeft: Radius.circular(100),
+                                  ),
+                                ),
                               ),
                               Container(
                                 decoration: BoxDecoration(
-                                    color: Color(0xFFAB83E2),
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(100),
-                                      bottomRight: Radius.circular(100),
-                                    )),
+                                  color: Color(0xFFAB83E2),
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(100),
+                                    bottomRight: Radius.circular(100),
+                                  ),
+                                ),
                                 width: 100,
                                 height: 100,
-                              )
+                              ),
                             ],
                           ),
                           Column(
@@ -68,22 +71,24 @@ class PatientHomeScreen extends StatelessWidget {
                                 width: 100,
                                 height: 100,
                                 decoration: BoxDecoration(
-                                    color: Color(0xFFAB83E2),
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(100),
-                                      bottomRight: Radius.circular(100),
-                                    )),
+                                  color: Color(0xFFAB83E2),
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(100),
+                                    bottomRight: Radius.circular(100),
+                                  ),
+                                ),
                               ),
                               Container(
                                 decoration: BoxDecoration(
-                                    color: Color(0xFFAB83E2),
-                                    borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(100),
-                                      bottomLeft: Radius.circular(100),
-                                    )),
+                                  color: Color(0xFFAB83E2),
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(100),
+                                    bottomLeft: Radius.circular(100),
+                                  ),
+                                ),
                                 width: 100,
                                 height: 100,
-                              )
+                              ),
                             ],
                           ),
                         ],
@@ -149,8 +154,9 @@ class PatientHomeScreen extends StatelessWidget {
                             minHeight: 8,
                             borderRadius: BorderRadius.circular(10),
                             valueColor: AlwaysStoppedAnimation<Color>(
-                                Color(0xFF490D8C)),
-                          )
+                              Color(0xFF490D8C),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -195,7 +201,7 @@ class PatientHomeScreen extends StatelessWidget {
                                 ),
                                 width: 80,
                                 height: 80,
-                              )
+                              ),
                             ],
                           ),
                           Column(
@@ -204,22 +210,24 @@ class PatientHomeScreen extends StatelessWidget {
                                 width: 80,
                                 height: 80,
                                 decoration: BoxDecoration(
-                                    color: Color(0xFF4FC283),
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(100),
-                                      bottomRight: Radius.circular(100),
-                                    )),
+                                  color: Color(0xFF4FC283),
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(100),
+                                    bottomRight: Radius.circular(100),
+                                  ),
+                                ),
                               ),
                               Container(
                                 decoration: BoxDecoration(
-                                    color: Color(0xFF4FC283),
-                                    borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(100),
-                                      bottomLeft: Radius.circular(100),
-                                    )),
+                                  color: Color(0xFF4FC283),
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(100),
+                                    bottomLeft: Radius.circular(100),
+                                  ),
+                                ),
                                 width: 80,
                                 height: 80,
-                              )
+                              ),
                             ],
                           ),
                         ],
@@ -325,7 +333,8 @@ class PatientHomeScreen extends StatelessWidget {
                               runSpacing: 8,
                               children: record['therapyTypes']
                                   .map<Widget>(
-                                      (therapy) => TherapyTag(text: therapy))
+                                    (therapy) => TherapyTag(text: therapy),
+                                  )
                                   .toList(),
                             ),
                             const SizedBox(height: 16),

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:therapy/screens/patient_screen/view_therapist.dart';
 import 'package:therapy/widgets/custom_appbar.dart';
 
-import '../../state_controllers/super_center_controller.dart';
+import '../../state_controllers/super_center_provider.dart';
 
 class PatientTherapiesScreen extends StatelessWidget {
   final String patientName;
@@ -13,9 +13,10 @@ class PatientTherapiesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(SuperCenterController());
+    final controller = Provider.of<SuperCenterProvider>(context);
     final owner = controller.owner;
     final String image = 'assets/center_profile.png';
+
     return Scaffold(
       appBar: CustomAppBar(
         userName: patientName,
@@ -29,9 +30,10 @@ class PatientTherapiesScreen extends StatelessWidget {
               Text(
                 "Therapy Centers",
                 style: GoogleFonts.inter(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF180829)),
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF180829),
+                ),
               ),
               SizedBox(
                 height: 16,
@@ -104,9 +106,14 @@ class PatientTherapiesScreen extends StatelessWidget {
                               const SizedBox(height: 11),
                               GestureDetector(
                                 onTap: () {
-                                  Get.to(ViewTherapist(
-                                    imageUrl: image,
-                                  ));
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ViewTherapist(
+                                        imageUrl: image,
+                                      ),
+                                    ),
+                                  );
                                 },
                                 child: Text(
                                   "View Center",
@@ -118,7 +125,7 @@ class PatientTherapiesScreen extends StatelessWidget {
                                     decorationColor: Color(0xFF41B877),
                                   ),
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),

@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
-import '../../state_controllers/super_center_controller.dart';
+import '../../state_controllers/super_center_provider.dart';
 import '../../widgets/center/add_holidays.dart';
 import '../../widgets/center/add_therapy_center.dart';
 import '../../widgets/center/add_working_hours.dart';
 
 class ViewTherapist extends StatelessWidget {
   final String imageUrl;
-  final SuperCenterController controller = Get.put(SuperCenterController());
 
   ViewTherapist({super.key, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
+    final controller = Provider.of<SuperCenterProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -76,7 +77,13 @@ class ViewTherapist extends StatelessWidget {
                       Spacer(),
                       GestureDetector(
                         onTap: () {
-                          Get.to(() => AddTherapyCenter(isEditing: true));
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  AddTherapyCenter(isEditing: true),
+                            ),
+                          );
                         },
                         child: SvgPicture.asset(
                           "assets/edit.svg",
@@ -96,7 +103,7 @@ class ViewTherapist extends StatelessWidget {
                   ),
                   SizedBox(height: 12),
                   ListTile(
-                    minTileHeight: 0,
+                    minVerticalPadding: 0,
                     contentPadding: EdgeInsets.zero,
                     leading: Icon(
                       Icons.phone_in_talk_sharp,
@@ -109,12 +116,7 @@ class ViewTherapist extends StatelessWidget {
                         color: Color(0xFF939EAA)),
                   ),
                   ListTile(
-                    minTileHeight: 0,
-                    shape: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xFFEBF6ED),
-                      ),
-                    ),
+                    minVerticalPadding: 0,
                     contentPadding: EdgeInsets.zero,
                     leading: Icon(
                       Icons.mail_outline_rounded,
@@ -201,7 +203,13 @@ class ViewTherapist extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Get.to(() => WorkingHoursScreen());
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  WorkingHoursScreen(isEditing: true),
+                            ),
+                          );
                         },
                         child: SvgPicture.asset(
                           "assets/edit.svg",
@@ -212,45 +220,42 @@ class ViewTherapist extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 12),
-                  Obx(() {
-                    return Column(
-                      children: controller.openingTimes.entries.map((entry) {
-                        final day = entry.key;
-                        final openingTime = entry.value;
-                        final closingTime = controller.closingTimes[day];
-                        final isHoliday = controller.holidays[day] != null;
+                  Column(
+                    children: controller.openingTimes.entries.map((entry) {
+                      final day = entry.key;
+                      final openingTime = entry.value;
+                      final closingTime = controller.closingTimes[day];
+                      final isHoliday = controller.holidays[day] != null;
 
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                day,
-                                style: GoogleFonts.inter(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Color(0xFF4E5661),
-                                ),
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              day,
+                              style: GoogleFonts.inter(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF4E5661),
                               ),
-                              Text(
-                                isHoliday
-                                    ? "Holiday"
-                                    : "${openingTime.format(context)} - ${closingTime?.format(context)}",
-                                style: GoogleFonts.inter(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  color: isHoliday
-                                      ? Colors.red
-                                      : Color(0xFF939EAA),
-                                ),
+                            ),
+                            Text(
+                              isHoliday
+                                  ? "Holiday"
+                                  : "${openingTime.format(context)} - ${closingTime?.format(context)}",
+                              style: GoogleFonts.inter(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color:
+                                    isHoliday ? Colors.red : Color(0xFF939EAA),
                               ),
-                            ],
-                          ),
-                        );
-                      }).toList(),
-                    );
-                  }),
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ),
                   SizedBox(height: 24),
                   Divider(
                     color: Color(0xFFEBF6ED),
@@ -269,7 +274,12 @@ class ViewTherapist extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Get.to(() => HolidayScreen());
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => HolidayScreen(),
+                            ),
+                          );
                         },
                         child: SvgPicture.asset(
                           "assets/edit.svg",
@@ -280,52 +290,40 @@ class ViewTherapist extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 12),
-                  Obx(() {
-                    final holidays = controller.holidays.entries
-                        .where((entry) => entry.value != null)
-                        .toList();
-
-                    if (holidays.isEmpty) {
-                      return Text(
-                        'No holidays added yet.',
-                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: controller.holidays.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final holiday =
+                          controller.holidays.entries.elementAt(index);
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 6.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              holiday.value?.message ?? '',
+                              style: GoogleFonts.inter(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF4E5661),
+                              ),
+                            ),
+                            Text(
+                              'Holiday',
+                              style: GoogleFonts.inter(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: Color(0xFF939EAA),
+                              ),
+                            ),
+                          ],
+                        ),
                       );
-                    }
-
-                    return ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: holidays.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final holiday = holidays[index];
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 6.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                holiday.value.message,
-                                style: GoogleFonts.inter(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Color(0xFF4E5661),
-                                ),
-                              ),
-                              Text(
-                                'Holiday',
-                                style: GoogleFonts.inter(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  color: Color(0xFF939EAA),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  }),
+                    },
+                  ),
                 ],
               ),
             ),

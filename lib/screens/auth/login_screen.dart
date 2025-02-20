@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:therapy/screens/auth/verify_screen.dart';
 import 'package:therapy/widgets/custom_button.dart';
 
 import '../../models/user_role.dart';
-import '../../state_controllers/auth_controller.dart';
+import '../../state_controllers/auth_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -37,23 +37,31 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _handleLogin() async {
     if (_formKey.currentState!.validate()) {
-      final authController = Get.find<AuthController>();
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
       UserRole selectedRole = _mapStringToUserRole(_selectedRole);
 
-      bool success = await authController.login(
+      bool success = await authProvider.login(
           selectedRole, _phoneController.text.toString());
 
       if (success) {
-        Get.off(() => VerifyScreen(
-            phoneNumber: _phoneController.text.toString(),
-            selectedRole: selectedRole));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VerifyScreen(
+              phoneNumber: _phoneController.text.toString(),
+              selectedRole: selectedRole,
+            ),
+          ),
+        );
       } else {
         // Show error message
-        Get.snackbar('Error', 'Login Failed',
-            snackPosition: SnackPosition.BOTTOM,
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Login Failed'),
             backgroundColor: Colors.red,
-            colorText: Colors.white);
+          ),
+        );
       }
     }
   }
@@ -103,7 +111,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 46),
-
               Row(
                 children: [
                   Text(
@@ -187,7 +194,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
               ),
               const SizedBox(height: 16),
-
               Row(
                 children: [
                   Text(
@@ -251,8 +257,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 52),
-
-              // Login Button
               CustomButton(
                 title: "Login",
                 onTap: _handleLogin,

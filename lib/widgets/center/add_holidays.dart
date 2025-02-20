@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../../models/holiday.dart';
-import '../../state_controllers/super_center_controller.dart';
+import '../../state_controllers/super_center_provider.dart';
 import '../custom_add_button.dart';
 
 class HolidayScreen extends StatelessWidget {
-  final SuperCenterController controller = Get.find();
-
   HolidayScreen({super.key});
 
-  void addNewHoliday() {
+  void addNewHoliday(SuperCenterProvider controller) {
     // Logic to add a new holiday entry
     String newHolidayKey = 'Holiday ${controller.holidays.length + 1}';
-    controller.holidays[newHolidayKey] = Holiday();
+    controller.addOrUpdateHoliday(newHolidayKey, Holiday());
   }
 
-  void _selectDate(BuildContext context, String day) async {
+  void _selectDate(
+      BuildContext context, SuperCenterProvider controller, String day) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -84,11 +83,14 @@ class HolidayScreen extends StatelessWidget {
 
     if (picked != null) {
       controller.holidays[day]?.date = picked;
+      controller.notifyListeners();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final controller = Provider.of<SuperCenterProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Holidays'),
@@ -102,9 +104,9 @@ class HolidayScreen extends StatelessWidget {
             onTap: () {
               // Save the holidays
               controller.updateData({
-                'holidays': controller.holidays.value,
+                'holidays': controller.holidays,
               });
-              Get.back();
+              Navigator.pop(context);
             },
             child: Container(
               margin: EdgeInsets.only(right: 20),
@@ -141,16 +143,15 @@ class HolidayScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Obx(() {
-                if (controller.holidays.isEmpty) {
-                  return Center(
-                    child: Text(
-                      'No holidays added yet.',
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
-                    ),
-                  );
-                }
-                return ListView.builder(
+              if (controller.holidays.isEmpty)
+                Center(
+                  child: Text(
+                    'No holidays added yet.',
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                )
+              else
+                ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   itemCount: controller.holidays.length,
@@ -179,7 +180,7 @@ class HolidayScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
                           InkWell(
-                            onTap: () => _selectDate(context, day),
+                            onTap: () => _selectDate(context, controller, day),
                             child: Container(
                               padding: const EdgeInsets.all(16),
                               decoration: BoxDecoration(
@@ -213,6 +214,7 @@ class HolidayScreen extends StatelessWidget {
                           TextField(
                             onChanged: (value) {
                               holiday.message = value;
+                              controller.notifyListeners();
                             },
                             decoration: InputDecoration(
                               hintText: 'Enter message',
@@ -225,10 +227,9 @@ class HolidayScreen extends StatelessWidget {
                       ),
                     );
                   },
-                );
-              }),
+                ),
               GestureDetector(
-                onTap: addNewHoliday,
+                onTap: () => addNewHoliday(controller),
                 child: Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 14, vertical: 12),

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:therapy/screens/therapist_screen/add_record_screen.dart';
 import 'package:therapy/widgets/custom_appbar.dart';
 
-import '../../state_controllers/super_center_controller.dart';
+import '../../state_controllers/super_center_provider.dart';
 import '../../widgets/custom_add_button.dart';
 
 class TherapistDailyDataScreen extends StatelessWidget {
@@ -12,7 +12,8 @@ class TherapistDailyDataScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(SuperCenterController());
+    final controller = Provider.of<SuperCenterProvider>(context);
+
     return Scaffold(
       appBar: CustomAppBar(
         userName: '',
@@ -68,19 +69,21 @@ class TherapistDailyDataScreen extends StatelessWidget {
                                 width: 80,
                                 height: 80,
                                 decoration: BoxDecoration(
-                                    color: Color(0xFF4FC283),
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(100),
-                                      bottomRight: Radius.circular(100),
-                                    )),
+                                  color: Color(0xFF4FC283),
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(100),
+                                    bottomRight: Radius.circular(100),
+                                  ),
+                                ),
                               ),
                               Container(
                                 decoration: BoxDecoration(
-                                    color: Color(0xFF4FC283),
-                                    borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(100),
-                                      bottomLeft: Radius.circular(100),
-                                    )),
+                                  color: Color(0xFF4FC283),
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(100),
+                                    bottomLeft: Radius.circular(100),
+                                  ),
+                                ),
                                 width: 80,
                                 height: 80,
                               ),
@@ -161,7 +164,11 @@ class TherapistDailyDataScreen extends StatelessWidget {
                   CustomAddButton(
                     title: "Add Record",
                     onTap: () async {
-                      final result = await Get.to(AddRecordScreen());
+                      final result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AddRecordScreen()),
+                      );
                       if (result != null) {
                         controller.addRecord(result);
                       }
@@ -170,57 +177,56 @@ class TherapistDailyDataScreen extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 16),
-              Obx(() {
-                return ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: controller.records.length,
-                  itemBuilder: (context, index) {
-                    final record = controller.records[index];
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 16),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: Color.fromARGB(255, 235, 246, 237),
-                        ),
+              ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: controller.records.length,
+                itemBuilder: (context, index) {
+                  final record = controller.records[index];
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: Color.fromARGB(255, 235, 246, 237),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              record['patientName'].toString(),
-                              style: GoogleFonts.inter(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xFF080C3E),
-                              ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            record['patientName'].toString(),
+                            style: GoogleFonts.inter(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF080C3E),
                             ),
-                            Wrap(
-                              spacing: 8,
-                              runSpacing: 8,
-                              children: record['therapyTypes']
-                                  .map<Widget>(
-                                      (therapy) => TherapyTag(text: therapy))
-                                  .toList(),
-                            ),
-                            const SizedBox(height: 16),
-                            _buildInfoRow(
-                              'Date',
-                              '${record['date'].day}-${record['date'].month}-${record['date'].year} ${record['time']}',
-                            ),
-                            const SizedBox(height: 8),
-                            _buildInfoRow('Given by', record['givenBy']),
-                          ],
-                        ),
+                          ),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: record['therapyTypes']
+                                .map<Widget>(
+                                  (therapy) => TherapyTag(text: therapy),
+                                )
+                                .toList(),
+                          ),
+                          const SizedBox(height: 16),
+                          _buildInfoRow(
+                            'Date',
+                            '${record['date'].day}-${record['date'].month}-${record['date'].year} ${record['time']}',
+                          ),
+                          const SizedBox(height: 8),
+                          _buildInfoRow('Given by', record['givenBy']),
+                        ],
                       ),
-                    );
-                  },
-                );
-              }),
+                    ),
+                  );
+                },
+              ),
             ],
           ),
         ),
