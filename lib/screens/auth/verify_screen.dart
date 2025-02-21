@@ -9,7 +9,7 @@ import 'package:therapy/widgets/custom_button.dart';
 import 'package:therapy/widgets/verify_otp.dart';
 
 import '../../models/user_role.dart';
-import '../../state_controllers/auth_provider.dart';
+import '../../providers/auth_provider.dart';
 
 class VerifyScreen extends StatefulWidget {
   final String phoneNumber;

@@ -41,7 +41,7 @@ dependencies:
   dotted_border: ^2.1.0
   lottie: ^3.3.1
   file_picker: ^8.3.1
-  get: ^4.6.5
+
   provider: ^6.1.2
 
 dev_dependencies:

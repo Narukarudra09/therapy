@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../widgets/custom_button.dart';
@@ -104,7 +103,8 @@ class _NewPhoneNumberState extends State<NewPhoneNumber> {
             CustomButton(
               title: "Save",
               onTap: () {
-                Get.to(SuccessScreen());
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => (SuccessScreen())));
               },
             ),
           ],

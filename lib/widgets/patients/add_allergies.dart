@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
-import '../../state_controllers/super_patient_controller.dart';
+import '../../providers/super_patient_provider.dart';
 import '../custom_add_button.dart';
 
 class AddAllergies extends StatelessWidget {
@@ -10,11 +10,11 @@ class AddAllergies extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SuperPatientController controller = Get.put(SuperPatientController());
+    final provider = Provider.of<SuperPatientProvider>(context);
 
     void saveAllergies() {
-      final selected = controller.getSelectedAllergies();
-      Get.back(result: selected);
+      final selected = provider.getSelectedAllergies();
+      Navigator.pop(context, selected);
     }
 
     return Scaffold(
@@ -94,7 +94,7 @@ class AddAllergies extends StatelessWidget {
                         actions: <Widget>[
                           GestureDetector(
                             onTap: () {
-                              Get.back();
+                              Navigator.pop(context);
                             },
                             child: Container(
                               width: 162,
@@ -117,9 +117,9 @@ class AddAllergies extends StatelessWidget {
                           GestureDetector(
                             onTap: () {
                               if (newAllergy.isNotEmpty) {
-                                controller.addAllergy(newAllergy);
+                                provider.addAllergy(newAllergy);
                               }
-                              Get.back();
+                              Navigator.pop(context);
                             },
                             child: Container(
                               width: 162,
@@ -160,29 +160,24 @@ class AddAllergies extends StatelessWidget {
                   ),
                 ),
               ),
-              Obx(() {
-                return ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: controller.allergies.length,
-                  itemBuilder: (context, index) {
-                    return Obx(() {
-                      return CheckboxListTile(
-                        side: BorderSide(
-                            color: Color.fromARGB(255, 224, 227, 231),
-                            width: 2),
-                        activeColor: Color.fromARGB(255, 65, 184, 119),
-                        checkboxShape: OvalBorder(),
-                        title: Text(controller.allergies[index]),
-                        value: controller.selectedAllergies[index],
-                        onChanged: (value) {
-                          controller.toggleSelection(index);
-                        },
-                      );
-                    });
-                  },
-                );
-              }),
+              ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: provider.allergies.length,
+                itemBuilder: (context, index) {
+                  return CheckboxListTile(
+                    side: BorderSide(
+                        color: Color.fromARGB(255, 224, 227, 231), width: 2),
+                    activeColor: Color.fromARGB(255, 65, 184, 119),
+                    checkboxShape: CircleBorder(),
+                    title: Text(provider.allergies[index]),
+                    value: provider.selectedAllergies[index],
+                    onChanged: (value) {
+                      provider.toggleSelection(index);
+                    },
+                  );
+                },
+              ),
             ],
           ),
         ),

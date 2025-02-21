@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:therapy/widgets/custom_appbar.dart';
 
-import '../../state_controllers/super_center_provider.dart';
+import '../../providers/super_center_provider.dart';
 
 class PatientHomeScreen extends StatelessWidget {
   final String patientName;

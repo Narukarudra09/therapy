@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:therapy/screens/center_owner_screens/new_phone_number.dart';
 
@@ -68,7 +67,8 @@ class _VerifyOTPState extends State<VerifyOTP> {
             CustomButton(
               title: "Verify",
               onTap: () {
-                Get.to(() => NewPhoneNumber());
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => NewPhoneNumber()));
               },
             )
           ],

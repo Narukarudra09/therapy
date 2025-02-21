@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:therapy/widgets/therapist/add_therapist.dart';
 
@@ -65,7 +64,10 @@ class _SuperTherapistsScreenState extends State<SuperTherapistsScreen> {
                   CustomAddButton(
                     title: "Add Center Member",
                     onTap: () {
-                      Get.to(AddTherapist());
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => (AddTherapist())));
                     },
                   ),
                 ],
@@ -82,9 +84,12 @@ class _SuperTherapistsScreenState extends State<SuperTherapistsScreen> {
                     title: names[index],
                     subtitle: roles[index],
                     onTap: () {
-                      Get.to(TherapistProfile(
-                        therapistName: names[index],
-                      ));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => (TherapistProfile(
+                                    therapistName: names[index],
+                                  ))));
                     },
                   );
                 },

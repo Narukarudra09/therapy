@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:therapy/screens/center_owner_screens/add_announcement.dart';
 import 'package:therapy/widgets/custom_add_button.dart';
 
-import '../../state_controllers/super_center_provider.dart';
+import '../../providers/super_center_provider.dart';
 
 class Announcement extends StatelessWidget {
   const Announcement({super.key});

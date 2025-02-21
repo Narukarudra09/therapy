@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:therapy/widgets/custom_add_button.dart';
 import 'package:therapy/widgets/therapist/add_therapist.dart';
@@ -64,7 +63,8 @@ class _TherapistState extends State<Therapist> {
           CustomAddButton(
             title: "Add Therapist",
             onTap: () {
-              Get.to(() => AddTherapist());
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AddTherapist()));
             },
           ),
           SizedBox(
@@ -82,8 +82,11 @@ class _TherapistState extends State<Therapist> {
               padding: const EdgeInsets.only(bottom: 8.0),
               child: InkWell(
                 onTap: () {
-                  Get.to(
-                      () => TherapistProfile(therapistName: therapist['name']));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => TherapistProfile(
+                              therapistName: therapist['name'])));
                 },
                 child: ListTile(
                   tileColor: Color(0xFFFFFFFF),

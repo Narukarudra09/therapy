@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 import '../../models/patient.dart';
-import '../../state_controllers/super_patient_controller.dart';
+import '../../providers/super_patient_provider.dart';
 import 'add_allergies.dart';
 
 class AddPatients extends StatefulWidget {
@@ -26,7 +26,6 @@ class _AddPatientsState extends State<AddPatients> {
 
   List<String> selectedAllergies = [];
   List<String> gender = ['Male', 'Female', 'Others'];
-  final SuperPatientController controller = Get.put(SuperPatientController());
 
   @override
   void dispose() {
@@ -44,7 +43,8 @@ class _AddPatientsState extends State<AddPatients> {
         name: _fullNameController.text,
         phone: _mobileNumberController.text,
         city: city,
-        bloodGroup: controller.bloodGroup.toString(),
+        bloodGroup: 'A+',
+        // Default blood group, can be updated later
         allergies: selectedAllergies,
         medicalRecords: [],
         therapySessions: [],
@@ -53,13 +53,17 @@ class _AddPatientsState extends State<AddPatients> {
         gender: _genderController.text,
       );
 
-      Get.find<SuperPatientController>().addPatient(newPatient);
-      Get.back();
+      final provider =
+          Provider.of<SuperPatientProvider>(context, listen: false);
+      provider.addPatient(newPatient);
+      Navigator.pop(context);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<SuperPatientProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Add Patients"),
@@ -436,7 +440,7 @@ class _AddPatientsState extends State<AddPatients> {
                       .toList(),
                   onChanged: (String? newValue) {
                     setState(() {
-                      controller.bloodGroup = newValue! as RxString;
+                      provider.updateBloodGroup(newValue!);
                     });
                   },
                   validator: (value) {
@@ -472,7 +476,11 @@ class _AddPatientsState extends State<AddPatients> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              Get.to(() => AddAllergies())?.then((value) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AddAllergies()),
+                              ).then((value) {
                                 if (value != null && value is List<String>) {
                                   setState(() {
                                     selectedAllergies = value;
@@ -506,7 +514,7 @@ class _AddPatientsState extends State<AddPatients> {
                                   ),
                                   deleteIcon: const Icon(Icons.close),
                                   onDeleted: () {
-                                    controller.deleteAllergy(allergy);
+                                    provider.deleteAllergy(allergy);
                                   },
                                   backgroundColor:
                                       Color.fromARGB(255, 233, 233, 233),
@@ -519,34 +527,33 @@ class _AddPatientsState extends State<AddPatients> {
                 const SizedBox(height: 8),
                 _buildSection(
                   'Medical Records',
-                  Obx(() => Column(
-                        children: controller.medicalRecords
-                            .map((record) => _buildRecordItem(
-                                  record['title'],
-                                  record['date'],
-                                  record['imagePath'],
-                                  onDelete: () =>
-                                      controller.deleteRecord(record),
-                                ))
-                            .toList(),
-                      )),
-                  onTap: () => controller.pickImage(ImageSource.gallery, false),
+                  Column(
+                    children: provider.medicalRecords
+                        .map((record) => _buildRecordItem(
+                              record['title'],
+                              record['date'],
+                              record['imagePath'],
+                              onDelete: () => provider.deleteRecord(record),
+                            ))
+                        .toList(),
+                  ),
+                  onTap: () => provider.pickImage(ImageSource.gallery, false),
                 ),
                 const SizedBox(height: 8),
                 _buildSection(
                   'Past Prescriptions',
-                  Obx(() => Column(
-                        children: controller.prescriptions
-                            .map((prescription) => _buildRecordItem(
-                                  prescription['title'],
-                                  prescription['date'],
-                                  prescription['imagePath'],
-                                  onDelete: () => controller
-                                      .deletePrescription(prescription),
-                                ))
-                            .toList(),
-                      )),
-                  onTap: () => controller.pickImage(ImageSource.gallery, true),
+                  Column(
+                    children: provider.prescriptions
+                        .map((prescription) => _buildRecordItem(
+                              prescription['title'],
+                              prescription['date'],
+                              prescription['imagePath'],
+                              onDelete: () =>
+                                  provider.deletePrescription(prescription),
+                            ))
+                        .toList(),
+                  ),
+                  onTap: () => provider.pickImage(ImageSource.gallery, true),
                 ),
               ],
             ),

@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
-import '../state_controllers/super_patient_controller.dart';
+import '../providers/super_patient_provider.dart';
 
 class CustomProfileScreen extends StatefulWidget {
   final PreferredSizeWidget? appBar;
   final void Function()? onTap;
   final String username;
 
-  const CustomProfileScreen(
-      {super.key,
-      required this.appBar,
-      required this.onTap,
-      required this.username});
+  const CustomProfileScreen({
+    super.key,
+    required this.appBar,
+    required this.onTap,
+    required this.username,
+  });
 
   @override
   State<CustomProfileScreen> createState() => _CustomProfileScreenState();
@@ -22,11 +23,11 @@ class CustomProfileScreen extends StatefulWidget {
 
 class _CustomProfileScreenState extends State<CustomProfileScreen> {
   final controller = TextEditingController(text: '7878404583');
-  final SuperPatientController patientController = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    final patient = patientController.selectedPatient.value;
+    final provider = Provider.of<SuperPatientProvider>(context);
+    final patient = provider.selectedPatient;
 
     return Scaffold(
       appBar: widget.appBar,
@@ -195,11 +196,17 @@ class _CustomProfileScreenState extends State<CustomProfileScreen> {
                     child: FittedBox(child: Text(value)),
                   );
                 }).toList(),
-                onChanged: (_) {},
+                onChanged: (value) {
+                  if (value != null) {
+                    provider.updatePatient(patient!.copyWith(city: value));
+                  }
+                },
               ),
               const SizedBox(height: 32),
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  // Implement logout logic here
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:therapy/screens/therapist_screen/update_phone_number.dart';
 import 'package:therapy/widgets/custom_profile_screen.dart';
@@ -55,11 +54,13 @@ class TherapistSettingsScreen extends StatelessWidget {
         ],
       ),
       onTap: () {
-        Get.to(
-          () => UpdatePhoneNumber(
-            oldNumber: '',
-          ),
-        );
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => UpdatePhoneNumber(
+                oldNumber: '',
+              ),
+            ));
       },
       username: '',
     );

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import '../../state_controllers/super_center_provider.dart';
+import '../../providers/super_center_provider.dart';
 import 'add_working_hours.dart';
 
 class AddTherapyCenter extends StatelessWidget {

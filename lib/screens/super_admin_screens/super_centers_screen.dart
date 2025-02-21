@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:therapy/screens/super_admin_screens/view_therapist.dart';
 
@@ -42,7 +41,10 @@ class SuperCentersScreen extends StatelessWidget {
                   CustomAddButton(
                     title: "Create Therapy Center",
                     onTap: () {
-                      Get.to(AddTherapyCenter());
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => (AddTherapyCenter())));
                     },
                   ),
                 ],
@@ -57,9 +59,12 @@ class SuperCentersScreen extends StatelessWidget {
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
                     onTap: () {
-                      Get.to(ViewTherapist(
-                        imageUrl: imageUrl,
-                      ));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => (ViewTherapist(
+                                    imageUrl: imageUrl,
+                                  ))));
                     },
                     child: Container(
                       margin: EdgeInsets.only(bottom: 16),

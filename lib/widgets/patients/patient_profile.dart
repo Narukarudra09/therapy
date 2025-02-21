@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
-import '../../state_controllers/super_patient_controller.dart';
+import '../../providers/super_patient_provider.dart';
 
 class PatientProfile extends StatelessWidget {
   const PatientProfile({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final patient = Get.find<SuperPatientController>().selectedPatient.value;
+    final provider = Provider.of<SuperPatientProvider>(context);
+    final patient = provider.selectedPatient;
 
     if (patient == null) {
       return Scaffold(
@@ -72,7 +73,8 @@ class PatientProfile extends StatelessWidget {
               _buildInfoRow(Icons.account_circle, patient.name),
               _buildInfoRow(Icons.email_outlined, patient.email),
               _buildInfoRow(Icons.phone_android, patient.phone),
-              _buildInfoRow(Icons.calendar_today_outlined, patient.gender),
+              _buildInfoRow(Icons.calendar_today_outlined,
+                  patient.gender ?? 'Not Specified'),
               const SizedBox(height: 16),
               const Divider(
                 color: Color.fromARGB(255, 218, 218, 218),

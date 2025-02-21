@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:therapy/providers/auth_provider.dart';
+import 'package:therapy/providers/navigation_provider.dart';
+import 'package:therapy/providers/super_center_provider.dart';
+import 'package:therapy/providers/super_patient_provider.dart';
 import 'package:therapy/screens/auth/splash_screen.dart';
-import 'package:therapy/state_controllers/auth_provider.dart';
-import 'package:therapy/state_controllers/navigation_provider.dart';
-import 'package:therapy/state_controllers/super_center_provider.dart';
-import 'package:therapy/state_controllers/super_patient_provider.dart';
 
 void main() {
   runApp(

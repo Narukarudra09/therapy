@@ -150,7 +150,7 @@ class SuperPatientProvider extends ChangeNotifier {
     }
   }
 
-  List<String> _allergies = [
+  final List<String> _allergies = [
     'Cheese',
     'Curd',
     'Egg',

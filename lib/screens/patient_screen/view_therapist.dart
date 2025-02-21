@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import '../../state_controllers/super_center_provider.dart';
+import '../../providers/super_center_provider.dart';
 
 class ViewTherapist extends StatelessWidget {
   final String imageUrl;
 
-  ViewTherapist({super.key, required this.imageUrl});
+  const ViewTherapist({super.key, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {

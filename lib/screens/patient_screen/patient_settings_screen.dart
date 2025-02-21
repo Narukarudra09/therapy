@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:therapy/screens/patient_screen/report_screen.dart';
 import 'package:therapy/screens/patient_screen/update_phone_number.dart';
@@ -39,57 +38,67 @@ class PatientSettingsScreen extends StatelessWidget {
               icon: Icons.person,
               title: 'Profile',
               onTap: () {
-                Get.to(() => CustomProfileScreen(
-                      appBar: AppBar(
-                        title: Text("Settings"),
-                        titleTextStyle: GoogleFonts.inter(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: Color(0xFF171C22)),
-                        elevation: 0,
-                        shape: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Color(0xFFBFD1E3), width: 0.3)),
-                        scrolledUnderElevation: 0,
-                        actions: [
-                          InkWell(
-                            onTap: () {},
-                            child: Container(
-                              margin: EdgeInsets.only(right: 20),
-                              height: 30,
-                              padding: EdgeInsets.symmetric(horizontal: 18),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                                color: Color.fromARGB(255, 65, 184, 119),
-                              ),
-                              child: Center(
-                                child: FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: ConstrainedBox(
-                                    constraints: BoxConstraints(maxWidth: 100),
-// Adjust max width as needed
-                                    child: Text(
-                                      "Save",
-                                      style: GoogleFonts.inter(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CustomProfileScreen(
+                              appBar: AppBar(
+                                title: Text("Settings"),
+                                titleTextStyle: GoogleFonts.inter(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(0xFF171C22)),
+                                elevation: 0,
+                                shape: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Color(0xFFBFD1E3), width: 0.3)),
+                                scrolledUnderElevation: 0,
+                                actions: [
+                                  InkWell(
+                                    onTap: () {},
+                                    child: Container(
+                                      margin: EdgeInsets.only(right: 20),
+                                      height: 30,
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 18),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        color:
+                                            Color.fromARGB(255, 65, 184, 119),
                                       ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
+                                      child: Center(
+                                        child: FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: ConstrainedBox(
+                                            constraints:
+                                                BoxConstraints(maxWidth: 100),
+// Adjust max width as needed
+                                            child: Text(
+                                              "Save",
+                                              style: GoogleFonts.inter(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
+                                ],
                               ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      onTap: () {
-                        Get.to(() => UpdatePhoneNumber());
-                      },
-                      username: patientName,
-                    ));
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            UpdatePhoneNumber()));
+                              },
+                              username: patientName,
+                            )));
               },
             ),
             SizedBox(
@@ -99,7 +108,8 @@ class PatientSettingsScreen extends StatelessWidget {
               icon: Icons.history,
               title: 'Medical History',
               onTap: () {
-                Get.to(() => MedicalHistory());
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => MedicalHistory()));
               },
             ),
             SizedBox(
@@ -117,7 +127,8 @@ class PatientSettingsScreen extends StatelessWidget {
               icon: Icons.report_problem,
               title: 'Report a Problem',
               onTap: () {
-                Get.to(() => ReportScreen());
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ReportScreen()));
               },
             ),
           ],

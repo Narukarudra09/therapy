@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../../state_controllers/super_center_provider.dart';
+
+import '../../providers/super_center_provider.dart';
 
 class AddAnnouncement extends StatefulWidget {
   const AddAnnouncement({super.key});

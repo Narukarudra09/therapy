@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AddRecordScreen extends StatefulWidget {
@@ -36,8 +35,6 @@ class _AddRecordScreenState extends State<AddRecordScreen> {
         'time': _selectedTime.format(context),
         'givenBy': _givenByController.text,
       };
-
-      Get.back(result: recordData);
     }
   }
 

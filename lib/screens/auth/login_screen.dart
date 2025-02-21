@@ -6,7 +6,7 @@ import 'package:therapy/screens/auth/verify_screen.dart';
 import 'package:therapy/widgets/custom_button.dart';
 
 import '../../models/user_role.dart';
-import '../../state_controllers/auth_provider.dart';
+import '../../providers/auth_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

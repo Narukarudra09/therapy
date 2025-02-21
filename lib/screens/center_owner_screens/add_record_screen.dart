@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AddRecordScreen extends StatefulWidget {
@@ -35,8 +34,6 @@ class _AddRecordScreenState extends State<AddRecordScreen> {
       'time': _selectedTime.format(context),
       'givenBy': _givenByController.text,
     };
-
-    Get.back(result: recordData);
   }
 
   void _showTherapySelectionDialog() {
@@ -240,7 +237,7 @@ class _AddRecordScreenState extends State<AddRecordScreen> {
                 children: _selectedTherapies.map((therapy) {
                   return Chip(
                     deleteIcon: Icon(Icons.close),
-                    color: WidgetStatePropertyAll(Color(0xFFE9E9E9)),
+                    backgroundColor: Color(0xFFE9E9E9),
                     side: BorderSide.none,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(100),

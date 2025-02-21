@@ -3,11 +3,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/holiday.dart';
-import '../../state_controllers/super_center_provider.dart';
+import '../../providers/super_center_provider.dart';
 import '../custom_add_button.dart';
 
 class HolidayScreen extends StatelessWidget {
-  HolidayScreen({super.key});
+  const HolidayScreen({super.key});
 
   void addNewHoliday(SuperCenterProvider controller) {
     // Logic to add a new holiday entry

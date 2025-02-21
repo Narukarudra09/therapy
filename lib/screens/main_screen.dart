@@ -13,10 +13,9 @@ import 'package:therapy/screens/therapist_screen/therapist_daily_data_screen.dar
 import 'package:therapy/screens/therapist_screen/therapist_patient_screen.dart';
 import 'package:therapy/screens/therapist_screen/therapist_payment_screen.dart';
 import 'package:therapy/screens/therapist_screen/therapist_settings_screen.dart';
-import 'package:therapy/state_controllers/navigation_provider.dart';
 
-import '../models/user_role.dart';
-import '../state_controllers/auth_provider.dart';
+import '../models/user_role.dart';import '../providers/auth_provider.dart';
+import '../providers/navigation_provider.dart';
 import 'center_owner_screens/center_daily_data_screen.dart';
 import 'center_owner_screens/center_patient_screen.dart';
 import 'center_owner_screens/center_payment_screen.dart';
@@ -30,18 +29,18 @@ class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
-    final navController = Provider.of<NavigationProvider>(context);
+    final navProvider = Provider.of<NavigationProvider>(context);
 
     return Scaffold(
       body: _buildDashboardForRole(
         context,
         authProvider.selectedUser!.role,
-        navController.currentIndex,
+        navProvider.currentIndex,
       ),
       bottomNavigationBar: _buildBottomNavigationBar(
         context,
         authProvider.selectedUser!.role,
-        navController.currentIndex,
+        navProvider.currentIndex,
       ),
     );
   }

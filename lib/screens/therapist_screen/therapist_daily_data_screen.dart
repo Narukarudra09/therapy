@@ -3,8 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:therapy/screens/therapist_screen/add_record_screen.dart';
 import 'package:therapy/widgets/custom_appbar.dart';
-
-import '../../state_controllers/super_center_provider.dart';
+import '../../providers/super_center_provider.dart';
 import '../../widgets/custom_add_button.dart';
 
 class TherapistDailyDataScreen extends StatelessWidget {

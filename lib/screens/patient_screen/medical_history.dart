@@ -1,11 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-
-import '../../state_controllers/super_patient_controller.dart';
+import 'package:provider/provider.dart';
+import '../../providers/super_patient_provider.dart';
 import '../../widgets/patients/add_allergies.dart';
 import 'blood_group.dart';
 
@@ -14,7 +13,8 @@ class MedicalHistory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SuperPatientController controller = Get.put(SuperPatientController());
+    final provider = Provider.of<SuperPatientProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -30,7 +30,9 @@ class MedicalHistory extends StatelessWidget {
         ),
         actions: [
           InkWell(
-            onTap: () {},
+            onTap: () {
+              // Save logic if needed
+            },
             child: Container(
               margin: EdgeInsets.only(right: 20),
               height: 30,
@@ -66,12 +68,12 @@ class MedicalHistory extends StatelessWidget {
         children: [
           _buildSection(
               'Blood Group',
-              Obx(() => ListTile(
-                    title: Text(
-                      controller.bloodGroup.value,
-                      style: const TextStyle(fontSize: 18),
-                    ),
-                  )), onTap: () async {
+              ListTile(
+                title: Text(
+                  provider.bloodGroup,
+                  style: const TextStyle(fontSize: 18),
+                ),
+              ), onTap: () async {
             final newBloodGroup = await Navigator.push(
               context,
               MaterialPageRoute(
@@ -79,75 +81,74 @@ class MedicalHistory extends StatelessWidget {
               ),
             );
             if (newBloodGroup != null) {
-              controller.updateBloodGroup(newBloodGroup);
+              provider.updateBloodGroup(newBloodGroup);
             }
           }),
           const SizedBox(height: 16),
           _buildSection(
               'Allergies',
-              Obx(() => Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Wrap(
-                      spacing: 4,
-                      children: controller.allergies
-                          .map((allergy) => Chip(
-                                side: BorderSide.none,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                                padding: EdgeInsets.all(0),
-                                labelPadding: EdgeInsets.only(left: 8),
-                                label: Text(allergy),
-                                deleteIcon: const Icon(Icons.close),
-                                onDeleted: () {
-                                  controller.deleteAllergy(allergy);
-                                },
-                                backgroundColor: Colors.grey[200],
-                              ))
-                          .toList(),
-                    ),
-                  )), onTap: () async {
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Wrap(
+                  spacing: 4,
+                  children: provider.allergies
+                      .asMap()
+                      .entries
+                      .where((entry) => provider.selectedAllergies[entry.key])
+                      .map((entry) => Chip(
+                            side: BorderSide.none,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            padding: EdgeInsets.all(0),
+                            labelPadding: EdgeInsets.only(left: 8),
+                            label: Text(entry.value),
+                            deleteIcon: const Icon(Icons.close),
+                            onDeleted: () {
+                              provider.deleteAllergy(entry.value);
+                            },
+                            backgroundColor: Colors.grey[200],
+                          ))
+                      .toList(),
+                ),
+              ), onTap: () async {
             final selectedAllergies = await Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => AddAllergies(),
               ),
             );
-            if (selectedAllergies != null &&
-                selectedAllergies is List<String>) {
-              controller.allergies.assignAll(selectedAllergies);
-            }
           }),
           const SizedBox(height: 16),
           _buildSection(
             'Medical Records',
-            Obx(() => Column(
-                  children: controller.medicalRecords
-                      .map((record) => _buildRecordItem(
-                            record['title'],
-                            record['date'],
-                            record['imagePath'],
-                            onDelete: () => controller.deleteRecord(record),
-                          ))
-                      .toList(),
-                )),
-            onTap: () => controller.pickImage(ImageSource.gallery, false),
+            Column(
+              children: provider.medicalRecords
+                  .map((record) => _buildRecordItem(
+                        record['title'],
+                        record['date'],
+                        record['imagePath'],
+                        onDelete: () => provider.deleteRecord(record),
+                      ))
+                  .toList(),
+            ),
+            onTap: () => provider.pickImage(ImageSource.gallery, false),
           ),
           const SizedBox(height: 16),
           _buildSection(
             'Past Prescriptions',
-            Obx(() => Column(
-                  children: controller.prescriptions
-                      .map((prescription) => _buildRecordItem(
-                            prescription['title'],
-                            prescription['date'],
-                            prescription['imagePath'],
-                            onDelete: () =>
-                                controller.deletePrescription(prescription),
-                          ))
-                      .toList(),
-                )),
-            onTap: () => controller.pickImage(ImageSource.gallery, true),
+            Column(
+              children: provider.prescriptions
+                  .map((prescription) => _buildRecordItem(
+                        prescription['title'],
+                        prescription['date'],
+                        prescription['imagePath'],
+                        onDelete: () =>
+                            provider.deletePrescription(prescription),
+                      ))
+                  .toList(),
+            ),
+            onTap: () => provider.pickImage(ImageSource.gallery, true),
           ),
         ],
       ),

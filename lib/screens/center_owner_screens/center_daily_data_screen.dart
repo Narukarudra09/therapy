@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:therapy/screens/center_owner_screens/add_record_screen.dart';
 import 'package:therapy/widgets/custom_appbar.dart';
 
-import '../../state_controllers/super_center_provider.dart';
+import '../../providers/super_center_provider.dart';
 import '../../widgets/custom_add_button.dart';
 
 class CenterDailyDataScreen extends StatelessWidget {
