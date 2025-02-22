@@ -12,6 +12,11 @@ class PatientPaymentHistory extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
+        shape: UnderlineInputBorder(
+          borderSide: BorderSide(color: Color(0xFFBFD1E3), width: 0.3),
+        ),
+        scrolledUnderElevation: 0,
         title: Text(
           patientName,
           style: GoogleFonts.inter(

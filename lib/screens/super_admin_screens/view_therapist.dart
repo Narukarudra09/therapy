@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+
 import '../../providers/super_center_provider.dart';
 import '../../widgets/center/add_holidays.dart';
 import '../../widgets/center/add_therapy_center.dart';
@@ -102,7 +103,7 @@ class ViewTherapist extends StatelessWidget {
                   ),
                   SizedBox(height: 12),
                   ListTile(
-                    minVerticalPadding: 0,
+                    minTileHeight: 0,
                     contentPadding: EdgeInsets.zero,
                     leading: Icon(
                       Icons.phone_in_talk_sharp,
@@ -115,7 +116,7 @@ class ViewTherapist extends StatelessWidget {
                         color: Color(0xFF939EAA)),
                   ),
                   ListTile(
-                    minVerticalPadding: 0,
+                    minTileHeight: 0,
                     contentPadding: EdgeInsets.zero,
                     leading: Icon(
                       Icons.mail_outline_rounded,

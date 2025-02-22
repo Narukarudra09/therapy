@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:therapy/screens/main_screen.dart';
 
 import '../../models/holiday.dart';
 import '../../providers/super_center_provider.dart';
@@ -106,7 +107,12 @@ class HolidayScreen extends StatelessWidget {
               controller.updateData({
                 'holidays': controller.holidays,
               });
-              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MainScreen(userName: ''),
+                ),
+              );
             },
             child: Container(
               margin: EdgeInsets.only(right: 20),

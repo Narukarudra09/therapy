@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
-import '../models/medical_record.dart';
 import '../models/patient.dart';
 import '../models/payment.dart';
 import '../models/therapy_session.dart';
@@ -40,34 +39,6 @@ class SuperPatientProvider extends ChangeNotifier {
   Future<void> fetchPatients() async {
     setLoading(true);
     setError(null);
-
-    try {
-      _patients = [
-        Patient(
-          id: '1',
-          name: 'Rudrapratap Singh Naruka',
-          email: 'narukarudra2@gmail.com',
-          phone: '1234567890',
-          city: 'Bhilwara',
-          gender: 'Male',
-          bloodGroup: 'A+',
-          allergies: ['Cheese', 'Milk'],
-          medicalRecords: [
-            MedicalRecord(
-              id: '1',
-              title: 'allergic khasi',
-              date: '12-05-2023',
-              fileUrl: 'assets/X-ray.png',
-            ),
-          ],
-        ),
-      ];
-      notifyListeners();
-    } catch (e) {
-      setError(e.toString());
-    } finally {
-      setLoading(false);
-    }
   }
 
   Future<void> addPatient(Patient patient) async {
@@ -202,8 +173,8 @@ class SuperPatientProvider extends ChangeNotifier {
 
   String get bloodGroup => _bloodGroup;
 
-  List<Map<String, dynamic>> _medicalRecords = [];
-  List<Map<String, dynamic>> _prescriptions = [];
+  final List<Map<String, dynamic>> _medicalRecords = [];
+  final List<Map<String, dynamic>> _prescriptions = [];
 
   List<Map<String, dynamic>> get medicalRecords => _medicalRecords;
 

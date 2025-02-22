@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +17,11 @@ class PatientProfile extends StatelessWidget {
     if (patient == null) {
       return Scaffold(
         appBar: AppBar(
+          elevation: 0,
+          shape: UnderlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFFBFD1E3), width: 0.3),
+          ),
+          scrolledUnderElevation: 0,
           title: Text(
             "Patient Profile",
             style: GoogleFonts.inter(
@@ -117,30 +124,40 @@ class PatientProfile extends StatelessWidget {
               const SizedBox(height: 16),
               _buildSection(
                 'Allergies',
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: List.generate(
-                      patient.allergies.length,
-                      (index) => Chip(
-                        side: BorderSide.none,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(100),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Divider(
+                      color: Color.fromARGB(255, 232, 233, 241),
+                      endIndent: 16,
+                      indent: 16,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: List.generate(
+                          patient.allergies.length,
+                          (index) => Chip(
+                            side: BorderSide.none,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            padding: EdgeInsets.all(0),
+                            labelPadding: EdgeInsets.symmetric(horizontal: 8),
+                            label: Text(patient.allergies[index]),
+                            labelStyle: GoogleFonts.inter(
+                              color: Color.fromARGB(255, 46, 44, 52),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            backgroundColor: Color.fromARGB(255, 233, 233, 233),
+                          ),
                         ),
-                        padding: EdgeInsets.all(0),
-                        labelPadding: EdgeInsets.symmetric(horizontal: 8),
-                        label: Text(patient.allergies[index]),
-                        labelStyle: GoogleFonts.inter(
-                          color: Color.fromARGB(255, 46, 44, 52),
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        backgroundColor: Color.fromARGB(255, 233, 233, 233),
                       ),
                     ),
-                  ),
+                  ],
                 ),
               ),
               const SizedBox(height: 16),
@@ -153,13 +170,13 @@ class PatientProfile extends StatelessWidget {
                     indent: 16,
                   ),
                   Column(
-                    children: List.generate(
-                      patient.medicalRecords.length,
-                      (index) => _buildRecordItem(
-                        patient.medicalRecords[index].title,
-                        patient.medicalRecords[index].date,
-                      ),
-                    ),
+                    children: provider.medicalRecords
+                        .map((record) => _buildRecordItem(
+                              record['title'],
+                              record['date'],
+                              record['imagePath'],
+                            ))
+                        .toList(),
                   ),
                 ]),
               ),
@@ -174,13 +191,13 @@ class PatientProfile extends StatelessWidget {
                       indent: 16,
                     ),
                     Column(
-                      children: List.generate(
-                        patient.prescriptions.length,
-                        (index) => _buildRecordItem(
-                          patient.prescriptions[index].title,
-                          patient.prescriptions[index].date,
-                        ),
-                      ),
+                      children: provider.prescriptions
+                          .map((prescription) => _buildRecordItem(
+                                prescription['title'],
+                                prescription['date'],
+                                prescription['imagePath'],
+                              ))
+                          .toList(),
                     ),
                   ],
                 ),
@@ -248,31 +265,33 @@ class PatientProfile extends StatelessWidget {
     );
   }
 
-  Widget _buildRecordItem(String title, String date) {
-    return Column(
-      children: [
-        ListTile(
-          leading: Image.asset(
-            'assets/X-ray.png',
-            width: 40,
-            height: 40,
-          ),
-          title: Text(title),
-          titleTextStyle: GoogleFonts.inter(
-            color: Color.fromARGB(255, 46, 44, 52),
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
-          subtitle: Text(
-            date,
-            style: GoogleFonts.inter(
-              color: Color.fromARGB(255, 147, 158, 170),
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
+  Widget _buildRecordItem(
+    String title,
+    String date,
+    String imagePath,
+  ) {
+    return ListTile(
+      contentPadding: EdgeInsets.symmetric(horizontal: 16),
+      leading: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color: Color(0xFFFAFAFA),
+          borderRadius: BorderRadius.circular(8),
+          image: imagePath != null
+              ? DecorationImage(
+                  image: FileImage(File(imagePath)),
+                  fit: BoxFit.cover,
+                )
+              : null,
         ),
-      ],
+      ),
+      title: Text(title),
+      titleTextStyle: GoogleFonts.inter(
+          fontSize: 14, fontWeight: FontWeight.w400, color: Color(0xFF2E2C34)),
+      subtitle: Text(date),
+      subtitleTextStyle:
+          GoogleFonts.inter(fontSize: 12, color: Color(0xFF939EAA)),
     );
   }
 }
