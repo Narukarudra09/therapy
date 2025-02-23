@@ -1,17 +1,27 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:therapy/models/center_owner.dart';
 import 'package:therapy/models/holiday.dart';
 
+import '../models/therapist.dart';
+
 class SuperCenterProvider with ChangeNotifier {
   // Reactive variables
-  bool _isActive = true;
+
   bool _isLoginAllowed = true;
   Map<String, Holiday> _holidays = {};
-  List<Map<String, dynamic>> _records = [];
-  List<Map<String, dynamic>> _announcements = [];
-  List<String> _selectedMediums = [];
+  final List<Map<String, dynamic>> _records = [];
+  final List<Map<String, dynamic>> _announcements = [];
+  final List<String> _selectedMediums = [];
+  String? selectedRole;
+  String? selectedCenter;
+  String? selectedGender;
+  bool isActive = true;
+  List<PlatformFile> selectedFiles = [];
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   // TextEditingControllers for input fields
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController aboutController = TextEditingController();
@@ -19,7 +29,7 @@ class SuperCenterProvider with ChangeNotifier {
   final TextEditingController feeController = TextEditingController();
 
   // Center owner data
-  CenterOwner _owner = CenterOwner(
+  final CenterOwner _owner = CenterOwner(
     centerName: '',
     name: "Dr. Rudra",
     role: "Owner",
@@ -55,7 +65,6 @@ class SuperCenterProvider with ChangeNotifier {
   };
 
   // Getters
-  bool get isActive => _isActive;
 
   bool get isLoginAllowed => _isLoginAllowed;
 
@@ -73,11 +82,18 @@ class SuperCenterProvider with ChangeNotifier {
 
   Map<String, TimeOfDay> get closingTimes => _closingTimes;
 
-  // Setters
-  set isActive(bool value) {
-    _isActive = value;
+  final List<Therapist> _therapists = [];
+
+  // Getter for therapists
+  List<Therapist> get therapists => _therapists;
+
+  // Method to add a therapist
+  void addTherapist(Therapist therapist) {
+    _therapists.add(therapist);
     notifyListeners();
   }
+
+  // Setters
 
   set isLoginAllowed(bool value) {
     _isLoginAllowed = value;

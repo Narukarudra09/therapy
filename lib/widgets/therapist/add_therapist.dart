@@ -1,55 +1,85 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:therapy/widgets/custom_add_button.dart';
 
-class AddTherapist extends StatefulWidget {
+import '../../models/therapist.dart';
+import '../../providers/super_center_provider.dart';
+
+class AddTherapist extends StatelessWidget {
   const AddTherapist({super.key});
 
   @override
-  State<AddTherapist> createState() => _AddTherapistState();
-}
-
-class _AddTherapistState extends State<AddTherapist> {
-  bool isActive = true;
-  final _formKey = GlobalKey<FormState>();
-
-  @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<SuperCenterProvider>(context);
+
+    void saveTherapist() {
+      if (provider.formKey.currentState?.validate() ?? false) {
+        final newTherapist = Therapist(
+          name: provider.nameController.text,
+          email: provider.emailController.text,
+          phoneNumber: provider.phoneController.text,
+          role: provider.selectedRole ?? '',
+          centerName: provider.selectedCenter ?? '',
+          gender: provider.selectedGender ?? '',
+          isActive: provider.isActive,
+          kycDocuments:
+              provider.selectedFiles.map((file) => file.name).toList(),
+        );
+        provider.addTherapist(newTherapist);
+        Navigator.pop(context);
+      }
+    }
+
+    Future<void> pickFiles() async {
+      final result = await FilePicker.platform.pickFiles(
+          allowMultiple: true,
+          type: FileType.custom,
+          allowedExtensions: ['pdf', 'doc', 'docx']);
+      if (result != null) {
+        provider.selectedFiles = result.files;
+        provider.notifyListeners();
+      }
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
           'Add Center Member',
           style: GoogleFonts.inter(
-            color: Color.fromARGB(255, 23, 28, 34),
+            color: const Color.fromARGB(255, 23, 28, 34),
             fontSize: 16,
             fontWeight: FontWeight.w500,
           ),
         ),
         actions: [
-          Container(
-            margin: EdgeInsets.only(right: 20),
-            height: 30,
-            padding: EdgeInsets.symmetric(horizontal: 18),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(50),
-              color: Color.fromARGB(255, 65, 184, 119),
-            ),
-            child: Center(
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 100),
-                  // Adjust max width as needed
-                  child: Text(
-                    "Save",
-                    style: GoogleFonts.inter(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+          InkWell(
+            onTap: saveTherapist,
+            child: Container(
+              margin: const EdgeInsets.only(right: 20),
+              height: 30,
+              padding: const EdgeInsets.symmetric(horizontal: 18),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(50),
+                color: const Color.fromARGB(255, 65, 184, 119),
+              ),
+              child: Center(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 100),
+                    child: Text(
+                      "Save",
+                      style: GoogleFonts.inter(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ),
@@ -61,7 +91,7 @@ class _AddTherapistState extends State<AddTherapist> {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
           child: Form(
-            key: _formKey,
+            key: provider.formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -69,7 +99,7 @@ class _AddTherapistState extends State<AddTherapist> {
                 Center(
                   child: Stack(
                     children: [
-                      CircleAvatar(
+                      const CircleAvatar(
                         radius: 50,
                         backgroundImage: AssetImage("assets/profile.png"),
                       ),
@@ -90,7 +120,6 @@ class _AddTherapistState extends State<AddTherapist> {
                   ),
                 ),
                 const SizedBox(height: 24),
-
                 Text(
                   'Basic Profile',
                   style: GoogleFonts.inter(
@@ -100,18 +129,21 @@ class _AddTherapistState extends State<AddTherapist> {
                   ),
                 ),
                 const SizedBox(height: 16),
-
                 _buildTextField(
                   label: 'Your Name',
                   hint: 'Enter your name',
+                  controller: provider.nameController,
+                  required: true,
                 ),
                 _buildTextField(
                   label: 'Email Address',
                   hint: 'Enter email address',
+                  controller: provider.emailController,
                 ),
                 _buildTextField(
                   label: 'Phone Number',
                   hint: 'Enter phone number',
+                  controller: provider.phoneController,
                   required: true,
                 ),
                 Row(
@@ -134,11 +166,10 @@ class _AddTherapistState extends State<AddTherapist> {
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: 8,
-                ),
+                const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
-                  icon: Icon(Icons.keyboard_arrow_down),
+                  value: provider.selectedRole,
+                  icon: const Icon(Icons.keyboard_arrow_down),
                   borderRadius: BorderRadius.circular(8),
                   iconEnabledColor: const Color.fromARGB(255, 23, 28, 34),
                   iconDisabledColor: const Color.fromARGB(255, 23, 28, 34),
@@ -169,10 +200,7 @@ class _AddTherapistState extends State<AddTherapist> {
                       ),
                     ),
                   ),
-                  items: [
-                    'Center Owner',
-                    'Therapist',
-                  ]
+                  items: ['Center Owner', 'Therapist']
                       .map((role) => DropdownMenuItem(
                             value: role,
                             child: Text(
@@ -186,12 +214,11 @@ class _AddTherapistState extends State<AddTherapist> {
                           ))
                       .toList(),
                   onChanged: (String? newValue) {
-                    setState(() {});
+                    provider.selectedRole = newValue;
+                    provider.notifyListeners();
                   },
                 ),
-                SizedBox(
-                  height: 16,
-                ),
+                const SizedBox(height: 16),
                 Row(
                   children: [
                     Text(
@@ -212,11 +239,10 @@ class _AddTherapistState extends State<AddTherapist> {
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: 8,
-                ),
+                const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
-                  icon: Icon(Icons.keyboard_arrow_down),
+                  value: provider.selectedCenter,
+                  icon: const Icon(Icons.keyboard_arrow_down),
                   borderRadius: BorderRadius.circular(8),
                   iconEnabledColor: const Color.fromARGB(255, 23, 28, 34),
                   iconDisabledColor: const Color.fromARGB(255, 23, 28, 34),
@@ -247,10 +273,7 @@ class _AddTherapistState extends State<AddTherapist> {
                       ),
                     ),
                   ),
-                  items: [
-                    'jk vihar',
-                    'tilak nagar',
-                  ]
+                  items: ['jk vihar', 'tilak nagar']
                       .map((role) => DropdownMenuItem(
                             value: role,
                             child: Text(
@@ -264,12 +287,11 @@ class _AddTherapistState extends State<AddTherapist> {
                           ))
                       .toList(),
                   onChanged: (String? newValue) {
-                    setState(() {});
+                    provider.selectedCenter = newValue;
+                    provider.notifyListeners();
                   },
                 ),
-                SizedBox(
-                  height: 16,
-                ),
+                const SizedBox(height: 16),
                 Text(
                   "Gender",
                   style: GoogleFonts.inter(
@@ -278,11 +300,10 @@ class _AddTherapistState extends State<AddTherapist> {
                     color: const Color.fromARGB(255, 135, 141, 186),
                   ),
                 ),
-                SizedBox(
-                  height: 8,
-                ),
+                const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
-                  icon: Icon(Icons.keyboard_arrow_down),
+                  value: provider.selectedGender,
+                  icon: const Icon(Icons.keyboard_arrow_down),
                   borderRadius: BorderRadius.circular(8),
                   iconEnabledColor: const Color.fromARGB(255, 23, 28, 34),
                   iconDisabledColor: const Color.fromARGB(255, 23, 28, 34),
@@ -313,11 +334,7 @@ class _AddTherapistState extends State<AddTherapist> {
                       ),
                     ),
                   ),
-                  items: [
-                    'Female',
-                    'Male',
-                    'Others',
-                  ]
+                  items: ['Female', 'Male', 'Others']
                       .map((role) => DropdownMenuItem(
                             value: role,
                             child: Text(
@@ -331,13 +348,11 @@ class _AddTherapistState extends State<AddTherapist> {
                           ))
                       .toList(),
                   onChanged: (String? newValue) {
-                    setState(() {});
+                    provider.selectedGender = newValue;
+                    provider.notifyListeners();
                   },
                 ),
-                SizedBox(
-                  height: 16,
-                ),
-                // Active Toggle
+                const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -347,7 +362,7 @@ class _AddTherapistState extends State<AddTherapist> {
                           'Active',
                           style: GoogleFonts.sora(
                             fontSize: 16,
-                            color: Color.fromARGB(255, 0, 0, 0),
+                            color: const Color.fromARGB(255, 0, 0, 0),
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -362,15 +377,16 @@ class _AddTherapistState extends State<AddTherapist> {
                       ],
                     ),
                     Switch(
-                        value: isActive,
-                        onChanged: (value) => setState(() => isActive = value),
-                        activeColor: const Color.fromARGB(255, 65, 184, 119)),
+                      value: provider.isActive,
+                      onChanged: (value) {
+                        provider.isActive = value;
+                        provider.notifyListeners();
+                      },
+                      activeColor: const Color.fromARGB(255, 65, 184, 119),
+                    ),
                   ],
                 ),
-
                 const SizedBox(height: 24),
-
-                // KYC Documents Section
                 Text(
                   'KYC Documents',
                   style: GoogleFonts.inter(
@@ -380,73 +396,74 @@ class _AddTherapistState extends State<AddTherapist> {
                   ),
                 ),
                 const SizedBox(height: 16),
-
-                // Uploaded Document
+                ...provider.selectedFiles.map((file) => Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey[200]!),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.picture_as_pdf,
+                              color: Colors.red, size: 32),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  file.name,
+                                  style: GoogleFonts.spaceGrotesk(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: const Color.fromARGB(255, 0, 0, 0)
+                                        .withOpacity(0.87),
+                                  ),
+                                ),
+                                Text(
+                                  '${(file.size / 1024).toStringAsFixed(2)} kb',
+                                  style: GoogleFonts.spaceGrotesk(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w400,
+                                    color:
+                                        const Color.fromARGB(255, 82, 103, 137),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {},
+                            child: Text(
+                              'View',
+                              style: GoogleFonts.inter(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: const Color.fromARGB(255, 65, 184, 119),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )),
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  margin: const EdgeInsets.only(top: 16),
+                  padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[200]!),
+                    border: Border.all(
+                      color: Colors.grey[300]!,
+                      style: BorderStyle.solid,
+                    ),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.picture_as_pdf,
-                          color: Colors.red, size: 32),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Fund.pdf',
-                              style: GoogleFonts.spaceGrotesk(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: const Color.fromARGB(255, 0, 0, 0)
-                                    .withOpacity(0.87),
-                              ),
-                            ),
-                            Text(
-                              '53.9 kb',
-                              style: GoogleFonts.spaceGrotesk(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                                color: const Color.fromARGB(255, 82, 103, 137),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          'View',
-                          style: GoogleFonts.inter(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: const Color.fromARGB(255, 65, 184, 119),
-                          ),
-                        ),
-                      ),
-                    ],
+                  child: Center(
+                    child: CustomAddButton(
+                      title: "Upload Documents",
+                      onTap: pickFiles,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                    ),
                   ),
                 ),
-
-                Container(
-                    margin: const EdgeInsets.only(top: 16),
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey[300]!,
-                        style: BorderStyle.solid,
-                      ),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Center(
-                        child: CustomAddButton(
-                      title: "upload",
-                      mainAxisAlignment: MainAxisAlignment.center,
-                    ))),
               ],
             ),
           ),
@@ -458,7 +475,7 @@ class _AddTherapistState extends State<AddTherapist> {
   Widget _buildTextField({
     required String label,
     required String hint,
-    String? initialValue,
+    required TextEditingController controller,
     bool required = false,
   }) {
     return Padding(
@@ -489,28 +506,29 @@ class _AddTherapistState extends State<AddTherapist> {
           ),
           const SizedBox(height: 8),
           TextFormField(
+            controller: controller,
             style: GoogleFonts.manrope(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: const Color.fromARGB(255, 46, 44, 52)),
-            initialValue: initialValue,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: const Color.fromARGB(255, 46, 44, 52),
+            ),
             decoration: InputDecoration(
               hintText: hint,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(
+                borderSide: const BorderSide(
                   color: Color.fromARGB(255, 232, 233, 241),
                 ),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(
+                borderSide: const BorderSide(
                   color: Color.fromARGB(255, 232, 233, 241),
                 ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(
+                borderSide: const BorderSide(
                   color: Color.fromARGB(255, 232, 233, 241),
                 ),
               ),

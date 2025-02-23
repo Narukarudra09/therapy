@@ -7,7 +7,7 @@ import '../models/payment.dart';
 import '../models/therapy_session.dart';
 
 class SuperPatientProvider extends ChangeNotifier {
-  List<Patient> _patients = [];
+  final List<Patient> _patients = [];
   Patient? _selectedPatient;
   bool _isLoading = false;
   String _error = '';
