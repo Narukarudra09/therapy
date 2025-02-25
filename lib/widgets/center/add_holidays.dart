@@ -7,11 +7,15 @@ import '../../models/holiday.dart';
 import '../../providers/super_center_provider.dart';
 import '../custom_add_button.dart';
 
-class HolidayScreen extends StatelessWidget {
+class HolidayScreen extends StatefulWidget {
   const HolidayScreen({super.key});
 
+  @override
+  State<HolidayScreen> createState() => _HolidayScreenState();
+}
+
+class _HolidayScreenState extends State<HolidayScreen> {
   void addNewHoliday(SuperCenterProvider controller) {
-    // Logic to add a new holiday entry
     String newHolidayKey = 'Holiday ${controller.holidays.length + 1}';
     controller.addOrUpdateHoliday(newHolidayKey, Holiday());
   }
@@ -92,21 +96,38 @@ class HolidayScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Provider.of<SuperCenterProvider>(context);
 
+    // Filter out Saturday and Sunday if they are within working hours
+    final filteredHolidays = controller.holidays.entries.where((entry) {
+      final day = entry.key;
+      final holiday = entry.value;
+      if (day == 'Saturday' || day == 'Sunday') {
+        final openingTime = controller.openingTimes[day];
+        final closingTime = controller.closingTimes[day];
+        final now = TimeOfDay.now();
+        return now.isBefore(openingTime!) || now.isAfter(closingTime!);
+      }
+      return true;
+    }).toList();
+
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        shape: UnderlineInputBorder(
+          borderSide: BorderSide(color: Color(0xFFBFD1E3), width: 0.3),
+        ),
         title: const Text('Holidays'),
         titleTextStyle: GoogleFonts.inter(
           fontSize: 16,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w600,
           color: Color.fromARGB(255, 23, 28, 34),
+          height: 1.38,
         ),
         actions: [
           GestureDetector(
             onTap: () {
               // Save the holidays
-              controller.updateData({
-                'holidays': controller.holidays,
-              });
+              controller.saveHolidays(controller.holidays);
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
@@ -148,22 +169,23 @@ class HolidayScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (controller.holidays.isEmpty)
+              if (filteredHolidays.isEmpty)
                 Center(
                   child: Text(
                     'No holidays added yet.',
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                    style: GoogleFonts.inter(fontSize: 16, color: Colors.grey),
                   ),
                 )
               else
                 ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount: controller.holidays.length,
+                  itemCount: filteredHolidays.length,
                   itemBuilder: (context, index) {
-                    String day = controller.holidays.keys.elementAt(index);
-                    Holiday holiday = controller.holidays[day]!;
+                    String day = filteredHolidays[index].key;
+                    Holiday holiday = filteredHolidays[index].value;
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 16.0),
                       child: Column(
@@ -171,17 +193,20 @@ class HolidayScreen extends StatelessWidget {
                         children: [
                           Text(
                             day,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                            style: GoogleFonts.inter(
+                              color: Color(0xFF2E2C34),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              height: 1.43,
                             ),
                           ),
-                          const SizedBox(height: 16),
-                          const Text(
+                          const SizedBox(height: 12),
+                          Text(
                             'Select Date',
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 16,
+                            style: GoogleFonts.inter(
+                              color: Color(0xFF878DBA),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
                           const SizedBox(height: 8),
@@ -190,7 +215,9 @@ class HolidayScreen extends StatelessWidget {
                             child: Container(
                               padding: const EdgeInsets.all(16),
                               decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey.shade300),
+                                border: Border.all(
+                                  color: Color.fromARGB(255, 232, 233, 241),
+                                ),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Row(
@@ -202,6 +229,12 @@ class HolidayScreen extends StatelessWidget {
                                         ? '${holiday.date!.toLocal()}'
                                             .split(' ')[0]
                                         : 'Select Date',
+                                    style: GoogleFonts.inter(
+                                      color: Color(0xFF2E2C34),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      height: 1.43,
+                                    ),
                                   ),
                                   const Icon(Icons.calendar_today),
                                 ],
@@ -209,11 +242,12 @@ class HolidayScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 16),
-                          const Text(
+                          Text(
                             'Message',
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 16,
+                            style: GoogleFonts.inter(
+                              color: Color(0xFF878DBA),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
                           const SizedBox(height: 8),
@@ -222,10 +256,31 @@ class HolidayScreen extends StatelessWidget {
                               holiday.message = value;
                               controller.notifyListeners();
                             },
+                            style: GoogleFonts.inter(
+                              color: Color(0xFF2E2C34),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              height: 1.43,
+                            ),
                             decoration: InputDecoration(
                               hintText: 'Enter message',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
+                                borderSide: const BorderSide(
+                                  color: Color.fromARGB(255, 232, 233, 241),
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: const BorderSide(
+                                  color: Color.fromARGB(255, 232, 233, 241),
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: const BorderSide(
+                                  color: Color.fromARGB(255, 232, 233, 241),
+                                ),
                               ),
                             ),
                           ),
@@ -243,7 +298,7 @@ class HolidayScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                     color: const Color.fromARGB(255, 254, 254, 255),
                     border: Border.all(
-                      color: const Color.fromARGB(255, 224, 227, 231),
+                      color: const Color.fromARGB(255, 232, 233, 241),
                     ),
                   ),
                   child: Center(

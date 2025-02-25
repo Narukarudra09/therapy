@@ -1,12 +1,10 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:therapy/providers/super_patient_provider.dart';
 
 import '../../models/patient.dart';
-import '../../providers/super_patient_provider.dart';
 import 'add_allergies.dart';
 
 class AddPatients extends StatefulWidget {
@@ -39,18 +37,19 @@ class _AddPatientsState extends State<AddPatients> {
   void _savePatient() {
     if (_formKey.currentState!.validate()) {
       final newPatient = Patient(
-        id: DateTime.now().toString(),
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
         name: _fullNameController.text,
         phone: _mobileNumberController.text,
         city: city,
         bloodGroup: 'A+',
         // Default blood group, can be updated later
         allergies: selectedAllergies,
+
+        email: _emailController.text,
+        gender: _genderController.text,
         medicalRecords: [],
         therapySessions: [],
         payments: [],
-        email: _emailController.text,
-        gender: _genderController.text,
       );
 
       final provider =
@@ -497,27 +496,24 @@ class _AddPatientsState extends State<AddPatients> {
                       ),
                       Wrap(
                         spacing: 4,
-                        children: selectedAllergies
-                            .map((allergy) => Chip(
+                        children: provider.allergies
+                            .asMap()
+                            .entries
+                            .where((entry) =>
+                                provider.selectedAllergies[entry.key])
+                            .map((entry) => Chip(
                                   side: BorderSide.none,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(100),
                                   ),
                                   padding: EdgeInsets.all(0),
-                                  labelPadding:
-                                      EdgeInsets.symmetric(horizontal: 8),
-                                  label: Text(allergy),
-                                  labelStyle: GoogleFonts.inter(
-                                    color: Color.fromARGB(255, 46, 44, 52),
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                  labelPadding: EdgeInsets.only(left: 8),
+                                  label: Text(entry.value),
                                   deleteIcon: const Icon(Icons.close),
                                   onDeleted: () {
-                                    provider.deleteAllergy(allergy);
+                                    provider.deleteAllergy(entry.value);
                                   },
-                                  backgroundColor:
-                                      Color.fromARGB(255, 233, 233, 233),
+                                  backgroundColor: Colors.grey[200],
                                 ))
                             .toList(),
                       ),
@@ -627,7 +623,7 @@ Widget _buildRecordItem(String title, String date, String imagePath,
         borderRadius: BorderRadius.circular(8),
         image: imagePath != null
             ? DecorationImage(
-                image: FileImage(File(imagePath)),
+                image: NetworkImage(imagePath),
                 fit: BoxFit.cover,
               )
             : null,

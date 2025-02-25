@@ -41,15 +41,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
       UserRole selectedRole = _mapStringToUserRole(_selectedRole);
 
-      bool success = await authProvider.login(
-          selectedRole, _phoneController.text.toString());
+      bool success =
+          await authProvider.login(selectedRole, _phoneController.text.trim());
 
       if (success) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => VerifyScreen(
-              phoneNumber: _phoneController.text.toString(),
+              phoneNumber: _phoneController.text.trim(),
               selectedRole: selectedRole,
             ),
           ),
@@ -249,8 +249,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     if (value!.isEmpty) {
                       return "Please enter your number";
                     }
-                    if (value.length < 10) {
-                      return "Please enter your valid number";
+                    if (!RegExp(r'^\+[1-9]\d{1,14}$').hasMatch(value)) {
+                      return "Please enter a valid phone number in E.164 format";
                     }
                     return null;
                   },

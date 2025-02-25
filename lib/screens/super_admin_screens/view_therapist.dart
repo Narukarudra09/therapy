@@ -17,6 +17,19 @@ class ViewTherapist extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Provider.of<SuperCenterProvider>(context);
 
+    // Filter out Saturday and Sunday if they are within working hours
+    final filteredHolidays = controller.holidays.entries.where((entry) {
+      final day = entry.key;
+      final holiday = entry.value;
+      if (day == 'Saturday' || day == 'Sunday') {
+        final openingTime = controller.openingTimes[day];
+        final closingTime = controller.closingTimes[day];
+        final now = TimeOfDay.now();
+        return now.isBefore(openingTime!) || now.isAfter(closingTime!);
+      }
+      return true;
+    }).toList();
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -293,10 +306,9 @@ class ViewTherapist extends StatelessWidget {
                   ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: controller.holidays.length,
+                    itemCount: filteredHolidays.length,
                     itemBuilder: (BuildContext context, int index) {
-                      final holiday =
-                          controller.holidays.entries.elementAt(index);
+                      final holiday = filteredHolidays[index];
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 6.0),
                         child: Row(

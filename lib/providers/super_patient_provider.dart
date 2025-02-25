@@ -1,3 +1,8 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -7,10 +12,11 @@ import '../models/payment.dart';
 import '../models/therapy_session.dart';
 
 class SuperPatientProvider extends ChangeNotifier {
-  final List<Patient> _patients = [];
+  late List<Patient> _patients = [];
   Patient? _selectedPatient;
   bool _isLoading = false;
   String _error = '';
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   List<Patient> get patients => _patients;
 
@@ -39,15 +45,27 @@ class SuperPatientProvider extends ChangeNotifier {
   Future<void> fetchPatients() async {
     setLoading(true);
     setError(null);
+    try {
+      final snapshot =
+          await FirebaseFirestore.instance.collection('patients').get();
+      _patients =
+          snapshot.docs.map((doc) => Patient.fromMap(doc.data())).toList();
+      notifyListeners();
+    } catch (e) {
+      setError(e.toString());
+    } finally {
+      setLoading(false);
+    }
   }
 
   Future<void> addPatient(Patient patient) async {
     setLoading(true);
     setError(null);
-
     try {
-      _patients.add(patient);
-      notifyListeners();
+      await FirebaseFirestore.instance
+          .collection('patients')
+          .add(patient.toMap());
+      fetchPatients();
     } catch (e) {
       setError(e.toString());
     } finally {
@@ -58,16 +76,12 @@ class SuperPatientProvider extends ChangeNotifier {
   Future<void> updatePatient(Patient patient) async {
     setLoading(true);
     setError(null);
-
     try {
-      final index = _patients.indexWhere((p) => p.id == patient.id);
-      if (index != -1) {
-        _patients[index] = patient;
-        if (_selectedPatient?.id == patient.id) {
-          _selectedPatient = patient;
-        }
-        notifyListeners();
-      }
+      await FirebaseFirestore.instance
+          .collection('patients')
+          .doc(patient.id)
+          .update(patient.toMap());
+      fetchPatients();
     } catch (e) {
       setError(e.toString());
     } finally {
@@ -90,11 +104,10 @@ class SuperPatientProvider extends ChangeNotifier {
       String patientId, TherapySession session) async {
     setLoading(true);
     setError(null);
-
     try {
       final patient = _patients.firstWhere((p) => p.id == patientId);
       final updatedPatient = patient.copyWith(
-        therapySessions: [...patient.therapySessions, session],
+        therapySessions: [...patient.therapySessions, session.toMap()],
       );
       await updatePatient(updatedPatient);
     } catch (e) {
@@ -107,11 +120,10 @@ class SuperPatientProvider extends ChangeNotifier {
   Future<void> addPayment(String patientId, Payment payment) async {
     setLoading(true);
     setError(null);
-
     try {
       final patient = _patients.firstWhere((p) => p.id == patientId);
       final updatedPatient = patient.copyWith(
-        payments: [...patient.payments, payment],
+        payments: [...patient.payments, payment.toMap()],
       );
       await updatePatient(updatedPatient);
     } catch (e) {
@@ -139,6 +151,7 @@ class SuperPatientProvider extends ChangeNotifier {
     'Shellfish/Fish',
     'Soya',
   ];
+
   List<bool> _selectedAllergies = [];
 
   List<String> get allergies => _allergies;
@@ -169,7 +182,7 @@ class SuperPatientProvider extends ChangeNotifier {
         .toList();
   }
 
-  String _bloodGroup = 'A+';
+  String _bloodGroup = '';
 
   String get bloodGroup => _bloodGroup;
 
@@ -188,7 +201,6 @@ class SuperPatientProvider extends ChangeNotifier {
   void deleteAllergy(String allergy) {
     int index = _allergies.indexOf(allergy);
     if (index != -1) {
-      _allergies.removeAt(index);
       _selectedAllergies.removeAt(index);
       notifyListeners();
     }
@@ -202,13 +214,29 @@ class SuperPatientProvider extends ChangeNotifier {
       String imageName = image.name;
       String imageTime =
           DateFormat('dd-MM-yyyy • hh:mm a').format(DateTime.now());
+      String imagePath = image.path;
+
+      // Upload image to Firebase Storage
+      final Reference storageRef = FirebaseStorage.instance
+          .ref()
+          .child('patient_medical_records/$imageName');
+      final UploadTask uploadTask = storageRef.putFile(File(imagePath));
+
+      final TaskSnapshot downloadUrl = await uploadTask;
+      final String imageUrl = await downloadUrl.ref.getDownloadURL();
 
       if (isPrescription) {
-        _prescriptions.add(
-            {'title': imageName, 'date': imageTime, 'imagePath': image.path});
+        _prescriptions.add({
+          'title': imageName,
+          'date': imageTime,
+          'imagePath': imageUrl,
+        });
       } else {
-        _medicalRecords.add(
-            {'title': imageName, 'date': imageTime, 'imagePath': image.path});
+        _medicalRecords.add({
+          'title': imageName,
+          'date': imageTime,
+          'imagePath': imageUrl,
+        });
       }
       notifyListeners();
     }
@@ -222,5 +250,35 @@ class SuperPatientProvider extends ChangeNotifier {
   void deletePrescription(Map<String, dynamic> prescription) {
     _prescriptions.remove(prescription);
     notifyListeners();
+  }
+
+  void saveData() {
+    // Implement the logic to save data to a database or persistent storage
+    // For example, you might save to shared preferences, a local database, or a remote server
+    print(
+        'Data saved: $bloodGroup, $selectedAllergies, $medicalRecords, $prescriptions');
+  }
+
+  // OTP Verification Method
+  Future<void> verifyOTP(String verificationId, String smsCode) async {
+    setLoading(true);
+    setError(null);
+    try {
+      // Create a PhoneAuthCredential with the code
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: verificationId,
+        smsCode: smsCode,
+      );
+
+      // Sign the user in (or link) with the credential
+      await _auth.signInWithCredential(credential);
+
+      // Fetch patients data after successful OTP verification
+      await fetchPatients();
+    } catch (e) {
+      setError(e.toString());
+    } finally {
+      setLoading(false);
+    }
   }
 }

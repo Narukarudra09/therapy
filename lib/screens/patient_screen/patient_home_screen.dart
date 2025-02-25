@@ -12,9 +12,9 @@ class PatientHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int completedDays = 4;
-    int totalDays = 15;
     final controller = Provider.of<SuperCenterProvider>(context);
+    int completedDays = 3;
+    int totalDays = 15;
 
     return Scaffold(
       appBar: CustomAppBar(

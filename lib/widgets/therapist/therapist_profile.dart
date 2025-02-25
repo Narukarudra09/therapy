@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:therapy/providers/super_center_provider.dart';
 
 class TherapistProfile extends StatelessWidget {
   final String therapistName;
@@ -11,6 +13,10 @@ class TherapistProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<SuperCenterProvider>(context);
+    final therapist =
+        provider.therapists.firstWhere((t) => t.name == therapistName);
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -59,11 +65,11 @@ class TherapistProfile extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              _buildInfoItem(therapistName, Icons.account_circle),
-              _buildInfoItem('ankitdangi@a2d.co.in', Icons.mail_outline),
-              _buildInfoItem('9509965856', Icons.edit_outlined),
-              _buildInfoItem('Jk vihar', Icons.edit_outlined),
-              _buildInfoItem('Male', Icons.calendar_today_outlined),
+              _buildInfoItem(therapist.name, Icons.account_circle),
+              _buildInfoItem(therapist.email, Icons.mail_outline),
+              _buildInfoItem(therapist.phoneNumber, Icons.phone),
+              _buildInfoItem(therapist.centerName, Icons.location_on),
+              _buildInfoItem(therapist.gender, Icons.person),
 
               const SizedBox(height: 16),
               Divider(
@@ -80,8 +86,9 @@ class TherapistProfile extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              _buildDocumentItem('aadhar.pdf'),
-              _buildDocumentItem('pan.pdf'),
+              ...therapist.kycDocuments
+                  .map((filename) => _buildDocumentItem(filename))
+                  .toList(),
             ],
           ),
         ),

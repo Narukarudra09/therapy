@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+
 import '../../providers/super_patient_provider.dart';
 import '../../widgets/patients/add_allergies.dart';
 import 'blood_group.dart';
@@ -31,7 +32,13 @@ class MedicalHistory extends StatelessWidget {
         actions: [
           InkWell(
             onTap: () {
-              // Save logic if needed
+              // Save the data
+              provider.saveData();
+              // Optionally, navigate back or show a success message
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Data saved successfully!')),
+              );
             },
             child: Container(
               margin: EdgeInsets.only(right: 20),

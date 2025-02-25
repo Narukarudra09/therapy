@@ -5,11 +5,16 @@ import 'package:provider/provider.dart';
 import '../../providers/super_center_provider.dart';
 import 'add_working_hours.dart';
 
-class AddTherapyCenter extends StatelessWidget {
+class AddTherapyCenter extends StatefulWidget {
   final bool isEditing;
 
   const AddTherapyCenter({super.key, this.isEditing = false});
 
+  @override
+  State<AddTherapyCenter> createState() => _AddTherapyCenterState();
+}
+
+class _AddTherapyCenterState extends State<AddTherapyCenter> {
   @override
   Widget build(BuildContext context) {
     final controller = Provider.of<SuperCenterProvider>(context);
@@ -30,17 +35,17 @@ class AddTherapyCenter extends StatelessWidget {
         actions: [
           GestureDetector(
             onTap: () {
-              if (isEditing) {
+              if (widget.isEditing) {
                 // Save the data
-                controller.updateData({
-                  'isActive': controller.isActive,
-                  'isLoginAllowed': controller.isLoginAllowed,
-                  'email': controller.emailController.text,
-                  'phone': controller.phoneController.text,
-                  'about': controller.aboutController.text,
-                  'location': controller.locationController.text,
-                  'fee': controller.feeController.text,
-                });
+                controller.saveTherapyCenterData(
+                  isActive: controller.isActive,
+                  isLoginAllowed: controller.isLoginAllowed,
+                  email: controller.emailController.text,
+                  phone: controller.phoneController.text,
+                  about: controller.aboutController.text,
+                  location: controller.locationController.text,
+                  fee: controller.feeController.text,
+                );
                 Navigator.pop(context);
               } else {
                 Navigator.push(
@@ -63,7 +68,7 @@ class AddTherapyCenter extends StatelessWidget {
                   child: ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: 100),
                     child: Text(
-                      isEditing ? "Save" : "Next",
+                      widget.isEditing ? "Save" : "Next",
                       style: GoogleFonts.inter(
                         color: Colors.white,
                         fontSize: 16,
@@ -327,7 +332,7 @@ class AddTherapyCenter extends StatelessWidget {
             onChanged: onChanged,
             activeColor: Color(0xFF41B877),
             inactiveThumbColor: Colors.white,
-            thumbColor: MaterialStateProperty.all(Colors.white),
+            thumbColor: WidgetStateProperty.all(Colors.white),
             activeTrackColor: Color(0xFF41B877),
           ),
         ],

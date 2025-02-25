@@ -5,19 +5,22 @@ import 'package:therapy/widgets/center/add_holidays.dart';
 
 import '../../providers/super_center_provider.dart';
 
-class WorkingHoursScreen extends StatelessWidget {
+class WorkingHoursScreen extends StatefulWidget {
   final bool isEditing;
 
   const WorkingHoursScreen({super.key, this.isEditing = false});
 
   @override
+  State<WorkingHoursScreen> createState() => _WorkingHoursScreenState();
+}
+
+class _WorkingHoursScreenState extends State<WorkingHoursScreen> {
+  @override
   Widget build(BuildContext context) {
     final controller = Provider.of<SuperCenterProvider>(context);
 
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
         elevation: 0,
         scrolledUnderElevation: 0,
         shape: UnderlineInputBorder(
@@ -34,10 +37,9 @@ class WorkingHoursScreen extends StatelessWidget {
         actions: [
           GestureDetector(
             onTap: () {
-              if (isEditing) {
-                controller.updateWorkingHour({
-                  'holidays': controller.holidays,
-                });
+              if (widget.isEditing) {
+                controller.saveWorkingHours(
+                    controller.openingTimes, controller.closingTimes);
                 Navigator.pop(context);
               } else {
                 Navigator.push(
@@ -60,7 +62,7 @@ class WorkingHoursScreen extends StatelessWidget {
                   child: ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: 100),
                     child: Text(
-                      isEditing ? "Save" : "Next",
+                      widget.isEditing ? "Save" : "Next",
                       style: GoogleFonts.inter(
                         color: Colors.white,
                         fontSize: 16,

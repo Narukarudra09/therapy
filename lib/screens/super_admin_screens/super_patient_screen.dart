@@ -21,7 +21,10 @@ class SuperPatientScreen extends StatelessWidget {
       body: Consumer<SuperPatientProvider>(
         builder: (context, provider, child) {
           if (provider.isLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+                child: CircularProgressIndicator(
+              color: Color(0xFF40B777),
+            ));
           }
 
           if (provider.error.isNotEmpty) {

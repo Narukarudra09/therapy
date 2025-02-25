@@ -6,8 +6,6 @@ import 'package:therapy/models/holiday.dart';
 import '../models/therapist.dart';
 
 class SuperCenterProvider with ChangeNotifier {
-  // Reactive variables
-
   bool _isLoginAllowed = true;
   Map<String, Holiday> _holidays = {};
   final List<Map<String, dynamic>> _records = [];
@@ -20,6 +18,28 @@ class SuperCenterProvider with ChangeNotifier {
   List<PlatformFile> selectedFiles = [];
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
+  bool get isLoginAllowed => _isLoginAllowed;
+
+  Map<String, Holiday> get holidays => _holidays;
+
+  List<Map<String, dynamic>> get records => _records;
+
+  List<Map<String, dynamic>> get announcements => _announcements;
+
+  List<String> get selectedMediums => _selectedMediums;
+
+  CenterOwner get owner => _owner;
+
+  Map<String, TimeOfDay> get openingTimes => _openingTimes;
+
+  Map<String, TimeOfDay> get closingTimes => _closingTimes;
+  final List<CenterOwner> _centerOwner = [];
+  final List<Therapist> _therapists = [];
+
+  List<Therapist> get therapists => _therapists;
+
+  List<CenterOwner> get centerOwner => _centerOwner;
+
   // TextEditingControllers for input fields
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -30,7 +50,7 @@ class SuperCenterProvider with ChangeNotifier {
 
   // Center owner data
   final CenterOwner _owner = CenterOwner(
-    centerName: '',
+    centerName: 'Gardens Galleria Par',
     name: "Dr. Rudra",
     role: "Owner",
     phoneNumber: "7878404583",
@@ -66,34 +86,12 @@ class SuperCenterProvider with ChangeNotifier {
 
   // Getters
 
-  bool get isLoginAllowed => _isLoginAllowed;
-
-  Map<String, Holiday> get holidays => _holidays;
-
-  List<Map<String, dynamic>> get records => _records;
-
-  List<Map<String, dynamic>> get announcements => _announcements;
-
-  List<String> get selectedMediums => _selectedMediums;
-
-  CenterOwner get owner => _owner;
-
-  Map<String, TimeOfDay> get openingTimes => _openingTimes;
-
-  Map<String, TimeOfDay> get closingTimes => _closingTimes;
-
-  final List<Therapist> _therapists = [];
-
-  // Getter for therapists
-  List<Therapist> get therapists => _therapists;
-
-  // Method to add a therapist
   void addTherapist(Therapist therapist) {
-    _therapists.add(therapist);
+    if (!_therapists.any((t) => t.name == therapist.name)) {
+      _therapists.add(therapist);
+    }
     notifyListeners();
   }
-
-  // Setters
 
   set isLoginAllowed(bool value) {
     _isLoginAllowed = value;
@@ -110,20 +108,17 @@ class SuperCenterProvider with ChangeNotifier {
     super.dispose();
   }
 
-  // Method to update data
   void updateData(Map<String, dynamic> data) {
     _holidays =
         Map<String, Holiday>.from(data['holidays'] as Map<String, Holiday>);
     notifyListeners();
   }
 
-  // Method to add or update a holiday
   void addOrUpdateHoliday(String day, Holiday holiday) {
     _holidays[day] = holiday;
     notifyListeners();
   }
 
-  // Method to set the time for a specific day
   void setTime(String day, TimeOfDay time, bool isOpeningTime) {
     if (isOpeningTime) {
       _openingTimes[day] = time;
@@ -133,13 +128,11 @@ class SuperCenterProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Method to update working hours
   void updateWorkingHour(Map<String, dynamic> data) {
     _holidays = Map<String, Holiday>.from(data['holidays'] ?? _holidays);
     notifyListeners();
   }
 
-  // Method to add a record
   void addRecord(Map<String, dynamic> record) {
     _records.add(record);
     notifyListeners();
@@ -154,13 +147,11 @@ class SuperCenterProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Method to add an announcement
   void addAnnouncement(Map<String, dynamic> announcement) {
     _announcements.add(announcement);
     notifyListeners();
   }
 
-  // Method to toggle selected medium
   void toggleMedium(String medium) {
     if (_selectedMediums.contains(medium)) {
       _selectedMediums.remove(medium);
@@ -170,8 +161,38 @@ class SuperCenterProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Method to check if a medium is selected
   bool isMediumSelected(String medium) {
     return _selectedMediums.contains(medium);
+  }
+
+  void saveTherapyCenterData({
+    required bool isActive,
+    required bool isLoginAllowed,
+    required String email,
+    required String phone,
+    required String about,
+    required String location,
+    required String fee,
+  }) {
+    this.isActive = isActive;
+    this.isLoginAllowed = isLoginAllowed;
+    emailController.text = email;
+    phoneController.text = phone;
+    aboutController.text = about;
+    locationController.text = location;
+    feeController.text = fee;
+    notifyListeners();
+  }
+
+  void saveWorkingHours(Map<String, TimeOfDay> openingTimes,
+      Map<String, TimeOfDay> closingTimes) {
+    _openingTimes.addAll(openingTimes);
+    _closingTimes.addAll(closingTimes);
+    notifyListeners();
+  }
+
+  void saveHolidays(Map<String, Holiday> holidays) {
+    _holidays.addAll(holidays);
+    notifyListeners();
   }
 }

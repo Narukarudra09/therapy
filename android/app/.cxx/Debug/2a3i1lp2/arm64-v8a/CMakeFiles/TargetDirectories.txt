@@ -1,0 +1,2 @@
+E:/study/therapy/android/app/.cxx/Debug/2a3i1lp2/arm64-v8a/CMakeFiles/edit_cache.dir
+E:/study/therapy/android/app/.cxx/Debug/2a3i1lp2/arm64-v8a/CMakeFiles/rebuild_cache.dir

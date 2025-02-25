@@ -198,7 +198,9 @@ class _CustomProfileScreenState extends State<CustomProfileScreen> {
                 }).toList(),
                 onChanged: (value) {
                   if (value != null) {
-                    provider.updatePatient(patient!.copyWith(city: value));
+                    provider.updatePatient(patient!.copyWith(
+                      city: value,
+                    ));
                   }
                 },
               ),

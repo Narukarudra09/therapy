@@ -1,4 +1,6 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:therapy/providers/auth_provider.dart';
 import 'package:therapy/providers/navigation_provider.dart';
@@ -6,7 +8,13 @@ import 'package:therapy/providers/super_center_provider.dart';
 import 'package:therapy/providers/super_patient_provider.dart';
 import 'package:therapy/screens/auth/splash_screen.dart';
 
-void main() {
+import 'firebase_options.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(
     MultiProvider(
       providers: [
@@ -47,6 +55,30 @@ class MyApp extends StatelessWidget {
           dialHandColor: Color(0xFF41B877),
           dialBackgroundColor: Color(0xFFE9E9E9),
           dialTextColor: Color(0xFF1D1B20),
+          confirmButtonStyle: ButtonStyle(
+            foregroundColor: WidgetStatePropertyAll(Color(0xFF40B777)),
+            textStyle: WidgetStatePropertyAll(
+              GoogleFonts.roboto(
+                color: Color(0xFF40B777),
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                height: 1.43,
+                letterSpacing: 0.10,
+              ),
+            ),
+          ),
+          cancelButtonStyle: ButtonStyle(
+            foregroundColor: WidgetStatePropertyAll(Color(0xFF40B777)),
+            textStyle: WidgetStatePropertyAll(
+              GoogleFonts.roboto(
+                color: Color(0xFF40B777),
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                height: 1.43,
+                letterSpacing: 0.10,
+              ),
+            ),
+          ),
         ),
         textSelectionTheme: const TextSelectionThemeData(
           cursorColor: Color(0xFF41B877),

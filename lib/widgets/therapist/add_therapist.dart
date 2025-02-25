@@ -1,5 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:therapy/widgets/custom_add_button.dart';
@@ -7,8 +8,23 @@ import 'package:therapy/widgets/custom_add_button.dart';
 import '../../models/therapist.dart';
 import '../../providers/super_center_provider.dart';
 
-class AddTherapist extends StatelessWidget {
+class AddTherapist extends StatefulWidget {
   const AddTherapist({super.key});
+
+  @override
+  State<AddTherapist> createState() => _AddTherapistState();
+}
+
+class _AddTherapistState extends State<AddTherapist> {
+  @override
+  void dispose() {
+    // Dispose of any controllers or other resources here
+    final provider = Provider.of<SuperCenterProvider>(context, listen: false);
+    provider.nameController.dispose();
+    provider.emailController.dispose();
+    provider.phoneController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +43,8 @@ class AddTherapist extends StatelessWidget {
           kycDocuments:
               provider.selectedFiles.map((file) => file.name).toList(),
         );
-        provider.addTherapist(newTherapist);
-        Navigator.pop(context);
+
+        Navigator.pop(context, newTherapist);
       }
     }
 
@@ -40,6 +56,34 @@ class AddTherapist extends StatelessWidget {
       if (result != null) {
         provider.selectedFiles = result.files;
         provider.notifyListeners();
+      }
+    }
+
+    void showPDFDialog(PlatformFile file) {
+      if (file.extension == 'pdf') {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              contentPadding: EdgeInsets.zero,
+              content: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.7,
+                child: PDFView(
+                  filePath: file.path!,
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Close'),
+                ),
+              ],
+            );
+          },
+        );
       }
     }
 
@@ -142,6 +186,7 @@ class AddTherapist extends StatelessWidget {
                 ),
                 _buildTextField(
                   label: 'Phone Number',
+                  keyboardType: TextInputType.phone,
                   hint: 'Enter phone number',
                   controller: provider.phoneController,
                   required: true,
@@ -421,7 +466,7 @@ class AddTherapist extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  '${(file.size / 1024).toStringAsFixed(2)} kb',
+                                  '${(file.size / (1024 * 1024)).toStringAsFixed(2)} MB',
                                   style: GoogleFonts.spaceGrotesk(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w400,
@@ -433,7 +478,7 @@ class AddTherapist extends StatelessWidget {
                             ),
                           ),
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () => showPDFDialog(file),
                             child: Text(
                               'View',
                               style: GoogleFonts.inter(
@@ -474,6 +519,7 @@ class AddTherapist extends StatelessWidget {
 
   Widget _buildTextField({
     required String label,
+    TextInputType? keyboardType = TextInputType.text,
     required String hint,
     required TextEditingController controller,
     bool required = false,
@@ -506,6 +552,7 @@ class AddTherapist extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           TextFormField(
+            keyboardType: keyboardType,
             controller: controller,
             style: GoogleFonts.manrope(
               fontSize: 14,

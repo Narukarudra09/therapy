@@ -6,9 +6,14 @@ import '../../widgets/center/add_therapy_center.dart';
 import '../../widgets/custom_add_button.dart';
 import '../../widgets/custom_appbar.dart';
 
-class SuperCentersScreen extends StatelessWidget {
+class SuperCentersScreen extends StatefulWidget {
   const SuperCentersScreen({super.key});
 
+  @override
+  State<SuperCentersScreen> createState() => _SuperCentersScreenState();
+}
+
+class _SuperCentersScreenState extends State<SuperCentersScreen> {
   @override
   Widget build(BuildContext context) {
     final String title = "Gardens Galleria Par";
@@ -60,11 +65,13 @@ class SuperCentersScreen extends StatelessWidget {
                   return GestureDetector(
                     onTap: () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => (ViewTherapist(
-                                    imageUrl: imageUrl,
-                                  ))));
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => (ViewTherapist(
+                            imageUrl: imageUrl,
+                          )),
+                        ),
+                      );
                     },
                     child: Container(
                       margin: EdgeInsets.only(bottom: 16),

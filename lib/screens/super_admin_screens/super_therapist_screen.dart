@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:therapy/providers/super_center_provider.dart';
-import 'package:therapy/widgets/therapist/add_therapist.dart';
 
 import '../../models/therapist.dart';
+import '../../providers/super_center_provider.dart';
 import '../../widgets/custom_add_button.dart';
 import '../../widgets/custom_appbar.dart';
 import '../../widgets/custom_listtile.dart';
+import '../../widgets/therapist/add_therapist.dart';
 import '../../widgets/therapist/therapist_profile.dart';
 
 class SuperTherapistsScreen extends StatelessWidget {
