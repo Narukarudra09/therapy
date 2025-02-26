@@ -1,48 +1,46 @@
 class Patient {
-  String id;
-  String name;
-  String phone;
-  String city;
-  String bloodGroup;
+  String? id;
+  String? name;
+  String? phone;
+  String? city;
+  String? bloodGroup;
   List<String> allergies;
   List<Map<String, dynamic>> medicalRecords;
   List<Map<String, dynamic>> therapySessions;
   List<Map<String, dynamic>> payments;
-  String email;
-  String gender;
+  String? email;
+  String? gender;
   String? dateOfBirth;
 
   Patient({
-    required this.id,
-    required this.name,
-    required this.phone,
-    required this.city,
-    required this.bloodGroup,
+    this.id,
+    this.name,
+    this.phone,
+    this.city,
+    this.bloodGroup,
     required this.allergies,
     required this.medicalRecords,
     required this.therapySessions,
     required this.payments,
-    required this.email,
-    required this.gender,
+    this.email,
+    this.gender,
     this.dateOfBirth,
   });
 
-  factory Patient.fromMap(Map<String, dynamic> map) {
+  factory Patient.fromFirestore(Map<String, dynamic> json) {
     return Patient(
-      id: map['id'] ?? '',
-      name: map['name'] ?? '',
-      phone: map['phone'] ?? '',
-      city: map['city'] ?? '',
-      bloodGroup: map['bloodGroup'] ?? '',
-      allergies: List<String>.from(map['allergies'] ?? []),
-      medicalRecords:
-          List<Map<String, dynamic>>.from(map['medicalRecords'] ?? []),
-      therapySessions:
-          List<Map<String, dynamic>>.from(map['therapySessions'] ?? []),
-      payments: List<Map<String, dynamic>>.from(map['payments'] ?? []),
-      email: map['email'] ?? '',
-      gender: map['gender'] ?? '',
-      dateOfBirth: map['dateOfBirth'],
+      id: json['id'],
+      name: json['name'],
+      phone: json['phoneNumber'],
+      city: json['city'],
+      bloodGroup: json['bloodGroup'],
+      allergies: json['allergies'],
+      medicalRecords: json['medicalRecords'],
+      therapySessions: json['therapySessions'],
+      payments: json['payment'],
+      email: json['email'],
+      gender: json['gender'],
+      dateOfBirth: json['dob'],
     );
   }
 

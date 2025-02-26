@@ -14,7 +14,8 @@ import 'package:therapy/screens/therapist_screen/therapist_patient_screen.dart';
 import 'package:therapy/screens/therapist_screen/therapist_payment_screen.dart';
 import 'package:therapy/screens/therapist_screen/therapist_settings_screen.dart';
 
-import '../models/user_role.dart';import '../providers/auth_provider.dart';
+import '../models/user_role.dart';
+import '../providers/auth_provider.dart';
 import '../providers/navigation_provider.dart';
 import 'center_owner_screens/center_daily_data_screen.dart';
 import 'center_owner_screens/center_patient_screen.dart';

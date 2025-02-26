@@ -61,6 +61,7 @@ class SuperCenterProvider with ChangeNotifier {
     fees: "250",
     workingHours: {},
     holidays: [],
+    id: '',
   );
 
   // Maps to store opening and closing times for each day

@@ -29,8 +29,8 @@ class _BasicPersonalDetailsState extends State<BasicPersonalDetails> {
           Provider.of<SuperPatientProvider>(context, listen: false);
       if (provider.selectedPatient != null) {
         final patient = provider.selectedPatient!;
-        _nameController.text = patient.name;
-        _emailController.text = patient.email;
+        _nameController.text = patient.name!;
+        _emailController.text = patient.email!;
         _selectedDate = patient.dateOfBirth;
         _genderController.text = patient.gender ?? '';
       }
@@ -49,7 +49,8 @@ class _BasicPersonalDetailsState extends State<BasicPersonalDetails> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (context) => MainScreen(userName: _nameController.text)),
+            builder: (context) => MainScreen(
+                userName: provider.selectedPatient!.name.toString())),
       );
     }
   }

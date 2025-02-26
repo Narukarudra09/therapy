@@ -19,7 +19,7 @@ class Therapist {
     required this.kycDocuments,
   });
 
-  factory Therapist.fromJson(Map<String, dynamic> json) {
+  factory Therapist.fromFirestore(Map<String, dynamic> json) {
     return Therapist(
       name: json['name'],
       email: json['email'],

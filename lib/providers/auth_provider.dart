@@ -1,19 +1,21 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../models/user_role.dart';
 
 class AuthProvider with ChangeNotifier {
-  UserRoles? _selectedUser;
+  dynamic _selectedUser;
   bool _isLoading = false;
   String? _verificationId;
   UserRole? _pendingRole;
 
-  UserRoles? get selectedUser => _selectedUser;
+  dynamic get selectedUser => _selectedUser;
   bool get isLoading => _isLoading;
   UserRole? get pendingRole => _pendingRole;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<bool> login(UserRole role, String phoneNumber) async {
     _isLoading = true;
@@ -42,11 +44,11 @@ class AuthProvider with ChangeNotifier {
           _verificationId = verificationId;
         },
       );
-      return true; // Return true if the OTP is sent successfully
+      return true;
     } catch (e) {
       _isLoading = false;
       notifyListeners();
-      return false; // Return false if there is an error
+      return false;
     }
   }
 
@@ -62,44 +64,32 @@ class AuthProvider with ChangeNotifier {
 
       await _auth.signInWithCredential(credential);
 
-      // Set the selected user based on the role
-      switch (_pendingRole) {
-        case UserRole.superAdmin:
-          _selectedUser = UserRoles(
-            id: '1',
-            name: 'Super Admin',
-            role: UserRole.superAdmin,
-            phoneNumber: '',
-          );
-          break;
-        case UserRole.centerOwner:
-          _selectedUser = UserRoles(
-            id: '2',
-            name: 'Center Owner',
-            role: UserRole.centerOwner,
-            phoneNumber: '',
-          );
-          break;
-        case UserRole.therapist:
-          _selectedUser = UserRoles(
-            id: '3',
-            name: 'Therapist',
-            role: UserRole.therapist,
-            phoneNumber: '',
-          );
-          break;
-        case UserRole.patient:
-          _selectedUser = UserRoles(
-            id: '4',
-            name: 'Patient',
-            role: UserRole.patient,
-            phoneNumber: '',
-          );
-          break;
-        case null:
-          // TODO: Handle this case.
-          throw UnimplementedError();
-      }
+      UserCredential userCredential =
+          await _auth.signInWithCredential(credential);
+      String uid = userCredential.user!.uid;
+
+      // Fetch user data from Firestore based on the role
+      // DocumentSnapshot userDoc;
+      // switch (_pendingRole) {
+      //   case UserRole.superAdmin:
+      //     userDoc = await _firestore.collection('superAdmins').doc(uid).get();
+      //     _selectedUser = SuperAdmin.fromFirestore(userDoc.data() as Map<String, dynamic>);
+      //     break;
+      //   case UserRole.centerOwner:
+      //     userDoc = await _firestore.collection('centerOwners').doc(uid).get();
+      //     _selectedUser = CenterOwner.fromFirestore(userDoc.data() as Map<String, dynamic>);
+      //     break;
+      //   case UserRole.therapist:
+      //     userDoc = await _firestore.collection('therapists').doc('3').get();
+      //     _selectedUser = Therapist.fromFirestore(userDoc.data() as Map<String, dynamic>);
+      //     break;
+      //   case UserRole.patient:
+      //     userDoc = await _firestore.collection('patients').doc('4').get();
+      //     _selectedUser = Patient.fromFirestore(userDoc.data() as Map<String, dynamic>);
+      //     break;
+      //   case null:
+      //     throw UnimplementedError();
+      // }
 
       _isLoading = false;
       _verificationId = null;

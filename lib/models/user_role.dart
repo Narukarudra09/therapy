@@ -5,9 +5,10 @@ class UserRoles {
   final String phoneNumber;
   final UserRole role;
 
-  UserRoles(
-      {required this.id,
-      required this.phoneNumber,
-      required this.role,
-      required String name});
+  UserRoles({
+    required this.id,
+    required this.phoneNumber,
+    required this.role,
+    required String name,
+  });
 }

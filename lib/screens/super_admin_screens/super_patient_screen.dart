@@ -68,15 +68,15 @@ class SuperPatientScreen extends StatelessWidget {
                     itemBuilder: (BuildContext context, int index) {
                       final patient = provider.patients[index];
                       return CustomListTile(
-                        title: patient.name,
-                        subtitle: patient.email,
+                        title: patient.name!,
+                        subtitle: patient.email!,
                         onTap: () {
-                          provider.selectPatient(patient.id);
+                          provider.selectPatient(patient.id!);
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    PatientDetail(patientName: patient.name)),
+                                    PatientDetail(patientName: patient.name!)),
                           );
                         },
                       );

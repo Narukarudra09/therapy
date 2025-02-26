@@ -47,7 +47,7 @@ class PatientProfile extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          patient.name,
+          patient.name!,
           style: GoogleFonts.inter(
             color: Color.fromARGB(255, 8, 12, 62),
             fontSize: 18,
@@ -77,9 +77,9 @@ class PatientProfile extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              _buildInfoRow(Icons.account_circle, patient.name),
-              _buildInfoRow(Icons.email_outlined, patient.email),
-              _buildInfoRow(Icons.phone_android, patient.phone),
+              _buildInfoRow(Icons.account_circle, patient.name!),
+              _buildInfoRow(Icons.email_outlined, patient.email!),
+              _buildInfoRow(Icons.phone_android, patient.phone!),
               _buildInfoRow(Icons.calendar_today_outlined,
                   patient.gender ?? 'Not Specified'),
               const SizedBox(height: 16),
@@ -110,7 +110,7 @@ class PatientProfile extends StatelessWidget {
                       padding:
                           EdgeInsets.symmetric(horizontal: 16.0, vertical: 6),
                       child: Text(
-                        patient.bloodGroup,
+                        patient.bloodGroup!,
                         style: GoogleFonts.inter(
                           color: Color.fromARGB(255, 23, 28, 34),
                           fontSize: 14,

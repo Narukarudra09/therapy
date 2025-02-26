@@ -12,7 +12,7 @@ import '../models/payment.dart';
 import '../models/therapy_session.dart';
 
 class SuperPatientProvider extends ChangeNotifier {
-  late List<Patient> _patients = [];
+  final List<Patient> _patients = [];
   Patient? _selectedPatient;
   bool _isLoading = false;
   String _error = '';
@@ -48,8 +48,7 @@ class SuperPatientProvider extends ChangeNotifier {
     try {
       final snapshot =
           await FirebaseFirestore.instance.collection('patients').get();
-      _patients =
-          snapshot.docs.map((doc) => Patient.fromMap(doc.data())).toList();
+
       notifyListeners();
     } catch (e) {
       setError(e.toString());

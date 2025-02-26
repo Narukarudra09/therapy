@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CenterOwner {
+  final String id;
   final String centerName;
   final String name;
   final String role;
@@ -23,10 +24,12 @@ class CenterOwner {
     required this.fees,
     required this.workingHours,
     required this.holidays,
+    required this.id,
   });
 
-  factory CenterOwner.fromJson(Map<String, dynamic> json) {
+  factory CenterOwner.fromFirestore(Map<String, dynamic> json) {
     return CenterOwner(
+      id: json["id"],
       centerName: json['CenterOwner'],
       name: json['name'],
       role: json['role'],
@@ -45,6 +48,7 @@ class CenterOwner {
 
   Map<String, dynamic> toJson() {
     return {
+      "id": id,
       "centerName": centerName,
       'name': name,
       'role': role,

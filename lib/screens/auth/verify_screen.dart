@@ -29,7 +29,8 @@ class _VerifyScreenState extends State<VerifyScreen> {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     try {
-      bool isVerified = await authProvider.verifyOtp(otp: _otpController.text);
+      bool isVerified =
+          await authProvider.verifyOtp(otp: _otpController.text.toString());
 
       if (isVerified) {
         if (widget.selectedRole == UserRole.patient ||

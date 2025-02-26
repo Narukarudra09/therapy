@@ -6,11 +6,16 @@ import 'package:therapy/widgets/custom_appbar.dart';
 
 import '../../providers/super_center_provider.dart';
 
-class PatientTherapiesScreen extends StatelessWidget {
+class PatientTherapiesScreen extends StatefulWidget {
   final String patientName;
 
   const PatientTherapiesScreen({super.key, required this.patientName});
 
+  @override
+  State<PatientTherapiesScreen> createState() => _PatientTherapiesScreenState();
+}
+
+class _PatientTherapiesScreenState extends State<PatientTherapiesScreen> {
   @override
   Widget build(BuildContext context) {
     final controller = Provider.of<SuperCenterProvider>(context);
@@ -19,7 +24,7 @@ class PatientTherapiesScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: CustomAppBar(
-        userName: patientName,
+        userName: widget.patientName,
       ),
       body: Padding(
         padding: EdgeInsets.only(top: 16, left: 20, right: 20),
