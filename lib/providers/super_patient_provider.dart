@@ -46,9 +46,6 @@ class SuperPatientProvider extends ChangeNotifier {
     setLoading(true);
     setError(null);
     try {
-      final snapshot =
-          await FirebaseFirestore.instance.collection('patients').get();
-
       notifyListeners();
     } catch (e) {
       setError(e.toString());
@@ -75,13 +72,7 @@ class SuperPatientProvider extends ChangeNotifier {
   Future<void> updatePatient(Patient patient) async {
     setLoading(true);
     setError(null);
-    try {
-      await FirebaseFirestore.instance
-          .collection('patients')
-          .doc(patient.id)
-          .update(patient.toMap());
-      fetchPatients();
-    } catch (e) {
+    try {} catch (e) {
       setError(e.toString());
     } finally {
       setLoading(false);

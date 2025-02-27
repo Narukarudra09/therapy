@@ -20,45 +20,32 @@ class _LoginScreenState extends State<LoginScreen> {
   final _phoneController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  UserRole _mapStringToUserRole(String role) {
-    switch (role) {
-      case 'Super Admin':
-        return UserRole.superAdmin;
-      case 'Center Owner':
-        return UserRole.centerOwner;
-      case 'Therapist':
-        return UserRole.therapist;
-      case 'Patient':
-        return UserRole.patient;
-      default:
-        return UserRole.superAdmin;
-    }
-  }
-
   void _handleLogin() async {
     if (_formKey.currentState!.validate()) {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
-
-      UserRole selectedRole = _mapStringToUserRole(_selectedRole);
+      UserModel userModel = UserModel(
+        phoneNumber: _phoneController.text.trim(),
+        userType: _selectedRole,
+      );
 
       bool success =
-          await authProvider.login(selectedRole, _phoneController.text.trim());
+          await authProvider.login(userModel.phoneNumber, userModel.userType);
 
       if (success) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => VerifyScreen(
-              phoneNumber: _phoneController.text.trim(),
-              selectedRole: selectedRole,
+              phoneNumber: userModel.phoneNumber,
+              userType: userModel.userType,
             ),
           ),
         );
       } else {
-        // Show error message
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Login Failed'),
+            content: Text(
+                'Login Failed. Please check your phone number and try again.'),
             backgroundColor: Colors.red,
           ),
         );
@@ -69,10 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        scrolledUnderElevation: 0,
-      ),
+      appBar: AppBar(elevation: 0),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: SingleChildScrollView(
@@ -94,14 +78,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
               const SizedBox(height: 16),
-              Text(
-                "Welcome",
-                style: GoogleFonts.inter(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w700,
-                  color: const Color.fromARGB(255, 23, 28, 34),
-                ),
-              ),
+              Text("Welcome",
+                  style: GoogleFonts.inter(
+                      fontSize: 28, fontWeight: FontWeight.w700)),
               Text(
                 "You've been missed",
                 style: GoogleFonts.inter(
@@ -257,10 +236,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 52),
-              CustomButton(
-                title: "Login",
-                onTap: _handleLogin,
-              )
+              CustomButton(title: "Login", onTap: _handleLogin),
             ],
           ),
         ),

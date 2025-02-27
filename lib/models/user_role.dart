@@ -1,14 +1,17 @@
-enum UserRole { superAdmin, centerOwner, therapist, patient }
+class UserModel {
+  String phoneNumber;
+  String userType;
 
-class UserRoles {
-  final String id;
-  final String phoneNumber;
-  final UserRole role;
+  UserModel({required this.phoneNumber, required this.userType});
 
-  UserRoles({
-    required this.id,
-    required this.phoneNumber,
-    required this.role,
-    required String name,
-  });
+  Map<String, dynamic> toMap() {
+    return {
+      "phoneNumber": phoneNumber,
+      "userType": userType,
+    };
+  }
+
+  UserModel.fromMap(Map<String, dynamic> map)
+      : phoneNumber = map['phoneNumber'],
+        userType = map['userType'];
 }

@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "106580139327",
+    "firebase_url": "https://therapy-app-9d5f9-default-rtdb.firebaseio.com",
     "project_id": "therapy-app-9d5f9",
     "storage_bucket": "therapy-app-9d5f9.firebasestorage.app"
   },
@@ -15,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyD4rIXSwVs7K13i6JR0E10Im4B0TUE1Qio"
+          "current_key": "AIzaSyC6AFXrUB23xnRlbnyyf-g6cOYm94m1u6A"
         }
       ],
       "services": {

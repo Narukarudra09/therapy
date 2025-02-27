@@ -131,7 +131,7 @@ class _HolidayScreenState extends State<HolidayScreen> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => MainScreen(userName: ''),
+                  builder: (context) => MainScreen(),
                 ),
               );
             },

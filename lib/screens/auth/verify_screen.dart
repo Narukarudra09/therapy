@@ -8,15 +8,17 @@ import 'package:therapy/screens/main_screen.dart';
 import 'package:therapy/widgets/custom_button.dart';
 import 'package:therapy/widgets/verify_otp.dart';
 
-import '../../models/user_role.dart';
 import '../../providers/auth_provider.dart';
 
 class VerifyScreen extends StatefulWidget {
   final String phoneNumber;
-  final UserRole selectedRole;
+  final String userType; // Change to String
 
-  const VerifyScreen(
-      {super.key, required this.phoneNumber, required this.selectedRole});
+  const VerifyScreen({
+    super.key,
+    required this.phoneNumber,
+    required this.userType,
+  });
 
   @override
   State<VerifyScreen> createState() => _VerifyScreenState();
@@ -29,12 +31,10 @@ class _VerifyScreenState extends State<VerifyScreen> {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     try {
-      bool isVerified =
-          await authProvider.verifyOtp(otp: _otpController.text.toString());
+      bool isVerified = await authProvider.verifyOtp(_otpController.text);
 
       if (isVerified) {
-        if (widget.selectedRole == UserRole.patient ||
-            widget.selectedRole == UserRole.therapist) {
+        if (widget.userType == 'Patient' || widget.userType == 'Therapist') {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => BasicPersonalDetails()),
@@ -42,13 +42,13 @@ class _VerifyScreenState extends State<VerifyScreen> {
         } else {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => MainScreen(userName: '')),
+            MaterialPageRoute(builder: (context) => MainScreen()),
           );
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Invalid OTP'),
+            content: Text('Invalid OTP. Please try again.'),
             backgroundColor: Colors.red,
           ),
         );

@@ -22,71 +22,87 @@ import 'center_owner_screens/center_patient_screen.dart';
 import 'center_owner_screens/center_payment_screen.dart';
 import 'center_owner_screens/center_settings_screen.dart';
 
-class MainScreen extends StatelessWidget {
-  final String userName;
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
 
-  const MainScreen({super.key, required this.userName});
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
 
+class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     final navProvider = Provider.of<NavigationProvider>(context);
 
+    if (authProvider.selectedUser == null) {
+      return Scaffold(
+        body: Center(
+          child: Text('User not selected. Please log in.'),
+        ),
+      );
+    }
+
+    UserModel user =
+        authProvider.selectedUser! as UserModel; // Get the UserModel
+
     return Scaffold(
       body: _buildDashboardForRole(
         context,
-        authProvider.selectedUser!.role,
+        user.userType, // Use userType from UserModel
         navProvider.currentIndex,
       ),
       bottomNavigationBar: _buildBottomNavigationBar(
         context,
-        authProvider.selectedUser!.role,
+        user.userType, // Use userType from UserModel
         navProvider.currentIndex,
       ),
     );
   }
 
   Widget _buildDashboardForRole(
-      BuildContext context, UserRole role, int currentIndex) {
+      BuildContext context, String role, int currentIndex) {
     switch (role) {
-      case UserRole.superAdmin:
+      case 'Super Admin':
         return [
           SuperPatientScreen(),
           SuperTherapistsScreen(),
           SuperPaymentsScreen(),
           SuperCentersScreen()
         ][currentIndex];
-      case UserRole.centerOwner:
+      case 'Center Owner':
         return [
           CenterDailyDataScreen(),
           CenterPatientScreen(),
           CenterPaymentScreen(),
           CenterSettingsScreen()
         ][currentIndex];
-      case UserRole.therapist:
+      case 'Therapist':
         return [
           TherapistDailyDataScreen(),
           TherapistPatientScreen(),
           TherapistPaymentScreen(),
           TherapistSettingsScreen()
         ][currentIndex];
-      case UserRole.patient:
+      case 'Patient':
         return [
-          PatientHomeScreen(patientName: userName),
-          PatientTherapiesScreen(patientName: userName),
-          PatientPaymentScreen(patientName: userName),
-          PatientSettingsScreen(patientName: userName)
+          PatientHomeScreen(patientName: ''),
+          PatientTherapiesScreen(patientName: ''),
+          PatientPaymentScreen(patientName: ''),
+          PatientSettingsScreen(patientName: '')
         ][currentIndex];
+      default:
+        return Center(child: Text('Invalid user role'));
     }
   }
 
   Widget _buildBottomNavigationBar(
-      BuildContext context, UserRole role, int currentIndex) {
+      BuildContext context, String role, int currentIndex) {
     final navController = Provider.of<NavigationProvider>(context);
 
-    List<BottomNavigationBarItem> getNavItems(UserRole role) {
+    List<BottomNavigationBarItem> getNavItems(String role) {
       switch (role) {
-        case UserRole.superAdmin:
+        case 'Super Admin':
           return [
             BottomNavigationBarItem(
                 icon: Icon(Icons.account_circle_rounded), label: 'Patients'),
@@ -97,8 +113,8 @@ class MainScreen extends StatelessWidget {
             BottomNavigationBarItem(
                 icon: Icon(Icons.home_filled), label: 'Centers'),
           ];
-        case UserRole.centerOwner:
-        case UserRole.therapist:
+        case 'Center Owner':
+        case 'Therapist':
           return [
             BottomNavigationBarItem(
                 icon: Icon(Icons.folder), label: 'Daily Data'),
@@ -109,7 +125,7 @@ class MainScreen extends StatelessWidget {
             BottomNavigationBarItem(
                 icon: Icon(Icons.settings), label: 'Settings'),
           ];
-        case UserRole.patient:
+        case 'Patient':
           return [
             BottomNavigationBarItem(
                 icon: Icon(Icons.account_circle_rounded), label: 'Home'),
@@ -120,6 +136,8 @@ class MainScreen extends StatelessWidget {
             BottomNavigationBarItem(
                 icon: Icon(Icons.settings), label: 'Settings'),
           ];
+        default:
+          return [];
       }
     }
 

@@ -48,9 +48,7 @@ class _BasicPersonalDetailsState extends State<BasicPersonalDetails> {
       );
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-            builder: (context) => MainScreen(
-                userName: provider.selectedPatient!.name.toString())),
+        MaterialPageRoute(builder: (context) => MainScreen()),
       );
     }
   }
@@ -142,8 +140,7 @@ class _BasicPersonalDetailsState extends State<BasicPersonalDetails> {
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => MainScreen(userName: '')),
+                MaterialPageRoute(builder: (context) => MainScreen()),
               );
             },
             child: Text(

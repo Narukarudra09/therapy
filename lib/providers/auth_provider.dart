@@ -2,24 +2,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../models/user_role.dart';
-
 class AuthProvider with ChangeNotifier {
-  dynamic _selectedUser;
+  String? _selectedUser;
   bool _isLoading = false;
   String? _verificationId;
-  UserRole? _pendingRole;
+  String? _userType; // Store the user type
 
-  dynamic get selectedUser => _selectedUser;
+  String? get selectedUser => _selectedUser;
+
   bool get isLoading => _isLoading;
-  UserRole? get pendingRole => _pendingRole;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<bool> login(UserRole role, String phoneNumber) async {
+  Future<bool> login(String phoneNumber, String userType) async {
     _isLoading = true;
-    _pendingRole = role;
+    _userType = userType; // Store the user type
     notifyListeners();
 
     try {
@@ -27,13 +25,13 @@ class AuthProvider with ChangeNotifier {
         phoneNumber: phoneNumber,
         verificationCompleted: (PhoneAuthCredential credential) async {
           await _auth.signInWithCredential(credential);
-          _isLoading = false;
-          notifyListeners();
+          await _addUserToFirestore(phoneNumber, userType);
+          _completeLogin();
         },
         verificationFailed: (FirebaseAuthException e) {
           _isLoading = false;
           notifyListeners();
-          throw Exception(e.message);
+          throw Exception('Verification failed: ${e.message}');
         },
         codeSent: (String verificationId, int? resendToken) {
           _verificationId = verificationId;
@@ -46,13 +44,19 @@ class AuthProvider with ChangeNotifier {
       );
       return true;
     } catch (e) {
-      _isLoading = false;
-      notifyListeners();
+      _handleLoginError(e);
       return false;
     }
   }
 
-  Future<bool> verifyOtp({required String otp}) async {
+  Future<void> _addUserToFirestore(String phoneNumber, String userType) async {
+    await _firestore.collection('Users').doc(phoneNumber).set({
+      'phoneNumber': phoneNumber,
+      'userType': userType,
+    });
+  }
+
+  Future<bool> verifyOtp(String otp) async {
     _isLoading = true;
     notifyListeners();
 
@@ -63,50 +67,31 @@ class AuthProvider with ChangeNotifier {
       );
 
       await _auth.signInWithCredential(credential);
-
-      UserCredential userCredential =
-          await _auth.signInWithCredential(credential);
-      String uid = userCredential.user!.uid;
-
-      // Fetch user data from Firestore based on the role
-      // DocumentSnapshot userDoc;
-      // switch (_pendingRole) {
-      //   case UserRole.superAdmin:
-      //     userDoc = await _firestore.collection('superAdmins').doc(uid).get();
-      //     _selectedUser = SuperAdmin.fromFirestore(userDoc.data() as Map<String, dynamic>);
-      //     break;
-      //   case UserRole.centerOwner:
-      //     userDoc = await _firestore.collection('centerOwners').doc(uid).get();
-      //     _selectedUser = CenterOwner.fromFirestore(userDoc.data() as Map<String, dynamic>);
-      //     break;
-      //   case UserRole.therapist:
-      //     userDoc = await _firestore.collection('therapists').doc('3').get();
-      //     _selectedUser = Therapist.fromFirestore(userDoc.data() as Map<String, dynamic>);
-      //     break;
-      //   case UserRole.patient:
-      //     userDoc = await _firestore.collection('patients').doc('4').get();
-      //     _selectedUser = Patient.fromFirestore(userDoc.data() as Map<String, dynamic>);
-      //     break;
-      //   case null:
-      //     throw UnimplementedError();
-      // }
-
-      _isLoading = false;
-      _verificationId = null;
-      _pendingRole = null;
-      notifyListeners();
+      await _addUserToFirestore(_auth.currentUser!.phoneNumber!, _userType!);
+      _completeLogin();
       return true;
     } catch (e) {
-      _isLoading = false;
-      notifyListeners();
+      _handleLoginError(e);
       return false;
     }
+  }
+
+  void _completeLogin() {
+    _isLoading = false;
+    _verificationId = null;
+    notifyListeners();
+  }
+
+  void _handleLoginError(dynamic e) {
+    _isLoading = false;
+    notifyListeners();
+    throw Exception('Login failed: $e');
   }
 
   void logout() {
     _selectedUser = null;
     _verificationId = null;
-    _pendingRole = null;
+    _userType = null;
     _auth.signOut();
     notifyListeners();
   }

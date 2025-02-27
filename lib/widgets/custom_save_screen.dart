@@ -54,10 +54,8 @@ class SuccessScreen extends StatelessWidget {
             const SizedBox(height: 40),
             TextButton.icon(
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => MainScreen(userName: "")));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => MainScreen()));
               },
               icon: const Icon(
                 size: 30,
