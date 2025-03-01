@@ -4,13 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:therapy/firebase_options.dart';
 import 'package:therapy/providers/auth_provider.dart';
 import 'package:therapy/providers/navigation_provider.dart';
 import 'package:therapy/providers/super_center_provider.dart';
 import 'package:therapy/providers/super_patient_provider.dart';
 import 'package:therapy/screens/auth/splash_screen.dart';
-
-import 'firebase_options.dart';
 
 Future<void> main() async {
   // Load environment variables from the .env file

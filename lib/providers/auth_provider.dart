@@ -2,13 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../models/user_role.dart';
+
 class AuthProvider with ChangeNotifier {
-  String? _selectedUser;
+  UserModel? _selectedUser;
   bool _isLoading = false;
   String? _verificationId;
-  String? _userType; // Store the user type
+  String? _userType;
 
-  String? get selectedUser => _selectedUser;
+  UserModel? get selectedUser => _selectedUser;
 
   bool get isLoading => _isLoading;
 
@@ -17,7 +19,7 @@ class AuthProvider with ChangeNotifier {
 
   Future<bool> login(String phoneNumber, String userType) async {
     _isLoading = true;
-    _userType = userType; // Store the user type
+    _userType = userType;
     notifyListeners();
 
     try {
@@ -25,7 +27,7 @@ class AuthProvider with ChangeNotifier {
         phoneNumber: phoneNumber,
         verificationCompleted: (PhoneAuthCredential credential) async {
           await _auth.signInWithCredential(credential);
-          await _addUserToFirestore(phoneNumber, userType);
+          _selectedUser = await _getUserFromFirestore(phoneNumber);
           _completeLogin();
         },
         verificationFailed: (FirebaseAuthException e) {
@@ -67,12 +69,23 @@ class AuthProvider with ChangeNotifier {
       );
 
       await _auth.signInWithCredential(credential);
-      await _addUserToFirestore(_auth.currentUser!.phoneNumber!, _userType!);
+      _selectedUser =
+          await _getUserFromFirestore(_auth.currentUser!.phoneNumber!);
       _completeLogin();
       return true;
     } catch (e) {
       _handleLoginError(e);
       return false;
+    }
+  }
+
+  Future<UserModel> _getUserFromFirestore(String phoneNumber) async {
+    DocumentSnapshot doc =
+        await _firestore.collection('Users').doc(phoneNumber).get();
+    if (doc.exists) {
+      return UserModel.fromDocument(doc);
+    } else {
+      throw Exception('User not found');
     }
   }
 

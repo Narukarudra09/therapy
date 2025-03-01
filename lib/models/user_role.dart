@@ -1,17 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class UserModel {
-  String phoneNumber;
-  String userType;
+  final String phoneNumber;
+  final String userType;
 
   UserModel({required this.phoneNumber, required this.userType});
 
-  Map<String, dynamic> toMap() {
-    return {
-      "phoneNumber": phoneNumber,
-      "userType": userType,
-    };
+  factory UserModel.fromDocument(DocumentSnapshot doc) {
+    return UserModel(
+      phoneNumber: doc['phoneNumber'],
+      userType: doc['userType'],
+    );
   }
-
-  UserModel.fromMap(Map<String, dynamic> map)
-      : phoneNumber = map['phoneNumber'],
-        userType = map['userType'];
 }

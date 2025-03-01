@@ -43,18 +43,17 @@ class _MainScreenState extends State<MainScreen> {
       );
     }
 
-    UserModel user =
-        authProvider.selectedUser! as UserModel; // Get the UserModel
+    UserModel user = authProvider.selectedUser!;
 
     return Scaffold(
       body: _buildDashboardForRole(
         context,
-        user.userType, // Use userType from UserModel
+        user.userType,
         navProvider.currentIndex,
       ),
       bottomNavigationBar: _buildBottomNavigationBar(
         context,
-        user.userType, // Use userType from UserModel
+        user.userType,
         navProvider.currentIndex,
       ),
     );
