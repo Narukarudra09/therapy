@@ -28,6 +28,47 @@ class _LoginScreenState extends State<LoginScreen> {
         userType: _selectedRole,
       );
 
+      // Check if the user type is correct
+      bool isUserTypeCorrect = await authProvider.verifyUserType(
+          userModel.phoneNumber, userModel.userType);
+
+      if (!isUserTypeCorrect) {
+        // Show alert message for wrong user type selection
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              backgroundColor: Color(0xFFFFFFFF),
+              title: Text("Incorrect User Type"),
+              titleTextStyle: GoogleFonts.poppins(
+                color: Color(0xFF41B877),
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+              ),
+              content: Text(
+                  "The selected user type is incorrect. Please choose the correct user type."),
+              contentTextStyle: GoogleFonts.inter(
+                color: Color(0xFF170729),
+              ),
+              actions: [
+                TextButton(
+                  child: Text(
+                    "OK",
+                    style: GoogleFonts.poppins(
+                      color: Color(0xFF41B877),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        return;
+      }
+
       bool success =
           await authProvider.login(userModel.phoneNumber, userModel.userType);
 

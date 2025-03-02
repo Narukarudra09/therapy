@@ -1,7 +1,6 @@
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:therapy/firebase_options.dart';
@@ -12,20 +11,12 @@ import 'package:therapy/providers/super_patient_provider.dart';
 import 'package:therapy/screens/auth/splash_screen.dart';
 
 Future<void> main() async {
-  // Load environment variables from the .env file
-  await dotenv.load(fileName: ".env");
-
-  // Access the API key from the environment variables
-  String apiKey = dotenv.env['API_KEY'] ?? 'default_api_key';
-
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Activate Firebase App Check
   await FirebaseAppCheck.instance.activate(
     androidProvider: AndroidProvider.debug,
   );

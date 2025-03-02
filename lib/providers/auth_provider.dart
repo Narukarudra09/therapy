@@ -8,7 +8,6 @@ class AuthProvider with ChangeNotifier {
   UserModel? _selectedUser;
   bool _isLoading = false;
   String? _verificationId;
-  String? _userType;
 
   UserModel? get selectedUser => _selectedUser;
 
@@ -19,7 +18,6 @@ class AuthProvider with ChangeNotifier {
 
   Future<bool> login(String phoneNumber, String userType) async {
     _isLoading = true;
-    _userType = userType;
     notifyListeners();
 
     try {
@@ -49,13 +47,6 @@ class AuthProvider with ChangeNotifier {
       _handleLoginError(e);
       return false;
     }
-  }
-
-  Future<void> _addUserToFirestore(String phoneNumber, String userType) async {
-    await _firestore.collection('Users').doc(phoneNumber).set({
-      'phoneNumber': phoneNumber,
-      'userType': userType,
-    });
   }
 
   Future<bool> verifyOtp(String otp) async {
@@ -89,6 +80,21 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  Future<bool> verifyUserType(String phoneNumber, String userType) async {
+    try {
+      DocumentSnapshot doc =
+          await _firestore.collection('Users').doc(phoneNumber).get();
+      if (doc.exists) {
+        UserModel user = UserModel.fromDocument(doc);
+        return user.userType == userType;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
   void _completeLogin() {
     _isLoading = false;
     _verificationId = null;
@@ -104,7 +110,6 @@ class AuthProvider with ChangeNotifier {
   void logout() {
     _selectedUser = null;
     _verificationId = null;
-    _userType = null;
     _auth.signOut();
     notifyListeners();
   }
