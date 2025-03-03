@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:therapy/providers/patient_provider.dart';
 import 'package:therapy/widgets/custom_appbar.dart';
 
-import '../../providers/super_center_provider.dart';
-
 class PatientHomeScreen extends StatelessWidget {
-  final String patientName;
-
-  const PatientHomeScreen({super.key, required this.patientName});
+  const PatientHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Provider.of<SuperCenterProvider>(context);
-    int completedDays = 3;
+    final controller = Provider.of<PatientProvider>(context);
+    int completedDays = 4;
     int totalDays = 15;
 
     return Scaffold(
       appBar: CustomAppBar(
-        userName: patientName,
+        userName: "rudra",
       ),
       body: Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 24),

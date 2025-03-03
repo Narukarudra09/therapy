@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:therapy/firebase_options.dart';
 import 'package:therapy/providers/auth_provider.dart';
 import 'package:therapy/providers/navigation_provider.dart';
+import 'package:therapy/providers/patient_provider.dart';
 import 'package:therapy/providers/super_center_provider.dart';
 import 'package:therapy/providers/super_patient_provider.dart';
 import 'package:therapy/screens/auth/splash_screen.dart';
@@ -24,6 +25,7 @@ Future<void> main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => NavigationProvider()),
+        ChangeNotifierProvider(create: (_) => PatientProvider()),
         ChangeNotifierProvider(create: (_) => SuperPatientProvider()),
         ChangeNotifierProvider(create: (_) => SuperCenterProvider()),
       ],

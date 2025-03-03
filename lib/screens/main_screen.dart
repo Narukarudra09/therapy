@@ -85,7 +85,7 @@ class _MainScreenState extends State<MainScreen> {
         ][currentIndex];
       case 'Patient':
         return [
-          PatientHomeScreen(patientName: ''),
+          PatientHomeScreen(),
           PatientTherapiesScreen(patientName: ''),
           PatientPaymentScreen(patientName: ''),
           PatientSettingsScreen(patientName: '')
