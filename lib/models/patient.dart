@@ -4,10 +4,10 @@ class Patient {
   String? phone;
   String? city;
   String? bloodGroup;
-  List<String> allergies;
-  List<Map<String, dynamic>> medicalRecords;
-  List<Map<String, dynamic>> therapySessions;
-  List<Map<String, dynamic>> payments;
+  List<String>? allergies;
+  List<Map<String, dynamic>>? medicalRecords;
+  List<Map<String, dynamic>>? therapySessions;
+  List<Map<String, dynamic>>? payments;
   String? email;
   String? gender;
   String? dateOfBirth;
@@ -18,10 +18,10 @@ class Patient {
     this.phone,
     this.city,
     this.bloodGroup,
-    required this.allergies,
-    required this.medicalRecords,
-    required this.therapySessions,
-    required this.payments,
+    this.allergies,
+    this.medicalRecords,
+    this.therapySessions,
+    this.payments,
     this.email,
     this.gender,
     this.dateOfBirth,

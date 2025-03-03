@@ -138,7 +138,7 @@ class PatientProfile extends StatelessWidget {
                         spacing: 8,
                         runSpacing: 8,
                         children: List.generate(
-                          patient.allergies.length,
+                          patient.allergies!.length,
                           (index) => Chip(
                             side: BorderSide.none,
                             shape: RoundedRectangleBorder(
@@ -146,7 +146,7 @@ class PatientProfile extends StatelessWidget {
                             ),
                             padding: EdgeInsets.all(0),
                             labelPadding: EdgeInsets.symmetric(horizontal: 8),
-                            label: Text(patient.allergies[index]),
+                            label: Text(patient.allergies![index]),
                             labelStyle: GoogleFonts.inter(
                               color: Color.fromARGB(255, 46, 44, 52),
                               fontSize: 12,

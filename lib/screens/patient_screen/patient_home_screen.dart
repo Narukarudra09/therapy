@@ -10,8 +10,8 @@ class PatientHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Provider.of<PatientProvider>(context);
-    int completedDays = 4;
-    int totalDays = 15;
+    int completedDays = controller.completedDays;
+    int totalDays = controller.totalDays;
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -113,7 +113,7 @@ class PatientHomeScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    "4 Days",
+                                    "$completedDays Days",
                                     style: GoogleFonts.inter(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -135,7 +135,7 @@ class PatientHomeScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    "15 Days",
+                                    "$totalDays Days",
                                     style: GoogleFonts.inter(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,

@@ -96,10 +96,6 @@ class SuperPatientProvider extends ChangeNotifier {
     setError(null);
     try {
       final patient = _patients.firstWhere((p) => p.id == patientId);
-      final updatedPatient = patient.copyWith(
-        therapySessions: [...patient.therapySessions, session.toMap()],
-      );
-      await updatePatient(updatedPatient);
     } catch (e) {
       setError(e.toString());
     } finally {
@@ -112,10 +108,6 @@ class SuperPatientProvider extends ChangeNotifier {
     setError(null);
     try {
       final patient = _patients.firstWhere((p) => p.id == patientId);
-      final updatedPatient = patient.copyWith(
-        payments: [...patient.payments, payment.toMap()],
-      );
-      await updatePatient(updatedPatient);
     } catch (e) {
       setError(e.toString());
     } finally {
