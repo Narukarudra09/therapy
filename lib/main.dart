@@ -12,11 +12,9 @@ import 'package:therapy/screens/auth/splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
   await FirebaseAppCheck.instance.activate(
     androidProvider: AndroidProvider.debug,
   );

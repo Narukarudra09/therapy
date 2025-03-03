@@ -25,7 +25,7 @@ class AuthProvider with ChangeNotifier {
         phoneNumber: phoneNumber,
         verificationCompleted: (PhoneAuthCredential credential) async {
           await _auth.signInWithCredential(credential);
-          _selectedUser = await _getUserFromFirestore(phoneNumber);
+          _selectedUser = await _getUserFromFirestore(phoneNumber, userType);
           _completeLogin();
         },
         verificationFailed: (FirebaseAuthException e) {
@@ -49,7 +49,7 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> verifyOtp(String otp) async {
+  Future<bool> verifyOtp(String otp, String userType) async {
     _isLoading = true;
     notifyListeners();
 
@@ -60,8 +60,9 @@ class AuthProvider with ChangeNotifier {
       );
 
       await _auth.signInWithCredential(credential);
-      _selectedUser =
-          await _getUserFromFirestore(_auth.currentUser!.phoneNumber!);
+      _selectedUser = await _getUserFromFirestore(
+          _auth.currentUser!.phoneNumber!,
+          userType); // Pass the userType directly
       _completeLogin();
       return true;
     } catch (e) {
@@ -70,17 +71,31 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<UserModel> _getUserFromFirestore(String phoneNumber) async {
+  Future<UserModel> _getUserFromFirestore(
+      String phoneNumber, String userType) async {
     DocumentSnapshot doc =
         await _firestore.collection('Users').doc(phoneNumber).get();
     if (doc.exists) {
-      return UserModel.fromDocument(doc);
+      UserModel user = UserModel.fromDocument(doc);
+      if (user.userType != userType) {
+        throw Exception('Incorrect user type');
+      }
+      return user;
     } else {
-      throw Exception('User not found');
+      // Add the user to Firestore if not found
+      await _firestore.collection('Users').doc(phoneNumber).set({
+        'phoneNumber': phoneNumber,
+        'userType': userType,
+        // Add other fields as necessary
+      });
+      // Fetch the newly added user
+      DocumentSnapshot newDoc =
+          await _firestore.collection('Users').doc(phoneNumber).get();
+      return UserModel.fromDocument(newDoc);
     }
   }
 
-  Future<bool> verifyUserType(String phoneNumber, String userType) async {
+  Future<bool> isUserTypeCorrect(String phoneNumber, String userType) async {
     try {
       DocumentSnapshot doc =
           await _firestore.collection('Users').doc(phoneNumber).get();
@@ -88,7 +103,14 @@ class AuthProvider with ChangeNotifier {
         UserModel user = UserModel.fromDocument(doc);
         return user.userType == userType;
       } else {
-        return false;
+        // Add the user to Firestore if not found
+        await _firestore.collection('Users').doc(phoneNumber).set({
+          'phoneNumber': phoneNumber,
+          'userType': userType,
+          // Add other fields as necessary
+        });
+        // Return true because the user is now added with the correct userType
+        return true;
       }
     } catch (e) {
       return false;

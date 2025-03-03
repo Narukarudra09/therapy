@@ -28,11 +28,30 @@ class _LoginScreenState extends State<LoginScreen> {
         userType: _selectedRole,
       );
 
-      // Check if the user type is correct
-      bool isUserTypeCorrect = await authProvider.verifyUserType(
-          userModel.phoneNumber, userModel.userType);
+      // Check if the user type is correct before proceeding
+      bool isUserTypeCorrect = await authProvider.isUserTypeCorrect(
+        userModel.phoneNumber,
+        userModel.userType,
+      );
 
-      if (!isUserTypeCorrect) {
+      if (isUserTypeCorrect) {
+        bool success = await authProvider.login(
+          userModel.phoneNumber,
+          userModel.userType,
+        );
+
+        if (success) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => VerifyScreen(
+                phoneNumber: userModel.phoneNumber,
+                userType: userModel.userType,
+              ),
+            ),
+          );
+        }
+      } else {
         // Show alert message for wrong user type selection
         showDialog(
           context: context,
@@ -65,30 +84,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ],
             );
           },
-        );
-        return;
-      }
-
-      bool success =
-          await authProvider.login(userModel.phoneNumber, userModel.userType);
-
-      if (success) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => VerifyScreen(
-              phoneNumber: userModel.phoneNumber,
-              userType: userModel.userType,
-            ),
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-                'Login Failed. Please check your phone number and try again.'),
-            backgroundColor: Colors.red,
-          ),
         );
       }
     }
@@ -270,7 +265,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       return "Please enter your number";
                     }
                     if (!RegExp(r'^\+[1-9]\d{1,14}$').hasMatch(value)) {
-                      return "Please enter a valid phone number in E.164 format";
+                      return "Please add +91 before the number";
                     }
                     return null;
                   },
