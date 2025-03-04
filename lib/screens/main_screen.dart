@@ -88,7 +88,7 @@ class _MainScreenState extends State<MainScreen> {
           PatientHomeScreen(),
           PatientTherapiesScreen(patientName: ''),
           PatientPaymentScreen(patientName: ''),
-          PatientSettingsScreen(patientName: '')
+          PatientSettingsScreen()
         ][currentIndex];
       default:
         return Center(child: Text('Invalid user role'));

@@ -1,8 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:therapy/providers/patient_provider.dart';
 
-import '../../providers/super_patient_provider.dart';
 import '../../widgets/custom_button.dart';
 import '../main_screen.dart';
 
@@ -20,36 +21,92 @@ class _BasicPersonalDetailsState extends State<BasicPersonalDetails> {
   String? _selectedDate;
   final _formKey = GlobalKey<FormState>();
   List<String> gender = ['Male', 'Female', 'Others'];
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final provider =
-          Provider.of<SuperPatientProvider>(context, listen: false);
-      if (provider.selectedPatient != null) {
-        final patient = provider.selectedPatient!;
-        _nameController.text = patient.name!;
-        _emailController.text = patient.email!;
-        _selectedDate = patient.dateOfBirth;
-        _genderController.text = patient.gender ?? '';
-      }
-    });
+    _checkExistingDetails();
   }
 
-  void _saveDetails() {
+  Future<void> _checkExistingDetails() async {
+    try {
+      final provider = Provider.of<PatientProvider>(context, listen: false);
+      await provider.initializePatient();
+
+      if (provider.patient != null) {
+        final patient = provider.patient!;
+        // Check if all required fields are filled
+        if (patient.name != null &&
+            patient.email != null &&
+            patient.dateOfBirth != null &&
+            patient.gender != null) {
+          // If all details exist, navigate to main screen
+          if (mounted) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => MainScreen()),
+            );
+          }
+        } else {
+          // If some details are missing, load existing data into form
+          if (mounted) {
+            setState(() {
+              _nameController.text = patient.name ?? '';
+              _emailController.text = patient.email ?? '';
+              _selectedDate = patient.dateOfBirth;
+              _genderController.text = patient.gender ?? '';
+              _isLoading = false;
+            });
+          }
+        }
+      } else {
+        // If no patient data exists, show empty form
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error loading patient data: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  void _saveDetails() async {
     if (_formKey.currentState!.validate()) {
-      final provider =
-          Provider.of<SuperPatientProvider>(context, listen: false);
-      provider.saveBasicDetails(
-        _nameController.text,
-        _emailController.text,
-        _selectedDate,
-      );
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => MainScreen()),
-      );
+      try {
+        final provider = Provider.of<PatientProvider>(context, listen: false);
+        await provider.saveBasicDetails(
+          _nameController.text,
+          _emailController.text,
+          _selectedDate,
+          _genderController.text,
+        );
+
+        if (mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => MainScreen()),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to save details: ${e.toString()}'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
     }
   }
 
@@ -127,6 +184,14 @@ class _BasicPersonalDetailsState extends State<BasicPersonalDetails> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Personal Details"),
@@ -255,7 +320,11 @@ class _BasicPersonalDetailsState extends State<BasicPersonalDetails> {
                   ),
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return "Please enter your address";
+                      return "Please enter your email";
+                    }
+                    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                        .hasMatch(value)) {
+                      return "Please enter a valid email address";
                     }
                     return null;
                   },

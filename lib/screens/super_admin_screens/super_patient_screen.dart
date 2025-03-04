@@ -71,7 +71,6 @@ class SuperPatientScreen extends StatelessWidget {
                         title: patient.name!,
                         subtitle: patient.email!,
                         onTap: () {
-                          provider.selectPatient(patient.id!);
                           Navigator.push(
                             context,
                             MaterialPageRoute(

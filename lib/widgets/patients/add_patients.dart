@@ -37,7 +37,6 @@ class _AddPatientsState extends State<AddPatients> {
   void _savePatient() {
     if (_formKey.currentState!.validate()) {
       final newPatient = Patient(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
         name: _fullNameController.text,
         phone: _mobileNumberController.text,
         city: city,

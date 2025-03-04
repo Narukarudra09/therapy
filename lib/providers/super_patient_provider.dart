@@ -8,8 +8,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 import '../models/patient.dart';
-import '../models/payment.dart';
-import '../models/therapy_session.dart';
 
 class SuperPatientProvider extends ChangeNotifier {
   final List<Patient> _patients = [];
@@ -33,12 +31,6 @@ class SuperPatientProvider extends ChangeNotifier {
 
   void setError(String? errorMessage) {
     _error = errorMessage ?? '';
-    notifyListeners();
-  }
-
-  void selectPatient(String patientId) {
-    _selectedPatient =
-        _patients.firstWhere((patient) => patient.id == patientId);
     notifyListeners();
   }
 
@@ -73,42 +65,6 @@ class SuperPatientProvider extends ChangeNotifier {
     setLoading(true);
     setError(null);
     try {} catch (e) {
-      setError(e.toString());
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  void saveBasicDetails(String name, String email, String? dateOfBirth) {
-    if (_selectedPatient != null) {
-      final updatedPatient = _selectedPatient!.copyWith(
-        name: name,
-        email: email,
-        dateOfBirth: dateOfBirth,
-      );
-      updatePatient(updatedPatient);
-    }
-  }
-
-  Future<void> addTherapySession(
-      String patientId, TherapySession session) async {
-    setLoading(true);
-    setError(null);
-    try {
-      final patient = _patients.firstWhere((p) => p.id == patientId);
-    } catch (e) {
-      setError(e.toString());
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  Future<void> addPayment(String patientId, Payment payment) async {
-    setLoading(true);
-    setError(null);
-    try {
-      final patient = _patients.firstWhere((p) => p.id == patientId);
-    } catch (e) {
       setError(e.toString());
     } finally {
       setLoading(false);

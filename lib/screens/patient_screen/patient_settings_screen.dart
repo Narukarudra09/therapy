@@ -1,22 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:therapy/providers/patient_provider.dart';
 import 'package:therapy/screens/patient_screen/report_screen.dart';
 import 'package:therapy/screens/patient_screen/update_phone_number.dart';
 import 'package:therapy/widgets/custom_appbar.dart';
 import 'package:therapy/widgets/custom_profile_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../models/patient.dart';
 import 'medical_history.dart';
 
-class PatientSettingsScreen extends StatelessWidget {
-  final String patientName;
+class PatientSettingsScreen extends StatefulWidget {
+  const PatientSettingsScreen({
+    super.key,
+  });
 
-  const PatientSettingsScreen({super.key, required this.patientName});
+  @override
+  State<PatientSettingsScreen> createState() => _PatientSettingsScreenState();
+}
+
+class _PatientSettingsScreenState extends State<PatientSettingsScreen> {
+  final TextEditingController controller = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  void saveProfile(BuildContext context) {
+    final provider = Provider.of<PatientProvider>(context, listen: false);
+    final patient = Patient(
+      name: controller.text.toString(),
+      phone: "",
+      city: 'Bhilwara', // Replace with actual city
+      // Add other fields as needed
+    );
+    provider.savePatientData(patient);
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<PatientProvider>(context);
     return Scaffold(
       appBar: CustomAppBar(
-        userName: patientName,
+        userName: "rudra",
       ),
       body: Padding(
         padding: EdgeInsets.only(top: 24, left: 20, right: 20),
@@ -55,7 +80,9 @@ class PatientSettingsScreen extends StatelessWidget {
                                 scrolledUnderElevation: 0,
                                 actions: [
                                   InkWell(
-                                    onTap: () {},
+                                    onTap: () {
+                                      saveProfile(context);
+                                    },
                                     child: Container(
                                       margin: EdgeInsets.only(right: 20),
                                       height: 30,
@@ -97,7 +124,10 @@ class PatientSettingsScreen extends StatelessWidget {
                                         builder: (context) =>
                                             UpdatePhoneNumber()));
                               },
-                              username: patientName,
+                              phone: provider.patient?.phone ??
+                                  _auth.currentUser?.phoneNumber ??
+                                  '',
+                              usernameController: controller,
                             )));
               },
             ),

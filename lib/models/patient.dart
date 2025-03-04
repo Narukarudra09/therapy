@@ -1,5 +1,4 @@
 class Patient {
-  String? id;
   String? name;
   String? phone;
   String? city;
@@ -11,9 +10,9 @@ class Patient {
   String? email;
   String? gender;
   String? dateOfBirth;
+  String? profileImageUrl;
 
   Patient({
-    this.id,
     this.name,
     this.phone,
     this.city,
@@ -25,44 +24,44 @@ class Patient {
     this.email,
     this.gender,
     this.dateOfBirth,
+    this.profileImageUrl,
   });
 
   factory Patient.fromFirestore(Map<String, dynamic> json) {
     return Patient(
-      id: json['id'],
       name: json['name'],
-      phone: json['phoneNumber'],
-      city: json['city'],
-      bloodGroup: json['bloodGroup'],
-      allergies: json['allergies'],
-      medicalRecords: json['medicalRecords'],
-      therapySessions: json['therapySessions'],
-      payments: json['payment'],
+      phone: json['phoneNumber'] ?? json['phone'],
       email: json['email'],
       gender: json['gender'],
-      dateOfBirth: json['dob'],
+      dateOfBirth: json['dateOfBirth'],
+      profileImageUrl: json['profileImageUrl'],
+      city: json['city'],
+      bloodGroup: json['bloodGroup'],
+      allergies: json['allergies']?.cast<String>(),
+      medicalRecords: json['medicalRecords']?.cast<Map<String, dynamic>>(),
+      therapySessions: json['therapySessions']?.cast<Map<String, dynamic>>(),
+      payments: json['payments']?.cast<Map<String, dynamic>>(),
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'name': name,
-      'phone': phone,
+      'phoneNumber': phone,
+      'email': email,
+      'gender': gender,
+      'dateOfBirth': dateOfBirth,
+      'profileImageUrl': profileImageUrl,
       'city': city,
       'bloodGroup': bloodGroup,
       'allergies': allergies,
       'medicalRecords': medicalRecords,
       'therapySessions': therapySessions,
       'payments': payments,
-      'email': email,
-      'gender': gender,
-      'dateOfBirth': dateOfBirth,
     };
   }
 
   Patient copyWith({
-    String? id,
     String? name,
     String? phone,
     String? city,
@@ -74,9 +73,9 @@ class Patient {
     String? email,
     String? gender,
     String? dateOfBirth,
+    String? profileImageUrl,
   }) {
     return Patient(
-      id: id ?? this.id,
       name: name ?? this.name,
       phone: phone ?? this.phone,
       city: city ?? this.city,
@@ -88,6 +87,7 @@ class Patient {
       email: email ?? this.email,
       gender: gender ?? this.gender,
       dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+      profileImageUrl: profileImageUrl ?? this.profileImageUrl,
     );
   }
 }

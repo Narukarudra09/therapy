@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/super_patient_provider.dart';
@@ -8,13 +11,15 @@ import '../providers/super_patient_provider.dart';
 class CustomProfileScreen extends StatefulWidget {
   final PreferredSizeWidget? appBar;
   final void Function()? onTap;
-  final String username;
+  final TextEditingController usernameController;
+  final String phone;
 
   const CustomProfileScreen({
     super.key,
     required this.appBar,
     required this.onTap,
-    required this.username,
+    required this.usernameController,
+    required this.phone,
   });
 
   @override
@@ -22,7 +27,18 @@ class CustomProfileScreen extends StatefulWidget {
 }
 
 class _CustomProfileScreenState extends State<CustomProfileScreen> {
-  final controller = TextEditingController(text: '7878404583');
+  File? _image;
+
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,21 +60,26 @@ class _CustomProfileScreenState extends State<CustomProfileScreen> {
                     CircleAvatar(
                       radius: 60,
                       backgroundColor: Colors.blue[200],
-                      backgroundImage: const AssetImage("assets/profile.png"),
+                      backgroundImage: _image != null
+                          ? FileImage(_image!)
+                          : const AssetImage("assets/profile.png")
+                              as ImageProvider,
                     ),
                     Positioned(
                       bottom: 0,
                       right: 0,
                       child: Container(
-                        padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: Colors.black,
                         ),
-                        child: const Icon(
-                          Icons.camera_alt,
-                          color: Colors.white,
-                          size: 24,
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.camera_alt,
+                            color: Colors.white,
+                            size: 24,
+                          ),
+                          onPressed: _pickImage,
                         ),
                       ),
                     ),
@@ -75,7 +96,7 @@ class _CustomProfileScreenState extends State<CustomProfileScreen> {
               ),
               const SizedBox(height: 8),
               TextFormField(
-                initialValue: widget.username,
+                controller: widget.usernameController,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -122,7 +143,8 @@ class _CustomProfileScreenState extends State<CustomProfileScreen> {
               ),
               const SizedBox(height: 8),
               TextFormField(
-                controller: controller,
+                readOnly: true,
+                initialValue: widget.phone,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -196,19 +218,11 @@ class _CustomProfileScreenState extends State<CustomProfileScreen> {
                     child: FittedBox(child: Text(value)),
                   );
                 }).toList(),
-                onChanged: (value) {
-                  if (value != null) {
-                    provider.updatePatient(patient!.copyWith(
-                      city: value,
-                    ));
-                  }
-                },
+                onChanged: (value) {},
               ),
               const SizedBox(height: 32),
               InkWell(
-                onTap: () {
-                  // Implement logout logic here
-                },
+                onTap: () {},
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

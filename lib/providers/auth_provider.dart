@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:therapy/models/patient.dart';
 
 import '../models/user_role.dart';
 
@@ -61,8 +62,70 @@ class AuthProvider with ChangeNotifier {
 
       await _auth.signInWithCredential(credential);
       _selectedUser = await _getUserFromFirestore(
-          _auth.currentUser!.phoneNumber!,
-          userType); // Pass the userType directly
+          _auth.currentUser!.phoneNumber!, userType);
+
+      // Check if user exists in their respective collection
+      final phoneNumber = _auth.currentUser!.phoneNumber!;
+      final userDoc = await _firestore
+          .collection('Users')
+          .doc(phoneNumber)
+          .collection('data')
+          .doc('info')
+          .get();
+
+      if (!userDoc.exists) {
+        // Create new user based on userType
+        switch (userType) {
+          case 'patient':
+            await _firestore
+                .collection('Users')
+                .doc(phoneNumber)
+                .collection('data')
+                .doc('info')
+                .set(Patient(
+                  phone: phoneNumber,
+                ).toMap());
+            break;
+
+          case 'therapist':
+            await _firestore
+                .collection('Users')
+                .doc(phoneNumber)
+                .collection('data')
+                .doc('info')
+                .set({
+              'phoneNumber': phoneNumber,
+              'isActive': false,
+              'kycDocuments': [],
+            });
+            break;
+
+          case 'center_owner':
+            await _firestore
+                .collection('Users')
+                .doc(phoneNumber)
+                .collection('data')
+                .doc('info')
+                .set({
+              'phoneNumber': phoneNumber,
+              'workingHours': {},
+              'holidays': [],
+            });
+            break;
+
+          case 'super_admin':
+            await _firestore
+                .collection('Users')
+                .doc(phoneNumber)
+                .collection('data')
+                .doc('info')
+                .set({
+              'phoneNumber': phoneNumber,
+            });
+            break;
+        }
+      }
+
       _completeLogin();
       return true;
     } catch (e) {
@@ -80,14 +143,28 @@ class AuthProvider with ChangeNotifier {
       if (user.userType != userType) {
         throw Exception('Incorrect user type');
       }
+
       return user;
     } else {
       // Add the user to Firestore if not found
       await _firestore.collection('Users').doc(phoneNumber).set({
         'phoneNumber': phoneNumber,
         'userType': userType,
-        // Add other fields as necessary
+        'createdAt': FieldValue.serverTimestamp(),
       });
+
+      // Create initial data based on user type
+      await _firestore
+          .collection('Users')
+          .doc(phoneNumber)
+          .collection('data')
+          .doc('info')
+          .set({
+        'phoneNumber': phoneNumber,
+        'userType': userType,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
       // Fetch the newly added user
       DocumentSnapshot newDoc =
           await _firestore.collection('Users').doc(phoneNumber).get();
