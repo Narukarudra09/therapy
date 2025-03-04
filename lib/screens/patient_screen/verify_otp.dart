@@ -3,15 +3,16 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../widgets/custom_button.dart';
 import '../../widgets/verify_otp.dart';
-import 'new_phone_number.dart';
 
 class VerifyOTP extends StatefulWidget {
   final String newPhoneNumber;
+  final VoidCallback onVerificationComplete;
 
   const VerifyOTP({
-    super.key,
+    Key? key,
     required this.newPhoneNumber,
-  });
+    required this.onVerificationComplete,
+  }) : super(key: key);
 
   @override
   State<VerifyOTP> createState() => _VerifyOTPState();
@@ -69,17 +70,29 @@ class _VerifyOTPState extends State<VerifyOTP> {
             const SizedBox(height: 52),
             CustomButton(
               title: "Verify",
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => (NewPhoneNumber(
-                            verifiedPhoneNumber: widget.newPhoneNumber))));
-              },
+              onTap: _verifyOTP,
             )
           ],
         ),
       ),
     );
+  }
+
+  Future<void> _verifyOTP() async {
+    try {
+      // ... existing verification code ...
+
+      // After successful verification
+      widget.onVerificationComplete();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 }

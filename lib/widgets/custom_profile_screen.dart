@@ -5,8 +5,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:therapy/screens/auth/login_screen.dart';
 
-import '../providers/super_patient_provider.dart';
+import '../providers/patient_provider.dart';
+import '../providers/auth_provider.dart';
 
 class CustomProfileScreen extends StatefulWidget {
   final PreferredSizeWidget? appBar;
@@ -42,8 +44,9 @@ class _CustomProfileScreenState extends State<CustomProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<SuperPatientProvider>(context);
-    final patient = provider.selectedPatient;
+    final provider = Provider.of<PatientProvider>(context);
+    final patient = provider.patient;
+    final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
       appBar: widget.appBar,
@@ -222,7 +225,13 @@ class _CustomProfileScreenState extends State<CustomProfileScreen> {
               ),
               const SizedBox(height: 32),
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  authProvider.logout();
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginScreen()));
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

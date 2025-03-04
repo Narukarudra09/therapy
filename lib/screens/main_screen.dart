@@ -86,8 +86,8 @@ class _MainScreenState extends State<MainScreen> {
       case 'Patient':
         return [
           PatientHomeScreen(),
-          PatientTherapiesScreen(patientName: ''),
-          PatientPaymentScreen(patientName: ''),
+          PatientTherapiesScreen(),
+          PatientPaymentScreen(),
           PatientSettingsScreen()
         ][currentIndex];
       default:

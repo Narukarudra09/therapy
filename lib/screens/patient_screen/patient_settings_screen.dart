@@ -24,146 +24,198 @@ class _PatientSettingsScreenState extends State<PatientSettingsScreen> {
   final TextEditingController controller = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  void saveProfile(BuildContext context) {
-    final provider = Provider.of<PatientProvider>(context, listen: false);
-    final patient = Patient(
-      name: controller.text.toString(),
-      phone: "",
-      city: 'Bhilwara', // Replace with actual city
-      // Add other fields as needed
-    );
-    provider.savePatientData(patient);
-    Navigator.pop(context);
+  @override
+  void initState() {
+    super.initState();
+    _initializePatientData();
+  }
+
+  Future<void> _initializePatientData() async {
+    try {
+      final provider = Provider.of<PatientProvider>(context, listen: false);
+      await provider.initializePatient();
+
+      if (provider.patient?.name != null) {
+        controller.text = provider.patient!.name!;
+      }
+    } catch (e) {
+      print('Error initializing patient data: $e');
+    }
+  }
+
+  void saveProfile(BuildContext context) async {
+    try {
+      final provider = Provider.of<PatientProvider>(context, listen: false);
+      final currentUser = _auth.currentUser;
+
+      if (currentUser == null) {
+        throw Exception('No authenticated user found');
+      }
+
+      final patient = Patient(
+        name: controller.text.toString(),
+        phone: currentUser.phoneNumber,
+        email: provider.patient?.email,
+        gender: provider.patient?.gender,
+        dateOfBirth: provider.patient?.dateOfBirth,
+        city: provider.patient?.city ?? 'Bhilwara',
+      );
+
+      await provider.savePatientData(patient);
+
+      if (mounted) {
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<PatientProvider>(context);
-    return Scaffold(
-      appBar: CustomAppBar(
-        userName: "rudra",
-      ),
-      body: Padding(
-        padding: EdgeInsets.only(top: 24, left: 20, right: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Settings",
-              style: GoogleFonts.inter(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: Color(0xFF171C22),
-              ),
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            _buildMenuItem(
-              icon: Icons.person,
-              title: 'Profile',
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CustomProfileScreen(
-                              appBar: AppBar(
-                                title: Text("Settings"),
-                                titleTextStyle: GoogleFonts.inter(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Color(0xFF171C22)),
-                                elevation: 0,
-                                shape: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Color(0xFFBFD1E3), width: 0.3)),
-                                scrolledUnderElevation: 0,
-                                actions: [
-                                  InkWell(
-                                    onTap: () {
-                                      saveProfile(context);
-                                    },
-                                    child: Container(
-                                      margin: EdgeInsets.only(right: 20),
-                                      height: 30,
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 18),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        color:
-                                            Color.fromARGB(255, 65, 184, 119),
-                                      ),
-                                      child: Center(
-                                        child: FittedBox(
-                                          fit: BoxFit.scaleDown,
-                                          child: ConstrainedBox(
-                                            constraints:
-                                                BoxConstraints(maxWidth: 100),
+    return Consumer<PatientProvider>(
+      builder: (context, provider, child) {
+        return Scaffold(
+          appBar: CustomAppBar(
+            userName: provider.patient?.name ?? "User",
+          ),
+          body: Padding(
+            padding: EdgeInsets.only(top: 24, left: 20, right: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Settings",
+                  style: GoogleFonts.inter(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF171C22),
+                  ),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                _buildMenuItem(
+                  icon: Icons.person,
+                  title: 'Profile',
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CustomProfileScreen(
+                                  appBar: AppBar(
+                                    title: Text("Settings"),
+                                    titleTextStyle: GoogleFonts.inter(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: Color(0xFF171C22)),
+                                    elevation: 0,
+                                    shape: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Color(0xFFBFD1E3),
+                                            width: 0.3)),
+                                    scrolledUnderElevation: 0,
+                                    actions: [
+                                      InkWell(
+                                        onTap: () {
+                                          saveProfile(context);
+                                        },
+                                        child: Container(
+                                          margin: EdgeInsets.only(right: 20),
+                                          height: 30,
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 18),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            color: Color.fromARGB(
+                                                255, 65, 184, 119),
+                                          ),
+                                          child: Center(
+                                            child: FittedBox(
+                                              fit: BoxFit.scaleDown,
+                                              child: ConstrainedBox(
+                                                constraints: BoxConstraints(
+                                                    maxWidth: 100),
 // Adjust max width as needed
-                                            child: Text(
-                                              "Save",
-                                              style: GoogleFonts.inter(
-                                                color: Colors.white,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600,
+                                                child: Text(
+                                                  "Save",
+                                                  style: GoogleFonts.inter(
+                                                    color: Colors.white,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
                                               ),
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
                                         ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            UpdatePhoneNumber()));
-                              },
-                              phone: provider.patient?.phone ??
-                                  _auth.currentUser?.phoneNumber ??
-                                  '',
-                              usernameController: controller,
-                            )));
-              },
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                UpdatePhoneNumber()));
+                                  },
+                                  phone: provider.patient?.phone ??
+                                      _auth.currentUser?.phoneNumber ??
+                                      '',
+                                  usernameController: controller,
+                                )));
+                  },
+                ),
+                SizedBox(
+                  height: 12,
+                ),
+                _buildMenuItem(
+                  icon: Icons.history,
+                  title: 'Medical History',
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MedicalHistory()));
+                  },
+                ),
+                SizedBox(
+                  height: 12,
+                ),
+                _buildMenuItem(
+                  icon: Icons.developer_mode_outlined,
+                  title: 'About Developer',
+                  onTap: () {},
+                ),
+                SizedBox(
+                  height: 12,
+                ),
+                _buildMenuItem(
+                  icon: Icons.report_problem,
+                  title: 'Report a Problem',
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ReportScreen()));
+                  },
+                ),
+              ],
             ),
-            SizedBox(
-              height: 12,
-            ),
-            _buildMenuItem(
-              icon: Icons.history,
-              title: 'Medical History',
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => MedicalHistory()));
-              },
-            ),
-            SizedBox(
-              height: 12,
-            ),
-            _buildMenuItem(
-              icon: Icons.developer_mode_outlined,
-              title: 'About Developer',
-              onTap: () {},
-            ),
-            SizedBox(
-              height: 12,
-            ),
-            _buildMenuItem(
-              icon: Icons.report_problem,
-              title: 'Report a Problem',
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ReportScreen()));
-              },
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

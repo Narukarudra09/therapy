@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_save_screen.dart';
+import '../../providers/patient_provider.dart';
 
 class NewPhoneNumber extends StatefulWidget {
   final String verifiedPhoneNumber;
@@ -18,6 +20,7 @@ class NewPhoneNumber extends StatefulWidget {
 
 class _NewPhoneNumberState extends State<NewPhoneNumber> {
   final TextEditingController _phoneController = TextEditingController();
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -29,6 +32,42 @@ class _NewPhoneNumberState extends State<NewPhoneNumber> {
   void dispose() {
     _phoneController.dispose();
     super.dispose();
+  }
+
+  Future<void> _saveNewPhoneNumber() async {
+    if (_phoneController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please enter a new phone number')),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      final provider = Provider.of<PatientProvider>(context, listen: false);
+      await provider.updatePhoneNumber(_phoneController.text);
+
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => SuccessScreen()),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
   }
 
   @override
@@ -101,11 +140,8 @@ class _NewPhoneNumberState extends State<NewPhoneNumber> {
             ),
             const SizedBox(height: 52),
             CustomButton(
-              title: "Save",
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => (SuccessScreen())));
-              },
+              title: _isLoading ? "Saving..." : "Save",
+              onTap: _saveNewPhoneNumber,
             ),
           ],
         ),

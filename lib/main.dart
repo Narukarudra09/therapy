@@ -9,6 +9,7 @@ import 'package:therapy/providers/navigation_provider.dart';
 import 'package:therapy/providers/patient_provider.dart';
 import 'package:therapy/providers/super_center_provider.dart';
 import 'package:therapy/providers/super_patient_provider.dart';
+import 'package:therapy/providers/basic_details_provider.dart';
 import 'package:therapy/screens/auth/splash_screen.dart';
 
 Future<void> main() async {
@@ -28,6 +29,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => PatientProvider()),
         ChangeNotifierProvider(create: (_) => SuperPatientProvider()),
         ChangeNotifierProvider(create: (_) => SuperCenterProvider()),
+        ChangeNotifierProvider(create: (_) => BasicDetailsProvider()),
       ],
       child: const MyApp(),
     ),
