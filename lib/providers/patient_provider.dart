@@ -13,9 +13,13 @@ class PatientProvider with ChangeNotifier {
   String? _verificationId;
   List<Map<String, dynamic>> _records = [];
   Patient? _patient;
+  File? _selectedImage;
+  String? _profileImageUrl;
 
   Patient? get patient => _patient;
   String? get verificationId => _verificationId;
+  File? get selectedImage => _selectedImage;
+  String? get profileImageUrl => _profileImageUrl;
 
   List<Map<String, dynamic>> get records => _records;
 
@@ -31,15 +35,6 @@ class PatientProvider with ChangeNotifier {
 
   void clearRecords() {
     _records.clear();
-    notifyListeners();
-  }
-
-  File? _selectedImage;
-
-  File? get selectedImage => _selectedImage;
-
-  void setImage(File? image) {
-    _selectedImage = image;
     notifyListeners();
   }
 
@@ -71,6 +66,7 @@ class PatientProvider with ChangeNotifier {
               ...data,
               'phoneNumber': phoneNumber,
             });
+            _profileImageUrl = _patient?.profileImageUrl;
           }
         } else {
           _patient = Patient(phone: phoneNumber);
@@ -95,23 +91,29 @@ class PatientProvider with ChangeNotifier {
   Future<void> savePatientData(Patient patient) async {
     try {
       _patient = patient;
-
-      // Get current phone number if patient phone is null
       final phoneNumber = patient.phone ?? auth.currentUser?.phoneNumber;
       if (phoneNumber == null || phoneNumber.isEmpty) {
         throw Exception('Phone number is required');
       }
 
       if (_selectedImage != null) {
-        final storageRef = FirebaseStorage.instance
-            .ref()
-            .child('profile_images/$phoneNumber.jpg');
-        await storageRef.putFile(_selectedImage!);
-        final imageUrl = await storageRef.getDownloadURL();
-        patient = patient.copyWith(profileImageUrl: imageUrl);
+        try {
+          final storageRef = FirebaseStorage.instance
+              .ref()
+              .child('user_profiles')
+              .child(phoneNumber)
+              .child('profile.jpg');
+
+          await storageRef.putFile(_selectedImage!);
+          final imageUrl = await storageRef.getDownloadURL();
+          patient = patient.copyWith(profileImageUrl: imageUrl);
+          _profileImageUrl = imageUrl;
+        } catch (e) {
+          print('Error uploading image: $e');
+          throw Exception('Failed to upload profile image: $e');
+        }
       }
 
-      // Update the patient object with the phone number
       patient = patient.copyWith(phone: phoneNumber);
 
       await firestore
@@ -267,5 +269,15 @@ class PatientProvider with ChangeNotifier {
     } catch (e) {
       throw Exception('Failed to update phone number: $e');
     }
+  }
+
+  void setImage(File? image) {
+    _selectedImage = image;
+    notifyListeners();
+  }
+
+  void setProfileImageUrl(String? url) {
+    _profileImageUrl = url;
+    notifyListeners();
   }
 }

@@ -29,19 +29,6 @@ class CustomProfileScreen extends StatefulWidget {
 }
 
 class _CustomProfileScreenState extends State<CustomProfileScreen> {
-  File? _image;
-
-  Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<PatientProvider>(context);
@@ -63,10 +50,13 @@ class _CustomProfileScreenState extends State<CustomProfileScreen> {
                     CircleAvatar(
                       radius: 60,
                       backgroundColor: Colors.blue[200],
-                      backgroundImage: _image != null
-                          ? FileImage(_image!)
-                          : const AssetImage("assets/profile.png")
-                              as ImageProvider,
+                      backgroundImage: provider.selectedImage != null
+                          ? FileImage(provider.selectedImage!)
+                          : provider.profileImageUrl != null
+                              ? NetworkImage(provider.profileImageUrl!)
+                                  as ImageProvider
+                              : const AssetImage("assets/profile.png")
+                                  as ImageProvider,
                     ),
                     Positioned(
                       bottom: 0,
@@ -256,5 +246,30 @@ class _CustomProfileScreenState extends State<CustomProfileScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _pickImage() async {
+    try {
+      final picker = ImagePicker();
+      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null) {
+        final patientProvider =
+            Provider.of<PatientProvider>(context, listen: false);
+        patientProvider.setImage(File(pickedFile.path));
+
+        if (patientProvider.patient != null) {
+          await patientProvider.savePatientData(patientProvider.patient!);
+        }
+      }
+    } catch (e) {
+      print('Error picking image: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to upload image: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }

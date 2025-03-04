@@ -5,7 +5,11 @@ class CustomButton extends StatefulWidget {
   String title;
   final VoidCallback onTap;
 
-  CustomButton({super.key, required this.title, required this.onTap});
+  CustomButton({
+    Key? key,
+    required this.title,
+    required this.onTap,
+  }) : super(key: key);
 
   @override
   State<CustomButton> createState() => _CustomButtonState();
