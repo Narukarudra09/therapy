@@ -5,7 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:therapy/providers/patient_provider.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomAppBar({super.key});
+  final String userName;
+
+  const CustomAppBar({super.key, required this.userName});
 
   @override
   Widget build(BuildContext context) {
