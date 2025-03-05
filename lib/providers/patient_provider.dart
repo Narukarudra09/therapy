@@ -20,6 +20,7 @@ class PatientProvider with ChangeNotifier {
   List<MedicalRecord> _medicalRecords = [];
   List<Prescription> _prescriptions = [];
   final Set<String> _selectedAllergies = {};
+  final TextEditingController _newAllergyController = TextEditingController();
   final List<String> _predefinedAllergies = [
     'Cheese',
     'Curd',
@@ -50,6 +51,8 @@ class PatientProvider with ChangeNotifier {
 
   Set<String> get selectedAllergies => _selectedAllergies;
   List<String> get predefinedAllergies => _predefinedAllergies;
+
+  TextEditingController get newAllergyController => _newAllergyController;
 
   void setRecords(List<Map<String, dynamic>> records) {
     _records = records;
@@ -356,6 +359,7 @@ class PatientProvider with ChangeNotifier {
     _patient = null;
     _profileImageUrl = null;
     notifyListeners();
+    await auth.signOut();
   }
 
   Future<void> addMedicalRecord({
@@ -508,23 +512,17 @@ class PatientProvider with ChangeNotifier {
       final phoneNumber = auth.currentUser?.phoneNumber;
       if (phoneNumber == null) throw Exception('No authenticated user found');
 
-      // Create a map of the medical history data
-      final Map<String, dynamic> medicalData = {
-        'bloodGroup': patient?.bloodGroup,
-        'allergies': patient?.allergies ?? [],
-        'medicalRecords':
-            medicalRecords.map((record) => record.toMap()).toList(),
-        'prescriptions':
-            prescriptions.map((prescription) => prescription.toMap()).toList(),
-      };
-
-      // Update Firestore
       await firestore
           .collection('Users')
           .doc(phoneNumber)
           .collection('data')
           .doc('info')
-          .update(medicalData);
+          .update({
+        'bloodGroup': patient?.bloodGroup,
+        'allergies': patient?.allergies,
+        'medicalRecords': _medicalRecords.map((r) => r.toMap()).toList(),
+        'prescriptions': _prescriptions.map((p) => p.toMap()).toList(),
+      });
     } catch (e) {
       print('Error saving medical history: $e');
       throw Exception('Failed to save medical history: $e');
@@ -559,26 +557,10 @@ class PatientProvider with ChangeNotifier {
 
   Future<void> removeAllergy(String allergy) async {
     try {
-      final phoneNumber = auth.currentUser?.phoneNumber;
-      if (phoneNumber == null) throw Exception('No authenticated user found');
-
-      // Update local state
-      if (patient != null && patient!.allergies != null) {
-        List<String> updatedAllergies = List<String>.from(patient!.allergies!);
-        updatedAllergies.remove(allergy);
-
-        _patient = patient!.copyWith(allergies: updatedAllergies);
+      if (patient?.allergies != null) {
+        patient?.allergies?.remove(allergy);
         notifyListeners();
-
-        // Update Firestore
-        await firestore
-            .collection('Users')
-            .doc(phoneNumber)
-            .collection('data')
-            .doc('info')
-            .update({
-          'allergies': updatedAllergies,
-        });
+        await saveMedicalHistory();
       }
     } catch (e) {
       print('Error removing allergy: $e');
@@ -693,9 +675,46 @@ class PatientProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void addCustomAllergy(String allergy) {
+    if (allergy.trim().isNotEmpty) {
+      _selectedAllergies.add(allergy.trim());
+      _newAllergyController.clear();
+      notifyListeners();
+    }
+  }
+
+  void loadExistingAllergies() {
+    if (patient?.allergies != null) {
+      _selectedAllergies.clear();
+      _selectedAllergies.addAll(patient!.allergies!);
+      notifyListeners();
+    }
+  }
+
+  Future<void> addNewAllergy(String allergy) async {
+    try {
+      final phoneNumber = auth.currentUser?.phoneNumber;
+      if (phoneNumber == null) throw Exception('No authenticated user found');
+
+      if (allergy.trim().isNotEmpty) {
+        // Add to predefined list if it's not already there
+        if (!_predefinedAllergies.contains(allergy.trim())) {
+          _predefinedAllergies.add(allergy.trim());
+        }
+        // Select the new allergy
+        _selectedAllergies.add(allergy.trim());
+        notifyListeners();
+      }
+    } catch (e) {
+      print('Error adding new allergy: $e');
+      throw Exception('Failed to add new allergy: $e');
+    }
+  }
+
   @override
   void dispose() {
     clearSelectedAllergies();
+    _newAllergyController.dispose();
     super.dispose();
   }
 }

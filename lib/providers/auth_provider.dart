@@ -210,8 +210,8 @@ class AuthProvider with ChangeNotifier {
   Future<void> saveToPrefs() async {
     if (_selectedUser != null) {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('userPhone', _selectedUser!.phoneNumber ?? '');
-      await prefs.setString('userType', _selectedUser!.userType ?? '');
+      await prefs.setString('userPhone', _selectedUser!.phoneNumber);
+      await prefs.setString('userType', _selectedUser!.userType);
     }
   }
 

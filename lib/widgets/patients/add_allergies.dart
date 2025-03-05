@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:therapy/widgets/custom_add_button.dart';
 import '../../providers/patient_provider.dart';
 
 class AddAllergies extends StatelessWidget {
@@ -8,37 +9,38 @@ class AddAllergies extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future.microtask(
+        () => context.read<PatientProvider>().loadExistingAllergies());
+
     return Consumer<PatientProvider>(
       builder: (context, provider, child) {
         return Scaffold(
+          backgroundColor: Colors.white,
           appBar: AppBar(
+            backgroundColor: Colors.white,
             elevation: 0,
-            shape: const UnderlineInputBorder(
-              borderSide: BorderSide(color: Color(0xFFBFD1E3), width: 0.3),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => Navigator.pop(context),
             ),
-            scrolledUnderElevation: 0,
             title: Text(
-              'Add Allergies',
+              'Allergies',
               style: GoogleFonts.inter(
-                fontSize: 16,
+                fontSize: 20,
                 fontWeight: FontWeight.w500,
-                color: Color(0xFF171C22),
+                color: Colors.black,
               ),
             ),
             actions: [
               InkWell(
                 onTap: () async {
-                  if (provider.selectedAllergies.isNotEmpty) {
-                    try {
-                      await provider.saveSelectedAllergies();
-                      Navigator.pop(context);
-                    } catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Failed to save allergies: $e')),
-                      );
-                    }
-                  } else {
+                  try {
+                    await provider.saveSelectedAllergies();
                     Navigator.pop(context);
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Failed to save allergies: $e')),
+                    );
                   }
                 },
                 child: Container(
@@ -63,111 +65,171 @@ class AddAllergies extends StatelessWidget {
               ),
             ],
           ),
-          body: Column(
+          body: ListView(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  'Select your allergies',
-                  style: GoogleFonts.inter(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: GridView.builder(
-                  padding: const EdgeInsets.all(16),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 3,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                  ),
-                  itemCount: provider.predefinedAllergies.length,
-                  itemBuilder: (context, index) {
-                    final allergy = provider.predefinedAllergies[index];
-                    final isSelected =
-                        provider.selectedAllergies.contains(allergy);
-
-                    return InkWell(
-                      onTap: () => provider.toggleAllergy(allergy),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: isSelected
-                                ? Color(0xFF6750A4)
-                                : Color(0xFFE8E9F1),
-                          ),
-                          color: isSelected
-                              ? Color(0xFF6750A4).withOpacity(0.1)
-                              : Colors.white,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+              // Add New Button
+              InkWell(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => Dialog(
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            if (isSelected)
-                              Icon(
-                                Icons.check,
-                                size: 16,
-                                color: Color(0xFF6750A4),
+                            Text(
+                              'Add New',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.inter(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
                               ),
-                            if (isSelected) SizedBox(width: 4),
-                            Flexible(
-                              child: Text(
-                                allergy,
-                                style: GoogleFonts.inter(
-                                  fontSize: 14,
-                                  color: isSelected
-                                      ? Color(0xFF6750A4)
-                                      : Color(0xFF2E2C34),
-                                  fontWeight: isSelected
-                                      ? FontWeight.w500
-                                      : FontWeight.w400,
+                            ),
+                            const SizedBox(height: 24),
+                            TextField(
+                              controller: provider.newAllergyController,
+                              decoration: InputDecoration(
+                                hintText: 'Write Here',
+                                hintStyle: GoogleFonts.inter(
+                                  fontSize: 16,
+                                  color: Colors.grey,
                                 ),
-                                overflow: TextOverflow.ellipsis,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                  borderSide: BorderSide(
+                                    color: Colors.grey.shade200,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                  borderSide: BorderSide(
+                                    color: Colors.grey.shade200,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                  borderSide: BorderSide(
+                                    color: Colors.grey.shade300,
+                                  ),
+                                ),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 16,
+                                ),
                               ),
+                            ),
+                            const SizedBox(height: 24),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: Text(
+                                    'No',
+                                    style: GoogleFonts.inter(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    if (provider.newAllergyController.text
+                                        .trim()
+                                        .isNotEmpty) {
+                                      provider.addNewAllergy(
+                                        provider.newAllergyController.text,
+                                      );
+                                      Navigator.pop(context);
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF4CAF50),
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 48,
+                                      vertical: 12,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(50),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'Add',
+                                    style: GoogleFonts.inter(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
+                child: Container(
+                    margin: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey.shade300),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: CustomAddButton(
+                      title: "Add New",
+                      mainAxisAlignment: MainAxisAlignment.center,
+                    )),
               ),
-              if (provider.selectedAllergies.isNotEmpty)
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  color: Colors.white,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Selected Allergies:',
-                        style: GoogleFonts.inter(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
+              // Allergies List
+              ...provider.predefinedAllergies
+                  .map((allergy) => ListTile(
+                        title: Text(
+                          allergy,
+                          style: GoogleFonts.inter(
+                            fontSize: 14,
+                            color: Color(0xFF2E2C34),
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: provider.selectedAllergies
-                            .map((allergy) => Chip(
-                                  label: Text(allergy),
-                                  deleteIcon: Icon(Icons.close, size: 18),
-                                  onDeleted: () =>
-                                      provider.removeSelectedAllergy(allergy),
-                                  backgroundColor: Color(0xFFF5F5F5),
-                                  side: BorderSide.none,
-                                ))
-                            .toList(),
-                      ),
-                    ],
-                  ),
-                ),
+                        trailing: GestureDetector(
+                          onTap: () => provider.toggleAllergy(allergy),
+                          child: Container(
+                            width: 24,
+                            height: 24,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color:
+                                    provider.selectedAllergies.contains(allergy)
+                                        ? const Color(0xFF4CAF50)
+                                        : Colors.grey.shade300,
+                              ),
+                              color:
+                                  provider.selectedAllergies.contains(allergy)
+                                      ? const Color(0xFF4CAF50)
+                                      : Colors.white,
+                            ),
+                            child: provider.selectedAllergies.contains(allergy)
+                                ? const Icon(
+                                    Icons.check,
+                                    size: 16,
+                                    color: Colors.white,
+                                  )
+                                : null,
+                          ),
+                        ),
+                      ))
+                  .toList(),
             ],
           ),
         );
