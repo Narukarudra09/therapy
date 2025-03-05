@@ -10,4 +10,22 @@ class Prescription {
     required this.date,
     required this.fileUrl,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'date': date,
+      'fileUrl': fileUrl,
+    };
+  }
+
+  factory Prescription.fromMap(Map<String, dynamic> map) {
+    return Prescription(
+      id: map['id'] ?? '',
+      title: map['title'] ?? '',
+      date: map['date'] ?? '',
+      fileUrl: map['fileUrl'] ?? '',
+    );
+  }
 }

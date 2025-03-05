@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:therapy/models/patient.dart';
-
 import '../models/user_role.dart';
 
 class AuthProvider with ChangeNotifier {
@@ -126,6 +126,7 @@ class AuthProvider with ChangeNotifier {
         }
       }
 
+      await saveToPrefs();
       _completeLogin();
       return true;
     } catch (e) {
@@ -206,10 +207,45 @@ class AuthProvider with ChangeNotifier {
     throw Exception('Login failed: $e');
   }
 
-  void logout() {
+  Future<void> saveToPrefs() async {
+    if (_selectedUser != null) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('userPhone', _selectedUser!.phoneNumber ?? '');
+      await prefs.setString('userType', _selectedUser!.userType ?? '');
+    }
+  }
+
+  Future<bool> loadFromPrefs() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final phone = prefs.getString('userPhone');
+      final userType = prefs.getString('userType');
+
+      if (phone != null && userType != null) {
+        _selectedUser = UserModel(
+          phoneNumber: phone,
+          userType: userType,
+        );
+        notifyListeners();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print('Error loading preferences: $e');
+      return false;
+    }
+  }
+
+  Future<void> clearPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+  }
+
+  Future<void> logout() async {
+    await clearPrefs();
     _selectedUser = null;
     _verificationId = null;
-    _auth.signOut();
+    await _auth.signOut();
     notifyListeners();
   }
 }

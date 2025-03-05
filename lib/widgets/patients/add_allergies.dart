@@ -1,187 +1,177 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-
-import '../../providers/super_patient_provider.dart';
-import '../custom_add_button.dart';
+import '../../providers/patient_provider.dart';
 
 class AddAllergies extends StatelessWidget {
   const AddAllergies({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<SuperPatientProvider>(context);
-
-    void saveAllergies() {
-      final selected = provider.getSelectedAllergies();
-      Navigator.pop(context, selected);
-    }
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Allergies"),
-        actions: [
-          GestureDetector(
-            onTap: saveAllergies,
-            child: Container(
-              margin: EdgeInsets.only(right: 20),
-              height: 30,
-              padding: EdgeInsets.symmetric(horizontal: 18),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                color: Color.fromARGB(255, 65, 184, 119),
-              ),
-              child: Center(
-                child: Text(
-                  "Save",
-                  style: GoogleFonts.inter(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+    return Consumer<PatientProvider>(
+      builder: (context, provider, child) {
+        return Scaffold(
+          appBar: AppBar(
+            elevation: 0,
+            shape: const UnderlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFFBFD1E3), width: 0.3),
+            ),
+            scrolledUnderElevation: 0,
+            title: Text(
+              'Add Allergies',
+              style: GoogleFonts.inter(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Color(0xFF171C22),
               ),
             ),
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 16),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              GestureDetector(
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      String newAllergy = '';
-                      return AlertDialog(
-                        contentPadding: EdgeInsets.all(0),
-                        titlePadding: EdgeInsets.only(
-                            left: 21, right: 21, top: 24, bottom: 15),
-                        actionsAlignment: MainAxisAlignment.spaceAround,
-                        insetPadding: EdgeInsets.symmetric(horizontal: 20),
-                        actionsPadding: EdgeInsets.only(top: 24, bottom: 32),
-                        title: Center(child: Text('Add New')),
-                        content: SizedBox(
-                          width: 500,
-                          height: MediaQuery.of(context).size.height * 0.119,
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    left: 15, right: 15, bottom: 24),
-                                child: TextField(
-                                  onChanged: (value) {
-                                    newAllergy = value;
-                                  },
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                      borderSide: BorderSide(
-                                          color: Color.fromARGB(
-                                              255, 232, 233, 241)),
-                                    ),
-                                    hintText: 'Write Here',
-                                  ),
-                                ),
-                              ),
-                              Divider()
-                            ],
-                          ),
-                        ),
-                        actions: <Widget>[
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: Container(
-                              width: 162,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "No",
-                                  style: GoogleFonts.inter(
-                                    color: Color.fromARGB(255, 118, 141, 139),
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              if (newAllergy.isNotEmpty) {
-                                provider.addAllergy(newAllergy);
-                              }
-                              Navigator.pop(context);
-                            },
-                            child: Container(
-                              width: 162,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                                color: Color.fromARGB(255, 65, 184, 119),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "Add",
-                                  style: GoogleFonts.sora(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+            actions: [
+              InkWell(
+                onTap: () async {
+                  if (provider.selectedAllergies.isNotEmpty) {
+                    try {
+                      await provider.saveSelectedAllergies();
+                      Navigator.pop(context);
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Failed to save allergies: $e')),
                       );
-                    },
-                  );
+                    }
+                  } else {
+                    Navigator.pop(context);
+                  }
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  margin: EdgeInsets.only(right: 20),
+                  height: 30,
+                  padding: EdgeInsets.symmetric(horizontal: 18),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: Color.fromARGB(255, 254, 254, 255),
-                      border: Border.all(
-                          color: Color.fromARGB(255, 224, 227, 231))),
+                    borderRadius: BorderRadius.circular(50),
+                    color: Color.fromARGB(255, 65, 184, 119),
+                  ),
                   child: Center(
-                    child: CustomAddButton(
-                      title: "Add New",
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    child: Text(
+                      "Save",
+                      style: GoogleFonts.inter(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
               ),
-              ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: provider.allergies.length,
-                itemBuilder: (context, index) {
-                  return CheckboxListTile(
-                    side: BorderSide(
-                        color: Color.fromARGB(255, 224, 227, 231), width: 2),
-                    activeColor: Color.fromARGB(255, 65, 184, 119),
-                    checkboxShape: CircleBorder(),
-                    title: Text(provider.allergies[index]),
-                    value: provider.selectedAllergies[index],
-                    onChanged: (value) {
-                      provider.toggleSelection(index);
-                    },
-                  );
-                },
-              ),
             ],
           ),
-        ),
-      ),
+          body: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'Select your allergies',
+                  style: GoogleFonts.inter(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: GridView.builder(
+                  padding: const EdgeInsets.all(16),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 3,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                  ),
+                  itemCount: provider.predefinedAllergies.length,
+                  itemBuilder: (context, index) {
+                    final allergy = provider.predefinedAllergies[index];
+                    final isSelected =
+                        provider.selectedAllergies.contains(allergy);
+
+                    return InkWell(
+                      onTap: () => provider.toggleAllergy(allergy),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: isSelected
+                                ? Color(0xFF6750A4)
+                                : Color(0xFFE8E9F1),
+                          ),
+                          color: isSelected
+                              ? Color(0xFF6750A4).withOpacity(0.1)
+                              : Colors.white,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            if (isSelected)
+                              Icon(
+                                Icons.check,
+                                size: 16,
+                                color: Color(0xFF6750A4),
+                              ),
+                            if (isSelected) SizedBox(width: 4),
+                            Flexible(
+                              child: Text(
+                                allergy,
+                                style: GoogleFonts.inter(
+                                  fontSize: 14,
+                                  color: isSelected
+                                      ? Color(0xFF6750A4)
+                                      : Color(0xFF2E2C34),
+                                  fontWeight: isSelected
+                                      ? FontWeight.w500
+                                      : FontWeight.w400,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              if (provider.selectedAllergies.isNotEmpty)
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  color: Colors.white,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Selected Allergies:',
+                        style: GoogleFonts.inter(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: provider.selectedAllergies
+                            .map((allergy) => Chip(
+                                  label: Text(allergy),
+                                  deleteIcon: Icon(Icons.close, size: 18),
+                                  onDeleted: () =>
+                                      provider.removeSelectedAllergy(allergy),
+                                  backgroundColor: Color(0xFFF5F5F5),
+                                  side: BorderSide.none,
+                                ))
+                            .toList(),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

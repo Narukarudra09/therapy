@@ -90,4 +90,21 @@ class Patient {
       profileImageUrl: profileImageUrl ?? this.profileImageUrl,
     );
   }
+
+  factory Patient.fromMap(Map<String, dynamic> map) {
+    return Patient(
+      bloodGroup: map['bloodGroup'] as String?,
+      allergies: List<String>.from(map['allergies'] ?? []),
+      name: map['name'],
+      phone: map['phoneNumber'] ?? map['phone'],
+      email: map['email'],
+      gender: map['gender'],
+      dateOfBirth: map['dateOfBirth'],
+      profileImageUrl: map['profileImageUrl'],
+      city: map['city'],
+      medicalRecords: map['medicalRecords']?.cast<Map<String, dynamic>>(),
+      therapySessions: map['therapySessions']?.cast<Map<String, dynamic>>(),
+      payments: map['payments']?.cast<Map<String, dynamic>>(),
+    );
+  }
 }
