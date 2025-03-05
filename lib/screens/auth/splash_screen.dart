@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:therapy/providers/auth_provider.dart';
 import 'login_screen.dart';
 import 'package:therapy/screens/main_screen.dart';
+import 'package:therapy/providers/patient_provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -15,6 +16,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  bool _isLoading = true;
+
   @override
   void initState() {
     super.initState();
@@ -23,19 +26,28 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> checkUserAndNavigate() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-
-    await Future.delayed(const Duration(seconds: 2));
+    final patientProvider =
+        Provider.of<PatientProvider>(context, listen: false);
 
     try {
+      // First check if user exists
       final userExists = await authProvider.loadFromPrefs();
+
       if (!mounted) return;
 
       if (userExists) {
+        // If user exists, load patient data and records
+        await patientProvider.loadFromPrefs();
+        await patientProvider.loadPatientData();
+        await patientProvider.loadRecords();
+
+        if (!mounted) return;
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const MainScreen()),
         );
       } else {
+        if (!mounted) return;
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const LoginScreen()),
@@ -48,6 +60,12 @@ class _SplashScreenState extends State<SplashScreen> {
         context,
         MaterialPageRoute(builder: (context) => const LoginScreen()),
       );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -64,7 +82,12 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
           ),
           Center(
-            child: SvgPicture.asset("assets/logo.svg"),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset("assets/logo.svg"),
+              ],
+            ),
           ),
           Align(
             alignment: Alignment.bottomCenter,

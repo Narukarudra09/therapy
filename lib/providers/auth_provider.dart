@@ -26,7 +26,7 @@ class AuthProvider with ChangeNotifier {
         phoneNumber: phoneNumber,
         verificationCompleted: (PhoneAuthCredential credential) async {
           await _auth.signInWithCredential(credential);
-          _selectedUser = await _getUserFromFirestore(phoneNumber, userType);
+          _selectedUser = await getUserFromFirestore(phoneNumber, userType);
           _completeLogin();
         },
         verificationFailed: (FirebaseAuthException e) {
@@ -61,8 +61,8 @@ class AuthProvider with ChangeNotifier {
       );
 
       await _auth.signInWithCredential(credential);
-      _selectedUser = await _getUserFromFirestore(
-          _auth.currentUser!.phoneNumber!, userType);
+      _selectedUser =
+          await getUserFromFirestore(_auth.currentUser!.phoneNumber!, userType);
 
       // Check if user exists in their respective collection
       final phoneNumber = _auth.currentUser!.phoneNumber!;
@@ -135,7 +135,7 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<UserModel> _getUserFromFirestore(
+  Future<UserModel> getUserFromFirestore(
       String phoneNumber, String userType) async {
     DocumentSnapshot doc =
         await _firestore.collection('Users').doc(phoneNumber).get();

@@ -9,13 +9,27 @@ import '../../widgets/patients/add_allergies.dart';
 import 'blood_group.dart';
 import '../../providers/patient_provider.dart';
 
-class MedicalHistory extends StatelessWidget {
+class MedicalHistory extends StatefulWidget {
   const MedicalHistory({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    Future.microtask(() => context.read<PatientProvider>().loadPatientData());
+  State<MedicalHistory> createState() => _MedicalHistoryState();
+}
 
+class _MedicalHistoryState extends State<MedicalHistory> {
+  @override
+  void initState() {
+    super.initState();
+    // Load both patient data and records when the screen initializes
+    Future.microtask(() async {
+      final provider = Provider.of<PatientProvider>(context, listen: false);
+      await provider.loadPatientData();
+      await provider.loadRecords(); // Add this line to load records
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Consumer<PatientProvider>(
       builder: (context, provider, child) {
         return Scaffold(

@@ -39,6 +39,7 @@ class PatientProvider with ChangeNotifier {
     'Shellfish/Fish',
     'Soya',
   ];
+  static const String _profileImageKey = 'profile_image_url';
 
   Patient? get patient => _patient;
   String? get verificationId => _verificationId;
@@ -375,7 +376,7 @@ class PatientProvider with ChangeNotifier {
       final String id =
           '${isPrescription ? "prescription" : "record"}_$timestamp';
 
-      // Upload file to Firebase Storage
+      // Create storage reference
       final storageRef = FirebaseStorage.instance
           .ref()
           .child('medical_records')
@@ -383,7 +384,14 @@ class PatientProvider with ChangeNotifier {
           .child(isPrescription ? 'prescriptions' : 'records')
           .child(id);
 
-      await storageRef.putFile(imageFile);
+      // Set metadata for caching
+      final metadata = SettableMetadata(
+        cacheControl: 'public, max-age=31536000', // Cache for 1 year
+        contentType: 'image/jpeg',
+      );
+
+      // Upload file with metadata
+      await storageRef.putFile(imageFile, metadata);
       final fileUrl = await storageRef.getDownloadURL();
 
       // Create record object
@@ -709,6 +717,29 @@ class PatientProvider with ChangeNotifier {
       print('Error adding new allergy: $e');
       throw Exception('Failed to add new allergy: $e');
     }
+  }
+
+  Future<void> saveProfileImage(String imageUrl) async {
+    _profileImageUrl = imageUrl;
+
+    // Save to SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_profileImageKey, imageUrl);
+
+    notifyListeners();
+  }
+
+  Future<void> loadProfileImageFromPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    _profileImageUrl = prefs.getString(_profileImageKey);
+    notifyListeners();
+  }
+
+  Future<void> clearProfileImage() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_profileImageKey);
+    _profileImageUrl = null;
+    notifyListeners();
   }
 
   @override
