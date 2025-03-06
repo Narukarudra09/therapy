@@ -2,7 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:therapy/models/center_owner.dart';
+
 import 'package:therapy/models/patient.dart';
+import 'package:therapy/models/super_admin.dart';
+import 'package:therapy/models/therapist.dart';
 import '../models/user_role.dart';
 
 class AuthProvider with ChangeNotifier {
@@ -64,7 +68,6 @@ class AuthProvider with ChangeNotifier {
       _selectedUser =
           await getUserFromFirestore(_auth.currentUser!.phoneNumber!, userType);
 
-      // Check if user exists in their respective collection
       final phoneNumber = _auth.currentUser!.phoneNumber!;
       final userDoc = await _firestore
           .collection('Users')
@@ -82,9 +85,7 @@ class AuthProvider with ChangeNotifier {
                 .doc(phoneNumber)
                 .collection('data')
                 .doc('info')
-                .set(Patient(
-                  phone: phoneNumber,
-                ).toMap());
+                .set(Patient(phone: phoneNumber).toMap());
             break;
 
           case 'therapist':
@@ -93,11 +94,7 @@ class AuthProvider with ChangeNotifier {
                 .doc(phoneNumber)
                 .collection('data')
                 .doc('info')
-                .set({
-              'phoneNumber': phoneNumber,
-              'isActive': false,
-              'kycDocuments': [],
-            });
+                .set(Therapist(phoneNumber: phoneNumber).toMap());
             break;
 
           case 'center_owner':
@@ -106,11 +103,7 @@ class AuthProvider with ChangeNotifier {
                 .doc(phoneNumber)
                 .collection('data')
                 .doc('info')
-                .set({
-              'phoneNumber': phoneNumber,
-              'workingHours': {},
-              'holidays': [],
-            });
+                .set(CenterOwner(phoneNumber: phoneNumber).toMap());
             break;
 
           case 'super_admin':
@@ -119,9 +112,7 @@ class AuthProvider with ChangeNotifier {
                 .doc(phoneNumber)
                 .collection('data')
                 .doc('info')
-                .set({
-              'phoneNumber': phoneNumber,
-            });
+                .set(SuperAdmin(phoneNumber: phoneNumber).toMap());
             break;
         }
       }

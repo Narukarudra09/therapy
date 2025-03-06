@@ -1,22 +1,22 @@
 class Therapist {
-  String name;
-  String email;
-  String phoneNumber;
-  String role;
-  String centerName;
-  String gender;
-  bool isActive;
-  List<String> kycDocuments;
+  String? name;
+  String? email;
+  String? phoneNumber;
+  String? role;
+  String? centerName;
+  String? gender;
+  bool? isActive;
+  List<String>? kycDocuments;
 
   Therapist({
-    required this.name,
-    required this.email,
-    required this.phoneNumber,
-    required this.role,
-    required this.centerName,
-    required this.gender,
-    required this.isActive,
-    required this.kycDocuments,
+    this.name,
+    this.email,
+    this.phoneNumber,
+    this.role,
+    this.centerName,
+    this.gender,
+    this.isActive,
+    this.kycDocuments,
   });
 
   factory Therapist.fromFirestore(Map<String, dynamic> json) {
@@ -32,7 +32,7 @@ class Therapist {
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
       'name': name,
       'email': email,

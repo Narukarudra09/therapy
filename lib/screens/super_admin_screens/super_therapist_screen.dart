@@ -65,14 +65,14 @@ class SuperTherapistsScreen extends StatelessWidget {
                     itemBuilder: (BuildContext context, int index) {
                       final therapist = provider.therapists[index];
                       return CustomListTile(
-                        title: therapist.name,
-                        subtitle: therapist.role,
+                        title: therapist.name ?? '',
+                        subtitle: therapist.role ?? '',
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => TherapistProfile(
-                                therapistName: therapist.name,
+                                therapistName: therapist.name ?? '',
                               ),
                             ),
                           );

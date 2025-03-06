@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -40,6 +41,8 @@ class PatientProvider with ChangeNotifier {
     'Soya',
   ];
   static const String _profileImageKey = 'profile_image_url';
+  StreamSubscription? _subscription;
+  final _cache = <String, dynamic>{};
 
   Patient? get patient => _patient;
   String? get verificationId => _verificationId;
@@ -742,10 +745,52 @@ class PatientProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void startRealTimeUpdates(String patientId) {
+    _subscription?.cancel();
+    _subscription = FirebaseFirestore.instance
+        .collection('patients')
+        .doc(patientId)
+        .snapshots()
+        .listen((snapshot) {
+      if (snapshot.exists) {
+        final patient = Patient.fromMap(snapshot.data()!);
+        _cache[patientId] = patient;
+        notifyListeners();
+      }
+    });
+  }
+
   @override
   void dispose() {
+    _subscription?.cancel();
     clearSelectedAllergies();
     _newAllergyController.dispose();
     super.dispose();
+  }
+
+  Future<Patient?> getPatient(String patientId) async {
+    // Check cache first
+    if (_cache.containsKey(patientId)) {
+      return _cache[patientId] as Patient;
+    }
+
+    // If not in cache, fetch from Firestore
+    final doc = await FirebaseFirestore.instance
+        .collection('patients')
+        .doc(patientId)
+        .get();
+
+    if (doc.exists) {
+      final patient = Patient.fromMap(doc.data()!);
+      // Store in cache
+      _cache[patientId] = patient;
+      return patient;
+    }
+    return null;
+  }
+
+  // Clear cache when needed
+  void clearCache() {
+    _cache.clear();
   }
 }

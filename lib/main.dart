@@ -12,6 +12,7 @@ import 'package:therapy/providers/super_patient_provider.dart';
 import 'package:therapy/providers/basic_details_provider.dart';
 import 'package:therapy/screens/auth/splash_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +25,12 @@ Future<void> main() async {
 
   // Configure CachedNetworkImage
   CachedNetworkImage.logLevel = CacheManagerLogLevel.verbose;
+
+  // Enable offline persistence
+  FirebaseFirestore.instance.settings = Settings(
+    persistenceEnabled: true,
+    cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+  );
 
   runApp(
     MultiProvider(

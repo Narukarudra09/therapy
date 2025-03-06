@@ -3,12 +3,18 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:therapy/providers/patient_provider.dart';
 import 'package:therapy/providers/basic_details_provider.dart';
+import 'package:therapy/providers/therapist_provider.dart';
 
 import '../../widgets/custom_button.dart';
 import '../main_screen.dart';
 
 class BasicPersonalDetails extends StatefulWidget {
-  const BasicPersonalDetails({super.key});
+  final String userType;
+
+  const BasicPersonalDetails({
+    super.key,
+    required this.userType,
+  });
 
   @override
   State<BasicPersonalDetails> createState() => _BasicPersonalDetailsState();
@@ -30,6 +36,8 @@ class _BasicPersonalDetailsState extends State<BasicPersonalDetails> {
           Provider.of<PatientProvider>(context, listen: false);
       final basicDetailsProvider =
           Provider.of<BasicDetailsProvider>(context, listen: false);
+      final therapistProvider =
+          Provider.of<TherapistProvider>(context, listen: false);
 
       await patientProvider.initializePatient();
 
@@ -61,7 +69,7 @@ class _BasicPersonalDetailsState extends State<BasicPersonalDetails> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error loading patient data: ${e.toString()}'),
+            content: Text('Error loading data: ${e.toString()}'),
             backgroundColor: Colors.red,
           ),
         );
@@ -77,12 +85,23 @@ class _BasicPersonalDetailsState extends State<BasicPersonalDetails> {
         final basicDetailsProvider =
             Provider.of<BasicDetailsProvider>(context, listen: false);
 
-        await patientProvider.saveBasicDetails(
-          basicDetailsProvider.nameController.text,
-          basicDetailsProvider.emailController.text,
-          basicDetailsProvider.selectedDate,
-          basicDetailsProvider.genderController.text,
-        );
+        if (widget.userType == 'patient') {
+          await patientProvider.saveBasicDetails(
+            basicDetailsProvider.nameController.text,
+            basicDetailsProvider.emailController.text,
+            basicDetailsProvider.selectedDate,
+            basicDetailsProvider.genderController.text,
+          );
+        } else if (widget.userType == 'therapist') {
+          final therapistProvider =
+              Provider.of<TherapistProvider>(context, listen: false);
+          await therapistProvider.saveTherapistBasicDetails(
+            basicDetailsProvider.nameController.text,
+            basicDetailsProvider.emailController.text,
+            basicDetailsProvider.selectedDate,
+            basicDetailsProvider.genderController.text,
+          );
+        }
 
         if (mounted) {
           Navigator.pushReplacement(
@@ -194,7 +213,9 @@ class _BasicPersonalDetailsState extends State<BasicPersonalDetails> {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text("Personal Details"),
+            title: Text(widget.userType == 'patient'
+                ? "Patient Details"
+                : "Therapist Details"),
             titleTextStyle: GoogleFonts.inter(
               color: Color.fromARGB(255, 8, 10, 19),
               fontSize: 14,

@@ -101,7 +101,7 @@ class _PatientTherapiesScreenState extends State<PatientTherapiesScreen> {
                                   SizedBox(
                                     width: 250,
                                     child: Text(
-                                      owner.location,
+                                      owner.location ?? '',
                                       style: GoogleFonts.inter(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w400,

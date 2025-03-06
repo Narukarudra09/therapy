@@ -38,7 +38,10 @@ class _VerifyScreenState extends State<VerifyScreen> {
         if (widget.userType == 'Patient' || widget.userType == 'Therapist') {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => BasicPersonalDetails()),
+            MaterialPageRoute(
+                builder: (context) => BasicPersonalDetails(
+                      userType: widget.userType,
+                    )),
           );
         } else {
           Navigator.pushReplacement(

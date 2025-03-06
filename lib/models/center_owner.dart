@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
 
 class CenterOwner {
-  final String id;
-  final String centerName;
-  final String name;
-  final String role;
-  final String phoneNumber;
-  final String email;
-  final String about;
-  final String location;
-  final String fees;
-  final Map<String, Map<String, TimeOfDay>> workingHours;
-  final List<String> holidays;
+  final String? id;
+  final String? centerName;
+  final String? name;
+  final String? role;
+  final String? phoneNumber;
+  final String? email;
+  final String? about;
+  final String? location;
+  final String? fees;
+  final Map<String, Map<String, TimeOfDay>>? workingHours;
+  final List<String>? holidays;
 
   CenterOwner({
-    required this.centerName,
-    required this.name,
-    required this.role,
-    required this.phoneNumber,
-    required this.email,
-    required this.about,
-    required this.location,
-    required this.fees,
-    required this.workingHours,
-    required this.holidays,
-    required this.id,
+    this.centerName,
+    this.name,
+    this.role,
+    this.phoneNumber,
+    this.email,
+    this.about,
+    this.location,
+    this.fees,
+    this.workingHours,
+    this.holidays,
+    this.id,
   });
 
   factory CenterOwner.fromFirestore(Map<String, dynamic> json) {
@@ -46,7 +46,7 @@ class CenterOwner {
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
       "id": id,
       "centerName": centerName,
@@ -57,10 +57,30 @@ class CenterOwner {
       'about': about,
       'location': location,
       'fees': fees,
-      'workingHours': workingHours.map((key, value) {
+      'workingHours': workingHours!.map((key, value) {
         return MapEntry(key, value);
       }),
       'holidays': holidays,
     };
+  }
+
+  CenterOwner copyWith({
+    String? centerName,
+    String? name,
+    String? role,
+    String? phoneNumber,
+    String? email,
+    String? about,
+    String? location,
+    String? fees,
+    Map<String, Map<String, TimeOfDay>>? workingHours,
+    List<String>? holidays,
+  }) {
+    return CenterOwner(
+      centerName: centerName ?? this.centerName,
+      name: name ?? this.name,
+      role: role ?? this.role,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+    );
   }
 }

@@ -65,11 +65,11 @@ class TherapistProfile extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              _buildInfoItem(therapist.name, Icons.account_circle),
-              _buildInfoItem(therapist.email, Icons.mail_outline),
-              _buildInfoItem(therapist.phoneNumber, Icons.phone),
-              _buildInfoItem(therapist.centerName, Icons.location_on),
-              _buildInfoItem(therapist.gender, Icons.person),
+              _buildInfoItem(therapist.name ?? '', Icons.account_circle),
+              _buildInfoItem(therapist.email ?? '', Icons.mail_outline),
+              _buildInfoItem(therapist.phoneNumber ?? '', Icons.phone),
+              _buildInfoItem(therapist.centerName ?? '', Icons.location_on),
+              _buildInfoItem(therapist.gender ?? '', Icons.person),
 
               const SizedBox(height: 16),
               Divider(
@@ -87,8 +87,9 @@ class TherapistProfile extends StatelessWidget {
               const SizedBox(height: 16),
 
               ...therapist.kycDocuments
-                  .map((filename) => _buildDocumentItem(filename))
-                  .toList(),
+                      ?.map((filename) => _buildDocumentItem(filename))
+                      ?.toList() ??
+                  [],
             ],
           ),
         ),
