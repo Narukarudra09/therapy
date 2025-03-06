@@ -1,6 +1,7 @@
 class Therapist {
   String? name;
   String? email;
+  String? dateOfBirth;
   String? phoneNumber;
   String? role;
   String? centerName;
@@ -11,6 +12,7 @@ class Therapist {
   Therapist({
     this.name,
     this.email,
+    this.dateOfBirth,
     this.phoneNumber,
     this.role,
     this.centerName,
@@ -23,6 +25,7 @@ class Therapist {
     return Therapist(
       name: json['name'],
       email: json['email'],
+      dateOfBirth: json['dateOfBirth'],
       phoneNumber: json['phoneNumber'],
       role: json['role'],
       centerName: json['centerName'],
@@ -36,6 +39,7 @@ class Therapist {
     return {
       'name': name,
       'email': email,
+      'dateOfBirth': dateOfBirth,
       'phoneNumber': phoneNumber,
       'role': role,
       'centerName': centerName,

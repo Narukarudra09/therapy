@@ -1,10 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:therapy/models/therapist.dart';
 
 class TherapistProvider extends ChangeNotifier {
   final firestore = FirebaseFirestore.instance;
   final auth = FirebaseAuth.instance;
+
+  Therapist? _therapist;
+
+  Therapist? get therapist => _therapist;
+
   Future<void> saveTherapistBasicDetails(
     String name,
     String email,
