@@ -100,7 +100,7 @@ The system architecture is based on a *Flutter* front-end and a *backend API* (e
 
 #### 6.3 *Usability*
 - The app should have an intuitive and user-friendly interface.
-- The design should be consistent across all platforms (iOS/Android).
+- The design should be consistent across all platforms (Android).
 - User onboarding should be easy, especially for non-tech-savvy users.
 
 #### 6.4 *Scalability*
