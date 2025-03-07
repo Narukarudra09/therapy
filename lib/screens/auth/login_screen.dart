@@ -59,7 +59,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 16),
                   Text("Welcome",
                       style: GoogleFonts.inter(
-                          fontSize: 28, fontWeight: FontWeight.w700)),
+                        color: Color(0xFF171C22),
+                        fontSize: 28,
+                        fontWeight: FontWeight.w700,
+                      )),
                   Text(
                     "You've been missed",
                     style: GoogleFonts.inter(
@@ -221,6 +224,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             return null;
                           },
                         ),
+                        const SizedBox(height: 52),
                         CustomButton(
                           title: "Login",
                           onTap: () => _handleLogin(authProvider),

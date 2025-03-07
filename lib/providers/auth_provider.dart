@@ -29,7 +29,6 @@ class AuthProvider with ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<bool> login(String phoneNumber, String userType) async {
-    _isLoading = true;
     _error = null;
     notifyListeners();
 
@@ -95,7 +94,6 @@ class AuthProvider with ChangeNotifier {
           .get();
 
       if (!userDoc.exists) {
-        // Create new user based on userType
         switch (userType) {
           case 'patient':
             await _firestore
@@ -106,7 +104,7 @@ class AuthProvider with ChangeNotifier {
                 .set(Patient(phone: phoneNumber).toMap());
             break;
 
-          case 'therapist':
+          case 'Therapist':
             await _firestore
                 .collection('Users')
                 .doc(phoneNumber)
@@ -115,7 +113,7 @@ class AuthProvider with ChangeNotifier {
                 .set(Therapist(phoneNumber: phoneNumber).toMap());
             break;
 
-          case 'center_owner':
+          case 'Center Owner':
             await _firestore
                 .collection('Users')
                 .doc(phoneNumber)
@@ -124,7 +122,7 @@ class AuthProvider with ChangeNotifier {
                 .set(CenterOwner(phoneNumber: phoneNumber).toMap());
             break;
 
-          case 'super_admin':
+          case 'Super Admin':
             await _firestore
                 .collection('Users')
                 .doc(phoneNumber)

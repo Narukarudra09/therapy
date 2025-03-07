@@ -81,7 +81,7 @@ class _MainScreenState extends State<MainScreen> {
           TherapistDailyDataScreen(),
           TherapistPatientScreen(),
           TherapistPaymentScreen(),
-          TherapistSettingsScreen()
+          TherapistSettingsScreen(),
         ][currentIndex];
       case 'Patient':
         return [

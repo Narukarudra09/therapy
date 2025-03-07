@@ -19,11 +19,18 @@ class _AddRecordScreenState extends State<AddRecordScreen> {
   TimeOfDay _selectedTime = TimeOfDay.now();
 
   final List<String> therapies = [
-    'Physical Therapy',
-    'Occupational Therapy',
-    'Speech Therapy',
-    'Cognitive Therapy',
-    'Other'
+    'Manual Therapy',
+    'Exercise Therapy',
+    'Electrotherapy',
+    'Therapeutic Ultrasound',
+    'Neuromuscular Electrical Stimulation',
+    'Interferential Current Therapy',
+    'Ultrasound Therapy',
+    'Heat Therapy',
+    'Cold Therapy',
+    'Light Therapy',
+    'Sound Therapy',
+    'Hydrotherapy',
   ];
 
   void _saveRecord() {
@@ -44,34 +51,48 @@ class _AddRecordScreenState extends State<AddRecordScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: Color(0xFFFFFFFF),
           title: Text('Select Therapies'),
-          content: StatefulBuilder(
-            builder: (context, setState) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: therapies.map((therapy) {
-                  return CheckboxListTile(
-                    title: Text(therapy),
-                    value: selectedTherapiesCopy.contains(therapy),
-                    onChanged: (bool? value) {
-                      if (value != null && value) {
-                        if (!selectedTherapiesCopy.contains(therapy)) {
-                          setState(() {
-                            selectedTherapiesCopy.add(therapy);
-                          });
-                        }
-                      } else {
-                        if (selectedTherapiesCopy.contains(therapy)) {
-                          setState(() {
-                            selectedTherapiesCopy.remove(therapy);
-                          });
-                        }
-                      }
-                    },
-                  );
-                }).toList(),
-              );
-            },
+          titleTextStyle: GoogleFonts.poppins(
+            color: Color(0xFF171C22),
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
+          ),
+          content: Container(
+            width: double.maxFinite,
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.6,
+            ),
+            child: StatefulBuilder(
+              builder: (context, setState) {
+                return SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: therapies.map((therapy) {
+                      return CheckboxListTile(
+                        title: Text(therapy),
+                        value: selectedTherapiesCopy.contains(therapy),
+                        onChanged: (bool? value) {
+                          if (value != null && value) {
+                            if (!selectedTherapiesCopy.contains(therapy)) {
+                              setState(() {
+                                selectedTherapiesCopy.add(therapy);
+                              });
+                            }
+                          } else {
+                            if (selectedTherapiesCopy.contains(therapy)) {
+                              setState(() {
+                                selectedTherapiesCopy.remove(therapy);
+                              });
+                            }
+                          }
+                        },
+                      );
+                    }).toList(),
+                  ),
+                );
+              },
+            ),
           ),
           actions: [
             TextButton(
