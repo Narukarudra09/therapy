@@ -13,16 +13,24 @@ class AuthProvider with ChangeNotifier {
   UserModel? _selectedUser;
   bool _isLoading = false;
   String? _verificationId;
+  String _selectedRole = 'Super Admin';
+  String? _error;
+  String? get error => _error;
 
   UserModel? get selectedUser => _selectedUser;
 
   bool get isLoading => _isLoading;
+
+  String get selectedRole => _selectedRole;
+
+  String? get verificationId => _verificationId;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<bool> login(String phoneNumber, String userType) async {
     _isLoading = true;
+    _error = null;
     notifyListeners();
 
     try {
@@ -34,6 +42,7 @@ class AuthProvider with ChangeNotifier {
           _completeLogin();
         },
         verificationFailed: (FirebaseAuthException e) {
+          _error = e.message;
           _isLoading = false;
           notifyListeners();
           throw Exception('Verification failed: ${e.message}');
@@ -50,23 +59,32 @@ class AuthProvider with ChangeNotifier {
       return true;
     } catch (e) {
       _handleLoginError(e);
+      _error = e.toString();
+      _isLoading = false;
       return false;
     }
   }
 
   Future<bool> verifyOtp(String otp, String userType) async {
     _isLoading = true;
+    _error = null;
     notifyListeners();
 
     try {
+      if (_verificationId == null) {
+        throw Exception('Verification ID not found');
+      }
+
       PhoneAuthCredential credential = PhoneAuthProvider.credential(
         verificationId: _verificationId!,
         smsCode: otp,
       );
 
       await _auth.signInWithCredential(credential);
-      _selectedUser =
-          await getUserFromFirestore(_auth.currentUser!.phoneNumber!, userType);
+      _selectedUser = await getUserFromFirestore(
+        _auth.currentUser!.phoneNumber!,
+        userType,
+      );
 
       final phoneNumber = _auth.currentUser!.phoneNumber!;
       final userDoc = await _firestore
@@ -237,6 +255,11 @@ class AuthProvider with ChangeNotifier {
     _selectedUser = null;
     _verificationId = null;
     await _auth.signOut();
+    notifyListeners();
+  }
+
+  void setSelectedRole(String role) {
+    _selectedRole = role;
     notifyListeners();
   }
 }

@@ -23,10 +23,8 @@ Future<void> main() async {
     androidProvider: AndroidProvider.debug,
   );
 
-  // Configure CachedNetworkImage
   CachedNetworkImage.logLevel = CacheManagerLogLevel.verbose;
 
-  // Enable offline persistence
   FirebaseFirestore.instance.settings = Settings(
     persistenceEnabled: true,
     cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,

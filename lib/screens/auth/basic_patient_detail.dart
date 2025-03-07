@@ -8,7 +8,9 @@ import '../../widgets/custom_button.dart';
 import '../main_screen.dart';
 
 class BasicPersonalDetails extends StatefulWidget {
-  const BasicPersonalDetails({super.key});
+  const BasicPersonalDetails({
+    super.key,
+  });
 
   @override
   State<BasicPersonalDetails> createState() => _BasicPersonalDetailsState();
@@ -16,7 +18,7 @@ class BasicPersonalDetails extends StatefulWidget {
 
 class _BasicPersonalDetailsState extends State<BasicPersonalDetails> {
   final _formKey = GlobalKey<FormState>();
-  List<String> gender = ['Male', 'Female', 'Others'];
+  final List<String> gender = ['Male', 'Female', 'Others'];
 
   @override
   void initState() {
@@ -69,7 +71,7 @@ class _BasicPersonalDetailsState extends State<BasicPersonalDetails> {
     }
   }
 
-  void _saveDetails() async {
+  Future<void> _saveDetails() async {
     if (_formKey.currentState!.validate()) {
       try {
         final patientProvider =
@@ -147,14 +149,14 @@ class _BasicPersonalDetailsState extends State<BasicPersonalDetails> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(28),
               ),
-              dayBackgroundColor: WidgetStateProperty.resolveWith((states) {
-                if (states.contains(WidgetState.selected)) {
+              dayBackgroundColor: MaterialStateProperty.resolveWith((states) {
+                if (states.contains(MaterialState.selected)) {
                   return Colors.green.shade400;
                 }
                 return null;
               }),
-              todayBackgroundColor: WidgetStateProperty.resolveWith((states) {
-                if (states.contains(WidgetState.selected)) {
+              todayBackgroundColor: MaterialStateProperty.resolveWith((states) {
+                if (states.contains(MaterialState.selected)) {
                   return Colors.green.shade400;
                 }
                 return Colors.transparent;
@@ -238,42 +240,9 @@ class _BasicPersonalDetailsState extends State<BasicPersonalDetails> {
                       ),
                     ),
                     const SizedBox(height: 21),
-                    Text(
-                      "Your Name",
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: const Color.fromARGB(255, 135, 141, 186),
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    TextFormField(
+                    _buildTextField(
+                      label: "Your Name",
                       controller: basicDetailsProvider.nameController,
-                      style: GoogleFonts.manrope(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
-                        color: Color(0xFF2E2C34),
-                      ),
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 232, 233, 241),
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 232, 233, 241),
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 232, 233, 241),
-                          ),
-                        ),
-                      ),
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "Please enter your name";
@@ -282,42 +251,9 @@ class _BasicPersonalDetailsState extends State<BasicPersonalDetails> {
                       },
                     ),
                     const SizedBox(height: 16),
-                    Text(
-                      "Email Address",
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: const Color.fromARGB(255, 135, 141, 186),
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    TextFormField(
-                      style: GoogleFonts.manrope(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
-                        color: Color(0xFF2E2C34),
-                      ),
+                    _buildTextField(
+                      label: "Email Address",
                       controller: basicDetailsProvider.emailController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 232, 233, 241),
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 232, 233, 241),
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 232, 233, 241),
-                          ),
-                        ),
-                      ),
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "Please enter your email";
@@ -330,125 +266,9 @@ class _BasicPersonalDetailsState extends State<BasicPersonalDetails> {
                       },
                     ),
                     const SizedBox(height: 16),
-                    Text(
-                      "Gender",
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: const Color.fromARGB(255, 135, 141, 186),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    DropdownButtonFormField<String>(
-                      value:
-                          basicDetailsProvider.genderController.text.isNotEmpty
-                              ? basicDetailsProvider.genderController.text
-                              : null,
-                      icon: Icon(Icons.keyboard_arrow_down),
-                      borderRadius: BorderRadius.circular(8),
-                      iconEnabledColor: const Color.fromARGB(255, 23, 28, 34),
-                      iconDisabledColor: const Color.fromARGB(255, 23, 28, 34),
-                      dropdownColor: const Color.fromARGB(255, 243, 243, 253),
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 232, 233, 241),
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 232, 233, 241),
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 232, 233, 241),
-                          ),
-                        ),
-                      ),
-                      items: gender
-                          .map((role) => DropdownMenuItem(
-                                value: role,
-                                child: FittedBox(
-                                  child: Text(
-                                    role,
-                                    style: GoogleFonts.inter(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w700,
-                                      color: Color(0xFF2E2C34),
-                                    ),
-                                  ),
-                                ),
-                              ))
-                          .toList(),
-                      onChanged: (String? newValue) {
-                        basicDetailsProvider.updateFormData(
-                          gender: newValue,
-                        );
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Please select a gender";
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      "Date of Birth",
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: const Color.fromARGB(255, 135, 141, 186),
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    InkWell(
-                      onTap: () => _selectDate(context),
-                      child: IgnorePointer(
-                        child: TextFormField(
-                          style: GoogleFonts.manrope(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14,
-                            color: Color(0xFF2E2C34),
-                          ),
-                          controller: TextEditingController(
-                            text: basicDetailsProvider.selectedDate,
-                          ),
-                          decoration: InputDecoration(
-                            suffixIcon: Icon(Icons.calendar_month),
-                            suffixIconColor: Color(0xFF292D32),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 232, 233, 241),
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 232, 233, 241),
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 232, 233, 241),
-                              ),
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return "Please enter your date of birth";
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                    ),
+                    _buildGenderDropdown(basicDetailsProvider),
+                    const SizedBox(height: 16),
+                    _buildDatePicker(basicDetailsProvider),
                     const SizedBox(height: 52),
                     CustomButton(
                       title: "Save",
@@ -461,6 +281,189 @@ class _BasicPersonalDetailsState extends State<BasicPersonalDetails> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildTextField({
+    required String label,
+    required TextEditingController controller,
+    required String? Function(String?) validator,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: GoogleFonts.inter(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            color: const Color.fromARGB(255, 135, 141, 186),
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: controller,
+          style: GoogleFonts.manrope(
+            fontWeight: FontWeight.w400,
+            fontSize: 14,
+            color: Color(0xFF2E2C34),
+          ),
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color.fromARGB(255, 232, 233, 241),
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color.fromARGB(255, 232, 233, 241),
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color.fromARGB(255, 232, 233, 241),
+              ),
+            ),
+          ),
+          validator: validator,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGenderDropdown(BasicDetailsProvider basicDetailsProvider) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Gender",
+          style: GoogleFonts.inter(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            color: const Color.fromARGB(255, 135, 141, 186),
+          ),
+        ),
+        const SizedBox(height: 8),
+        DropdownButtonFormField<String>(
+          value: basicDetailsProvider.genderController.text.isNotEmpty
+              ? basicDetailsProvider.genderController.text
+              : null,
+          icon: Icon(Icons.keyboard_arrow_down),
+          borderRadius: BorderRadius.circular(8),
+          iconEnabledColor: const Color.fromARGB(255, 23, 28, 34),
+          iconDisabledColor: const Color.fromARGB(255, 23, 28, 34),
+          dropdownColor: const Color.fromARGB(255, 243, 243, 253),
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color.fromARGB(255, 232, 233, 241),
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color.fromARGB(255, 232, 233, 241),
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: Color.fromARGB(255, 232, 233, 241),
+              ),
+            ),
+          ),
+          items: gender
+              .map((role) => DropdownMenuItem(
+                    value: role,
+                    child: FittedBox(
+                      child: Text(
+                        role,
+                        style: GoogleFonts.inter(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF2E2C34),
+                        ),
+                      ),
+                    ),
+                  ))
+              .toList(),
+          onChanged: (String? newValue) {
+            basicDetailsProvider.updateFormData(
+              gender: newValue,
+            );
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "Please select a gender";
+            }
+            return null;
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDatePicker(BasicDetailsProvider basicDetailsProvider) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Date of Birth",
+          style: GoogleFonts.inter(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            color: const Color.fromARGB(255, 135, 141, 186),
+          ),
+        ),
+        const SizedBox(height: 8),
+        InkWell(
+          onTap: () => _selectDate(context),
+          child: IgnorePointer(
+            child: TextFormField(
+              style: GoogleFonts.manrope(
+                fontWeight: FontWeight.w400,
+                fontSize: 14,
+                color: Color(0xFF2E2C34),
+              ),
+              controller: TextEditingController(
+                text: basicDetailsProvider.selectedDate,
+              ),
+              decoration: InputDecoration(
+                suffixIcon: Icon(Icons.calendar_month),
+                suffixIconColor: Color(0xFF292D32),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(
+                    color: Color.fromARGB(255, 232, 233, 241),
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(
+                    color: Color.fromARGB(255, 232, 233, 241),
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(
+                    color: Color.fromARGB(255, 232, 233, 241),
+                  ),
+                ),
+              ),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return "Please enter your date of birth";
+                }
+                return null;
+              },
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

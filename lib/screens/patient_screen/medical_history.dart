@@ -20,11 +20,11 @@ class _MedicalHistoryState extends State<MedicalHistory> {
   @override
   void initState() {
     super.initState();
-    // Load both patient data and records when the screen initializes
+
     Future.microtask(() async {
       final provider = Provider.of<PatientProvider>(context, listen: false);
       await provider.loadPatientData();
-      await provider.loadRecords(); // Add this line to load records
+      await provider.loadRecords();
     });
   }
 
@@ -52,11 +52,17 @@ class _MedicalHistoryState extends State<MedicalHistory> {
                     await provider.saveMedicalHistory();
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Data saved successfully!')),
+                      const SnackBar(
+                        content: Text('Data saved successfully!'),
+                        backgroundColor: Color(0xFF41B877),
+                      ),
                     );
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Failed to save: $e')),
+                      SnackBar(
+                        content: Text('Failed to save: $e'),
+                        backgroundColor: Colors.red,
+                      ),
                     );
                   }
                 },
