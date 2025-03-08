@@ -10,6 +10,7 @@ import 'package:therapy/providers/patient_provider.dart';
 import 'package:therapy/providers/super_center_provider.dart';
 import 'package:therapy/providers/super_patient_provider.dart';
 import 'package:therapy/providers/basic_details_provider.dart';
+import 'package:therapy/providers/therapist_provider.dart';
 import 'package:therapy/screens/auth/splash_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -36,6 +37,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => NavigationProvider()),
         ChangeNotifierProvider(create: (_) => PatientProvider()),
+        ChangeNotifierProvider(create: (_) => TherapistProvider()),
         ChangeNotifierProvider(create: (_) => SuperPatientProvider()),
         ChangeNotifierProvider(create: (_) => SuperCenterProvider()),
         ChangeNotifierProvider(create: (_) => BasicDetailsProvider()),

@@ -1,4 +1,6 @@
 class Therapist {
+  String? imageUrl;
+  String? city;
   String? name;
   String? email;
   String? dateOfBirth;
@@ -10,6 +12,8 @@ class Therapist {
   List<String>? kycDocuments;
 
   Therapist({
+    this.imageUrl,
+    this.city,
     this.name,
     this.email,
     this.dateOfBirth,
@@ -23,7 +27,9 @@ class Therapist {
 
   factory Therapist.fromFirestore(Map<String, dynamic> json) {
     return Therapist(
+      imageUrl: json['imageUrl'],
       name: json['name'],
+      city: json['city'],
       email: json['email'],
       dateOfBirth: json['dateOfBirth'],
       phoneNumber: json['phoneNumber'],
@@ -37,7 +43,9 @@ class Therapist {
 
   Map<String, dynamic> toMap() {
     return {
+      'imageUrl': imageUrl,
       'name': name,
+      'city': city,
       'email': email,
       'dateOfBirth': dateOfBirth,
       'phoneNumber': phoneNumber,

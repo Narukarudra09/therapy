@@ -5,9 +5,9 @@ import 'package:therapy/screens/therapist_screen/verify_otp.dart';
 import '../../widgets/custom_button.dart';
 
 class UpdatePhoneNumber extends StatefulWidget {
-  final String oldNumber;
-
-  const UpdatePhoneNumber({super.key, required this.oldNumber});
+  const UpdatePhoneNumber({
+    super.key,
+  });
 
   @override
   State<UpdatePhoneNumber> createState() => _UpdatePhoneNumberState();

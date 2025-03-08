@@ -34,6 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (!mounted) return;
 
       if (userExists) {
+        await patientProvider.initializePatient();
         await patientProvider.loadFromPrefs();
         await patientProvider.loadPatientData();
         await patientProvider.loadRecords();
