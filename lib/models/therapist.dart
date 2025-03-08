@@ -1,59 +1,88 @@
 class Therapist {
-  String? imageUrl;
-  String? city;
+  String? phoneNumber;
   String? name;
   String? email;
+  String? gender;
   String? dateOfBirth;
-  String? phoneNumber;
+  String? city;
+  String? imageUrl;
   String? role;
   String? centerName;
-  String? gender;
   bool? isActive;
   List<String>? kycDocuments;
 
   Therapist({
-    this.imageUrl,
-    this.city,
+    this.phoneNumber,
     this.name,
     this.email,
+    this.gender,
     this.dateOfBirth,
-    this.phoneNumber,
+    this.city,
+    this.imageUrl,
     this.role,
     this.centerName,
-    this.gender,
     this.isActive,
     this.kycDocuments,
   });
 
-  factory Therapist.fromFirestore(Map<String, dynamic> json) {
-    return Therapist(
-      imageUrl: json['imageUrl'],
-      name: json['name'],
-      city: json['city'],
-      email: json['email'],
-      dateOfBirth: json['dateOfBirth'],
-      phoneNumber: json['phoneNumber'],
-      role: json['role'],
-      centerName: json['centerName'],
-      gender: json['gender'],
-      isActive: json['isActive'],
-      kycDocuments: List<String>.from(json['kycDocuments']),
-    );
-  }
-
   Map<String, dynamic> toMap() {
     return {
-      'imageUrl': imageUrl,
-      'name': name,
-      'city': city,
-      'email': email,
-      'dateOfBirth': dateOfBirth,
       'phoneNumber': phoneNumber,
+      'name': name,
+      'email': email,
+      'gender': gender,
+      'dateOfBirth': dateOfBirth,
+      'city': city,
+      'imageUrl': imageUrl,
+      'type': 'therapist',
       'role': role,
       'centerName': centerName,
-      'gender': gender,
       'isActive': isActive,
       'kycDocuments': kycDocuments,
     };
+  }
+
+  static Therapist fromFirestore(Map<String, dynamic> data) {
+    return Therapist(
+      phoneNumber: data['phoneNumber']?.toString(),
+      name: data['name']?.toString(),
+      email: data['email']?.toString(),
+      gender: data['gender']?.toString(),
+      dateOfBirth: data['dateOfBirth']?.toString(),
+      city: data['city']?.toString(),
+      imageUrl: data['imageUrl']?.toString(),
+      role: data['role']?.toString(),
+      centerName: data['centerName']?.toString(),
+      isActive: data['isActive'],
+      kycDocuments: List<String>.from(data['kycDocuments'] ?? []),
+    );
+  }
+
+  Therapist copyWith({
+    String? phoneNumber,
+    String? name,
+    String? email,
+    String? gender,
+    String? dateOfBirth,
+    String? city,
+    String? imageUrl,
+    String? role,
+    String? centerName,
+    bool? isActive,
+    List<String>? kycDocuments,
+  }) {
+    return Therapist(
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      gender: gender ?? this.gender,
+      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+      city: city ?? this.city,
+      imageUrl: imageUrl ?? this.imageUrl,
+      role: role ?? this.role,
+      centerName: centerName ?? this.centerName,
+      isActive: isActive ?? this.isActive,
+      kycDocuments: kycDocuments ?? this.kycDocuments,
+    );
   }
 }

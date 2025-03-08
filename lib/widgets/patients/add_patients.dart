@@ -47,7 +47,7 @@ class _AddPatientsState extends State<AddPatients> {
         email: _emailController.text,
         gender: _genderController.text,
         medicalRecords: [],
-        therapySessions: [],
+
         payments: [],
       );
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:therapy/screens/auth/basic_patient_detail.dart';
+import 'package:therapy/screens/auth/basic_personal_detail.dart';
 import 'package:therapy/screens/auth/login_screen.dart';
 import 'package:therapy/screens/main_screen.dart';
 import 'package:therapy/widgets/custom_button.dart';

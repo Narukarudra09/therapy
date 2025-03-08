@@ -36,8 +36,12 @@ class _TherapistSettingsScreenState extends State<TherapistSettingsScreen> {
       final provider = Provider.of<TherapistProvider>(context, listen: false);
       await provider.initializeTherapist();
 
-      if (provider.therapist?.name != null) {
-        controller.text = provider.therapist!.name!;
+      if (mounted) {
+        setState(() {
+          if (provider.therapist?.name != null) {
+            controller.text = provider.therapist!.name!;
+          }
+        });
       }
     } catch (e) {
       print('Error initializing therapist data: $e');

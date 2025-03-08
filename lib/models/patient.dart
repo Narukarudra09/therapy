@@ -5,7 +5,7 @@ class Patient {
   String? bloodGroup;
   List<String>? allergies;
   List<Map<String, dynamic>>? medicalRecords;
-  List<Map<String, dynamic>>? therapySessions;
+
   List<Map<String, dynamic>>? payments;
   String? email;
   String? gender;
@@ -19,7 +19,6 @@ class Patient {
     this.bloodGroup,
     this.allergies,
     this.medicalRecords,
-    this.therapySessions,
     this.payments,
     this.email,
     this.gender,
@@ -39,7 +38,6 @@ class Patient {
       bloodGroup: json['bloodGroup'],
       allergies: json['allergies']?.cast<String>(),
       medicalRecords: json['medicalRecords']?.cast<Map<String, dynamic>>(),
-      therapySessions: json['therapySessions']?.cast<Map<String, dynamic>>(),
       payments: json['payments']?.cast<Map<String, dynamic>>(),
     );
   }
@@ -56,7 +54,6 @@ class Patient {
       'bloodGroup': bloodGroup,
       'allergies': allergies,
       'medicalRecords': medicalRecords,
-      'therapySessions': therapySessions,
       'payments': payments,
     };
   }
@@ -68,7 +65,6 @@ class Patient {
     String? bloodGroup,
     List<String>? allergies,
     List<Map<String, dynamic>>? medicalRecords,
-    List<Map<String, dynamic>>? therapySessions,
     List<Map<String, dynamic>>? payments,
     String? email,
     String? gender,
@@ -82,7 +78,6 @@ class Patient {
       bloodGroup: bloodGroup ?? this.bloodGroup,
       allergies: allergies ?? this.allergies,
       medicalRecords: medicalRecords ?? this.medicalRecords,
-      therapySessions: therapySessions ?? this.therapySessions,
       payments: payments ?? this.payments,
       email: email ?? this.email,
       gender: gender ?? this.gender,
@@ -103,7 +98,6 @@ class Patient {
       profileImageUrl: map['profileImageUrl'],
       city: map['city'],
       medicalRecords: map['medicalRecords']?.cast<Map<String, dynamic>>(),
-      therapySessions: map['therapySessions']?.cast<Map<String, dynamic>>(),
       payments: map['payments']?.cast<Map<String, dynamic>>(),
     );
   }
